@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">AndroEat</string>
+    <string name="title_home">Home</string>
+    <string name="title_basket">Basket</string>
+    <string name="title_fav">Favourites</string>
+    <string name="title_profile">Profile</string>
+</resources>
