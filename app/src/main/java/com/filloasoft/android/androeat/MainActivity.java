@@ -41,7 +41,7 @@ public class MainActivity extends AppCompatActivity {
                     startActivity(favIntent);
                     return true;
                 case R.id.navigation_profile:
-                    Intent profileIntent = new Intent(getApplicationContext(), ShoppingBasketActivity.class);
+                    Intent profileIntent = new Intent(getApplicationContext(), LoginActivity.class);
                     startActivity(profileIntent);
                     return true;
             }

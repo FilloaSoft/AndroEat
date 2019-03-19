@@ -6,51 +6,49 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
-import android.widget.ListView;
-import android.widget.TextView;
+import android.view.View;
+import android.widget.EditText;
 import android.widget.Toast;
 
-import java.util.ArrayList;
-
-public class ShoppingBasketActivity extends AppCompatActivity {
-
-    private TextView mTextMessage;
-    ListView list;
+public class SingupActivity extends AppCompatActivity {
     Toast toast;
+    public EditText editText;
 
-    String[] productName = {
-            "Apple", "Milk",
-            "Eggs",
-    };
-
-    String[] productDescription = {
-            "Apple description", "Milk description",
-            "Eggs description",
-    };
-
-    Integer[] productImage = {
-            R.drawable.apples, R.drawable.milk,
-            R.drawable.eggs
-    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.shopping_basket);
-
-        ShoppingBasketListAdapter adapter = new ShoppingBasketListAdapter(this, productName, productDescription, productImage);
-        list = (ListView) findViewById(R.id.basketList);
-        list.setAdapter(adapter);
-
-        mTextMessage = (TextView) findViewById(R.id.message);
-
-        BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
-        navigation.setSelectedItemId(R.id.navigation_basket);
-        navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
+        setContentView(R.layout.singup);
 
         toast = Toast.makeText(getApplicationContext(),
-                "Pantalla de la cesta de la compra!", Toast.LENGTH_SHORT);
+                "Pantalla de registro!", Toast.LENGTH_SHORT);
 
+        toast.show();
+
+        BottomNavigationView navigation = findViewById(R.id.navigation);
+        navigation.setSelectedItemId(R.id.navigation_profile);
+        navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
+
+    }
+
+    /**
+     * Called when the user taps the Send button
+     */
+
+    public void singUp(View view) {
+        EditText usernameText = (EditText) findViewById(R.id.username_singup);
+        EditText emailText = (EditText) findViewById(R.id.email_text_singup);
+        EditText passwordText = (EditText) findViewById(R.id.password_text_singup);
+        EditText passwordTextConfirmation = (EditText) findViewById(R.id.password_text_singup2);
+
+        String username = usernameText.getText().toString();
+        String email = emailText.getText().toString();
+        String password = passwordText.getText().toString();
+        String passwordConfirmation = passwordTextConfirmation.getText().toString();
+
+
+        toast = Toast.makeText(getApplicationContext(),
+                username + ' ' + email + ' ' + password + ' ' + passwordConfirmation, Toast.LENGTH_SHORT);
         toast.show();
 
     }
@@ -70,22 +68,22 @@ public class ShoppingBasketActivity extends AppCompatActivity {
                     Intent homeIntent = new Intent(getApplicationContext(), MainActivity.class);
                     startActivity(homeIntent);
                     return true;
-                case R.id.navigation_basket:
+                case R.id.navigation_profile:
                     return true;
                 case R.id.navigation_fav:
                     toast = Toast.makeText(getApplicationContext(),
-                                    "Navegando hacia la pantalla de recetas favoritas...", Toast.LENGTH_SHORT);
+                            "Navegando hacia la pantalla de recetas favoritas...", Toast.LENGTH_SHORT);
 
                     toast.show();
                     Intent favIntent = new Intent(getApplicationContext(), ShoppingBasketActivity.class);
                     startActivity(favIntent);
                     return true;
-                case R.id.navigation_profile:
+                case R.id.navigation_basket:
                     toast = Toast.makeText(getApplicationContext(),
-                            "Navegando hacia la pantalla de login...", Toast.LENGTH_SHORT);
+                            "Navegando hacia la pantalla de cesta...", Toast.LENGTH_SHORT);
 
                     toast.show();
-                    Intent profileIntent = new Intent(getApplicationContext(), LoginActivity.class);
+                    Intent profileIntent = new Intent(getApplicationContext(), ShoppingBasketActivity.class);
                     startActivity(profileIntent);
                     return true;
             }
