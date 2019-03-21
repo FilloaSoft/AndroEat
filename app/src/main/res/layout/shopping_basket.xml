@@ -38,18 +38,20 @@
     fab:fab_addButtonColorPressed="@color/colorPrimaryDark">
 
     <com.getbase.floatingactionbutton.FloatingActionButton
-        android:id="@+id/accion_favorito"
+        android:id="@+id/accion_buscar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:onClick="openAddDialog"
         fab:fab_colorNormal="#D9DCE0"
         fab:fab_icon="@drawable/ic_search"
         fab:fab_size="mini"
         fab:fab_colorPressed="@color/colorPrimaryDark"/>
 
     <com.getbase.floatingactionbutton.FloatingActionButton
-        android:id="@+id/accion_buscar"
+        android:id="@+id/accion_escanear"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:onClick="scan"
         fab:fab_colorNormal="#D9DCE0"
         fab:fab_icon="@drawable/ic_camera"
         fab:fab_size="mini"
@@ -62,6 +64,7 @@
         android:layout_width="110dp"
         android:layout_height="wrap_content"
         android:gravity="center"
+        android:onClick="findRecipes"
         android:textColor="#FFFFFF"
         android:background="@color/colorAccent"
         android:layout_above="@id/navigation"

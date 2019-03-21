@@ -6,11 +6,13 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.Scanner;
 
 public class ShoppingBasketActivity extends AppCompatActivity {
 
@@ -92,4 +94,25 @@ public class ShoppingBasketActivity extends AppCompatActivity {
             return false;
         }
     };
+
+    public void scan(View view){
+        Intent scannerIntent = new Intent(this, ScannerActivity.class);
+        startActivity(scannerIntent);
+    }
+
+    public void findRecipes(View view) {
+
+        toast = Toast.makeText(getApplicationContext(),
+                "Buscando recetas...", Toast.LENGTH_SHORT);
+        // Do something in response to button
+        toast.show();
+    }
+
+    public void openAddDialog(View view) {
+
+        toast = Toast.makeText(getApplicationContext(),
+                "Abriendo diálogo de adición de productos...", Toast.LENGTH_SHORT);
+        // Do something in response to button
+        toast.show();
+    }
 }
