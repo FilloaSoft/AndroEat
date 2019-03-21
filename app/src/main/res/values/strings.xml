@@ -9,4 +9,6 @@
     <string name="singup">SINGUP</string>
     <string name="username">Username</string>
     <string name="email">Email</string>
+    <string name="camera_image">Imagen de camara</string>
+    <string name="scan_button">Escanear codigo</string>
 </resources>

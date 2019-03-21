@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:fab="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/relativeLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <android.support.design.widget.BottomNavigationView
+        android:id="@+id/navigation"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="#EEEDED"
+        fab:itemIconTint="@color/bottom_nav_color"
+        fab:itemTextColor="@color/bottom_nav_color"
+        fab:labelVisibilityMode="labeled"
+        fab:layout_constraintBottom_toBottomOf="parent"
+        fab:layout_constraintLeft_toLeftOf="parent"
+        fab:layout_constraintRight_toRightOf="parent"
+        fab:menu="@menu/navigation" />
+
+    <ImageView
+        android:id="@+id/Imagen_camara"
+        android:layout_width="172dp"
+        android:layout_height="291dp"
+        android:layout_marginTop="56dp"
+        android:contentDescription="@string/camera_image"
+        fab:layout_constraintEnd_toEndOf="parent"
+        fab:layout_constraintHorizontal_bias="0.497"
+        fab:layout_constraintStart_toStartOf="parent"
+        fab:layout_constraintTop_toTopOf="parent"
+        fab:srcCompat="@drawable/coke_can" />
+
+    <ImageButton
+        android:id="@+id/accion_escanear"
+        android:layout_width="75dp"
+        android:layout_height="75dp"
+        android:layout_marginTop="36dp"
+        android:background="@drawable/ic_camera"
+        android:contentDescription="@string/scan_button"
+        android:onClick="scan"
+        android:scaleType="fitXY"
+        fab:layout_constraintEnd_toEndOf="parent"
+        fab:layout_constraintStart_toStartOf="parent"
+        fab:layout_constraintTop_toBottomOf="@+id/Imagen_camara" />
+
+
+</android.support.constraint.ConstraintLayout>

@@ -27,6 +27,9 @@
         <activity
             android:name=".SingupActivity"
             android:label="Singup"/>
+        <activity
+            android:name=".ScannerActivity"
+            android:label="Scanner"/>
     </application>
 
 </manifest>
