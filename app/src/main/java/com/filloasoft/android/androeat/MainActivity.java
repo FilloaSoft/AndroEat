@@ -16,7 +16,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.home);
 
         mTextMessage = (TextView) findViewById(R.id.message);
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
@@ -31,13 +31,15 @@ public class MainActivity extends AppCompatActivity {
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
             switch (item.getItemId()) {
                 case R.id.navigation_recipe:
+                    Intent homeIntent = new Intent(getApplicationContext(), HomeActivity.class);
+                    startActivity(homeIntent);
                     return true;
                 case R.id.navigation_basket:
                     Intent basketIntent = new Intent(getApplicationContext(), ShoppingBasketActivity.class);
                     startActivity(basketIntent);
                     return true;
                 case R.id.navigation_fav:
-                    Intent favIntent = new Intent(getApplicationContext(), ShoppingBasketActivity.class);
+                    Intent favIntent = new Intent(getApplicationContext(), FavouriteRecipesActivity.class);
                     startActivity(favIntent);
                     return true;
                 case R.id.navigation_profile:

@@ -30,6 +30,12 @@
         <activity
             android:name=".ScannerActivity"
             android:label="Scanner"/>
+        <activity
+            android:name=".HomeActivity"
+            android:label="Home"/>
+        <activity
+            android:name=".FavouriteRecipesActivity"
+            android:label="Favouriterecipes"/>
     </application>
 
 </manifest>

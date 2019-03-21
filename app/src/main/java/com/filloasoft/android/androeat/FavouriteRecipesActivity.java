@@ -7,33 +7,48 @@ import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.GridView;
+import android.widget.TextView;
 import android.widget.Toast;
 
-public class ScannerActivity extends AppCompatActivity {
+public class FavouriteRecipesActivity extends AppCompatActivity {
+
+    private TextView mTextMessage;
+    GridView grid;
     Toast toast;
+
+    String[] recipeName = {
+            "Espaguetis","Tortilla"
+    };
+
+    String[] recipeDescription = {
+            "Espaguetis description", "Tortilla description"
+    };
+
+    Integer[] recipeImage = {
+            R.drawable.espaguetis, R.drawable.tortilla
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.scanner);
+        setContentView(R.layout.favourite_recipes);
 
-        toast = Toast.makeText(getApplicationContext(),
-                "Pantalla de escaneado!", Toast.LENGTH_SHORT);
+        HomeListAdapter adapter = new HomeListAdapter(this, recipeName, recipeDescription, recipeImage);
+        grid = findViewById(R.id.home_grid);
+        grid.setAdapter(adapter);
 
-        toast.show();
+        mTextMessage = (TextView) findViewById(R.id.message);
 
-        BottomNavigationView navigation = findViewById(R.id.navigation);
+        BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setSelectedItemId(R.id.navigation_fav);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
-    }
-
-    public void scan(View view) {
-
         toast = Toast.makeText(getApplicationContext(),
-                "Escaneando codigo...", Toast.LENGTH_SHORT);
-        // Do something in response to button
+                "Pantalla de la cesta de la compra!", Toast.LENGTH_SHORT);
+
         toast.show();
+
     }
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
@@ -78,4 +93,26 @@ public class ScannerActivity extends AppCompatActivity {
             return false;
         }
     };
+
+    public void scan(View view){
+        Intent scannerIntent = new Intent(this, ScannerActivity.class);
+        startActivity(scannerIntent);
+    }
+
+    public void findRecipes(View view) {
+
+        toast = Toast.makeText(getApplicationContext(),
+                "Buscando recetas...", Toast.LENGTH_SHORT);
+        // Do something in response to button
+        toast.show();
+    }
+
+    public void openAddDialog(View view) {
+
+        toast = Toast.makeText(getApplicationContext(),
+                "Abriendo diálogo de adición de recetas...", Toast.LENGTH_SHORT);
+        // Do something in response to button
+        toast.show();
+    }
+
 }
