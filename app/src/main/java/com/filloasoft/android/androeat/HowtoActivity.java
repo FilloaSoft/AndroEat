@@ -7,63 +7,40 @@ import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
+import android.widget.EditText;
 import android.widget.GridView;
-import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class HomeActivity extends AppCompatActivity {
+public class HowtoActivity extends AppCompatActivity {
 
     private TextView mTextMessage;
-    GridView grid;
-    Toast toast;
+    private Toast toast;
 
-    String[] recipeName = {
-            "Tarta", "Espaguetis",
-            "Tortilla",
-    };
-
-    String[] recipeDescription = {
-            "Tarta de manzana", "Espaguetis description",
-            "Tortilla description",
-    };
-
-    Integer[] recipeImage = {
-            R.drawable.tarta, R.drawable.espaguetis,
-            R.drawable.tortilla
-    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.home);
+        setContentView(R.layout.howto_recipe);
 
-        HomeListAdapter adapter = new HomeListAdapter(this, recipeName, recipeDescription, recipeImage);
-        grid = findViewById(R.id.home_grid);
-        grid.setAdapter(adapter);
-        grid.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
-                Intent intent = new Intent(getApplicationContext(),HowtoActivity.class);
-                //based on item add info to intent
-                startActivity(intent);
-            }
-        });
-        mTextMessage = (TextView) findViewById(R.id.message);
-
-        BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
-        navigation.setSelectedItemId(R.id.home);
+        BottomNavigationView navigation = findViewById(R.id.navigation);
+        navigation.setSelectedItemId(R.id.navigation_profile);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
+    }
 
+    public void AddToFavorite(View view) {
         toast = Toast.makeText(getApplicationContext(),
-                "Pantalla de inicio!", Toast.LENGTH_SHORT);
-
+                "FAVORITE!", Toast.LENGTH_SHORT);
         toast.show();
 
     }
 
+    public void ShareRecipe(View view) {
+        toast = Toast.makeText(getApplicationContext(),
+                "SHARING RECIPE!", Toast.LENGTH_SHORT);
+        toast.show();
+
+    }
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -107,31 +84,4 @@ public class HomeActivity extends AppCompatActivity {
             return false;
         }
     };
-
-    public void scan(View view){
-        Intent scannerIntent = new Intent(this, ScannerActivity.class);
-        startActivity(scannerIntent);
-    }
-
-    public void howto(View view){
-        Intent howtoIntent = new Intent(this, ScannerActivity.class);
-        startActivity(howtoIntent);
-    }
-
-    public void findRecipes(View view) {
-
-        toast = Toast.makeText(getApplicationContext(),
-                "Buscando recetas...", Toast.LENGTH_SHORT);
-        // Do something in response to button
-        toast.show();
-    }
-
-    public void openAddDialog(View view) {
-
-        toast = Toast.makeText(getApplicationContext(),
-                "Abriendo diálogo de adición de productos...", Toast.LENGTH_SHORT);
-        // Do something in response to button
-        toast.show();
-    }
-
 }

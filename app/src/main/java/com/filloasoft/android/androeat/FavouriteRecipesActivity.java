@@ -7,6 +7,7 @@ import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -37,6 +38,15 @@ public class FavouriteRecipesActivity extends AppCompatActivity {
         HomeListAdapter adapter = new HomeListAdapter(this, recipeName, recipeDescription, recipeImage);
         grid = findViewById(R.id.home_grid);
         grid.setAdapter(adapter);
+        grid.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+                Intent intent = new Intent(getApplicationContext(),HowtoActivity.class);
+                //based on item add info to intent
+                startActivity(intent);
+            }
+        });
 
         mTextMessage = (TextView) findViewById(R.id.message);
 
