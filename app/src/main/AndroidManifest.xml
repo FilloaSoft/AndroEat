@@ -36,6 +36,12 @@
         <activity
             android:name=".FavouriteRecipesActivity"
             android:label="Favouriterecipes"/>
+        <activity
+            android:name=".ProfileActivity"
+            android:label="Profile"/>
+        <activity
+            android:name=".HowtoActivity"
+            android:label="Profile"/>
     </application>
 
 </manifest>
