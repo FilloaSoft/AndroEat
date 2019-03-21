@@ -24,7 +24,7 @@ public class HowtoActivity extends AppCompatActivity {
         setContentView(R.layout.howto_recipe);
 
         BottomNavigationView navigation = findViewById(R.id.navigation);
-        navigation.setSelectedItemId(R.id.navigation_profile);
+        navigation.setSelectedItemId(R.id.navigation_recipe);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
     }
 
