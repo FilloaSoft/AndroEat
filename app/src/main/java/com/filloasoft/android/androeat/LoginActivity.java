@@ -41,6 +41,9 @@ public class LoginActivity extends AppCompatActivity {
                 email + ' ' + password, Toast.LENGTH_SHORT);
         // Do something in response to button
         toast.show();
+
+        Intent profileActivity = new Intent(getApplicationContext(), ProfileActivity.class);
+        startActivity(profileActivity);
     }
 
     /** Called when the user taps the Send button */
