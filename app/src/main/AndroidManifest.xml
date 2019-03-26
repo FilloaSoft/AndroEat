@@ -19,29 +19,8 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".ShoppingBasketActivity"
-            android:label="Shopping basket" />
-        <activity
-            android:name=".LoginActivity"
-            android:label="Login" />
-        <activity
-            android:name=".SingupActivity"
-            android:label="Singup"/>
-        <activity
             android:name=".ScannerActivity"
             android:label="Scanner"/>
-        <activity
-            android:name=".HomeActivity"
-            android:label="Home"/>
-        <activity
-            android:name=".FavouriteRecipesActivity"
-            android:label="Favouriterecipes"/>
-        <activity
-            android:name=".ProfileActivity"
-            android:label="Profile"/>
-        <activity
-            android:name=".HowtoActivity"
-            android:label="Profile"/>
     </application>
 
 </manifest>

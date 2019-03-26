@@ -1,4 +1,4 @@
-package com.filloasoft.android.androeat;
+package com.filloasoft.android.androeat.product;
 
 import android.app.Activity;
 import android.view.LayoutInflater;
@@ -7,6 +7,8 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.filloasoft.android.androeat.R;
 
 public class ShoppingBasketListAdapter extends ArrayAdapter<String> {
 

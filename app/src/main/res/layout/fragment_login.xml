@@ -6,19 +6,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <android.support.design.widget.BottomNavigationView
-        android:id="@+id/navigation"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="#EEEDED"
-        fab:itemIconTint="@color/bottom_nav_color"
-        fab:itemTextColor="@color/bottom_nav_color"
-        fab:labelVisibilityMode="labeled"
-        fab:layout_constraintBottom_toBottomOf="parent"
-        fab:layout_constraintLeft_toLeftOf="parent"
-        fab:layout_constraintRight_toRightOf="parent"
-        fab:menu="@menu/navigation" />
-
     <Button
         android:id="@+id/button"
         android:layout_width="395dp"
