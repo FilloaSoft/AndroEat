@@ -18,6 +18,7 @@ import com.filloasoft.android.androeat.product.ShoppingBasketFragment;
 import com.filloasoft.android.androeat.recipe.FavouriteFragment;
 import com.filloasoft.android.androeat.recipe.HomeFragment;
 import com.filloasoft.android.androeat.recipe.HowToFragment;
+import com.filloasoft.android.androeat.recipe.RecipeDetailsFragment;
 import com.filloasoft.android.androeat.user.LoginFragment;
 import com.filloasoft.android.androeat.user.ProfileFragment;
 import com.filloasoft.android.androeat.user.SignupFragment;
@@ -40,7 +41,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         navigation.setOnNavigationItemSelectedListener(this);
 
         //loading the default fragment
-        loadFragment(new HomeFragment(), true);
+        loadFragment(new RecipeDetailsFragment(), true);
     }
 
     @Override
