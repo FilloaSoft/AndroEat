@@ -2,6 +2,7 @@
 <android.widget.RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:fab="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/howto_fragment"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -103,20 +104,6 @@
         android:text="Whisk egg yolks, eggs, cream and three-quarters of the parmesan together in a bowl. Season with salt and pepper."
         fab:layout_editor_absoluteX="16dp"
         fab:layout_editor_absoluteY="203dp" />
-
-    <android.support.design.widget.BottomNavigationView
-        android:id="@+id/navigation"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:background="#EEEDED"
-        fab:itemIconTint="@color/bottom_nav_color"
-        fab:itemTextColor="@color/bottom_nav_color"
-        fab:labelVisibilityMode="labeled"
-        fab:layout_constraintBottom_toBottomOf="parent"
-        fab:layout_constraintLeft_toLeftOf="parent"
-        fab:layout_constraintRight_toRightOf="parent"
-        fab:menu="@menu/navigation" />
 
     <ImageView
         android:id="@+id/imageView"

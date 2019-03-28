@@ -2,29 +2,16 @@
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:fab="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/relativeLayout"
+    android:id="@+id/fragment_signup"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-
-    <android.support.design.widget.BottomNavigationView
-        android:id="@+id/navigation"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="#EEEDED"
-        fab:itemIconTint="@color/bottom_nav_color"
-        fab:itemTextColor="@color/bottom_nav_color"
-        fab:labelVisibilityMode="labeled"
-        fab:layout_constraintBottom_toBottomOf="parent"
-        fab:layout_constraintLeft_toLeftOf="parent"
-        fab:layout_constraintRight_toRightOf="parent"
-        fab:menu="@menu/navigation" />
 
     <Button
         android:id="@+id/button_singup_2"
         android:layout_width="395dp"
         android:layout_height="59dp"
         android:layout_marginTop="352dp"
-        android:onClick="singUp"
+        android:onClick="signUp"
         android:text="@string/singup"
         fab:layout_constraintEnd_toEndOf="parent"
         fab:layout_constraintHorizontal_bias="0.5"
@@ -89,6 +76,5 @@
         fab:layout_constraintStart_toStartOf="@+id/email_text_singup"
         fab:layout_constraintTop_toTopOf="parent"
         tools:targetApi="o" />
-
 
 </android.support.constraint.ConstraintLayout>

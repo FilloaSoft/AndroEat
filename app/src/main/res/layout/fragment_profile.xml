@@ -2,21 +2,8 @@
 <android.widget.RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:fab="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
-
-    <android.support.design.widget.BottomNavigationView
-        android:id="@+id/navigation"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:background="#EEEDED"
-        fab:itemIconTint="@color/bottom_nav_color"
-        fab:itemTextColor="@color/bottom_nav_color"
-        fab:labelVisibilityMode="labeled"
-        fab:layout_constraintBottom_toBottomOf="parent"
-        fab:layout_constraintLeft_toLeftOf="parent"
-        fab:layout_constraintRight_toRightOf="parent"
-        fab:menu="@menu/navigation" />
+    android:layout_height="match_parent"
+    android:id="@+id/profile_fragment">
 
     <ImageView
         android:id="@+id/imageView"
@@ -138,7 +125,7 @@
 
 
     <TextView
-        android:id="@+id/editText3"
+        android:id="@+id/editText31"
         android:layout_width="359dp"
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
@@ -152,7 +139,7 @@
         fab:layout_editor_absoluteY="203dp" />
 
     <TextView
-        android:id="@+id/editText3"
+        android:id="@+id/editText32"
         android:layout_width="359dp"
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
@@ -166,7 +153,7 @@
         fab:layout_editor_absoluteY="203dp" />
 
     <TextView
-        android:id="@+id/editText3"
+        android:id="@+id/editText33"
         android:layout_width="358dp"
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
@@ -194,7 +181,7 @@
         fab:layout_editor_absoluteY="203dp" />
 
     <TextView
-        android:id="@+id/editText3"
+        android:id="@+id/editText34"
         android:layout_width="359dp"
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
@@ -208,7 +195,7 @@
         fab:layout_editor_absoluteY="203dp" />
 
     <TextView
-        android:id="@+id/editText3"
+        android:id="@+id/editText35"
         android:layout_width="358dp"
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
