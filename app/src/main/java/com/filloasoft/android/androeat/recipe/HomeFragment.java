@@ -1,7 +1,6 @@
 package com.filloasoft.android.androeat.recipe;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -14,8 +13,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.filloasoft.android.androeat.R;
-import com.filloasoft.android.androeat.ScannerActivity;
-import com.filloasoft.android.androeat.recipe.HomeListAdapter;
 
 public class HomeFragment extends Fragment {
 
@@ -61,11 +58,6 @@ public class HomeFragment extends Fragment {
         toast.show();
 
         return homeView;
-    }
-
-    public void scan(View view){
-        Intent scannerIntent = new Intent(getActivity(), ScannerActivity.class);
-        startActivity(scannerIntent);
     }
 
     public interface OnClickHowTo{

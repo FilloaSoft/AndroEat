@@ -17,18 +17,13 @@ public class SignupFragment extends Fragment {
     Toast toast;
     public EditText editText;
 
-
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View signupView = inflater.inflate(R.layout.fragment_signup, null);
-
-
         toast = Toast.makeText(getActivity(),
                 "Pantalla de registro!", Toast.LENGTH_SHORT);
-
         toast.show();
 
         return signupView;
-
     }
 }

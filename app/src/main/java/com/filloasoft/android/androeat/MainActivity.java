@@ -40,7 +40,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         navigation.setOnNavigationItemSelectedListener(this);
 
         //loading the default fragment
-        loadFragment(new HomeFragment());
+        loadFragment(new HomeFragment(), true);
     }
 
     @Override
@@ -60,16 +60,18 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
                 fragment = new LoginFragment();
                 break;
         }
-        return loadFragment(fragment);
+        return loadFragment(fragment, false);
     }
 
-    private boolean loadFragment(Fragment fragment) {
+    private boolean loadFragment(Fragment fragment, boolean firstFragment) {
         //switching fragment
         if (fragment != null) {
             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
 
             transaction.replace(R.id.fragment_container, fragment);
-            transaction.addToBackStack(null);
+            if (!firstFragment) {
+                transaction.addToBackStack(null);
+            }
             transaction.commit();
             return true;
         }
@@ -79,27 +81,26 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
     public void onRecipeSelected(View view){
         HowToFragment howToFragment = (HowToFragment) getSupportFragmentManager().findFragmentById(R.id.howto_fragment);
         if (howToFragment != null){
-
+            //Manage two pane layout
         }
         else{
             HowToFragment newHowToFragment = new HowToFragment();
-            loadFragment(newHowToFragment);
+            loadFragment(newHowToFragment, false);
         }
     }
 
     public void scan(View view){
         ScannerFragment scannerFragment = (ScannerFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_scanner);
         if (scannerFragment != null){
-
+            //Manage two pane layout
         }
         else{
             ScannerFragment newScannerFragment = new ScannerFragment();
-            loadFragment(newScannerFragment);
+            loadFragment(newScannerFragment, false);
         }
     }
 
     public void findRecipes(View view) {
-
         toast = Toast.makeText(this,
                 "Buscando recetas...", Toast.LENGTH_SHORT);
         // Do something in response to button
@@ -107,7 +108,6 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
     }
 
     public void openAddDialog(View view) {
-
         toast = Toast.makeText(this,
                 "Abriendo diálogo de adición de productos...", Toast.LENGTH_SHORT);
         // Do something in response to button
@@ -118,11 +118,11 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
     public void login(View view){
         ProfileFragment profileFragment = (ProfileFragment) getSupportFragmentManager().findFragmentById(R.id.profile_fragment);
         if (profileFragment != null){
-
+            //Manage two pane layout
         }
         else{
             ProfileFragment newProfileFragment = new ProfileFragment();
-            loadFragment(newProfileFragment);
+            loadFragment(newProfileFragment, false);
         }
     }
 
@@ -130,13 +130,14 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
     public void register(View view) {
         SignupFragment signupFragment = (SignupFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_signup);
         if (signupFragment != null){
-
+            //Manage two pane layout
         }
         else{
             SignupFragment newSignupFragment = new SignupFragment();
-            loadFragment(newSignupFragment);
+            loadFragment(newSignupFragment, false);
         }
     }
+
 
 
     /**
@@ -144,20 +145,8 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
      */
 
     public void signUp(View view) {
-        EditText usernameText = (EditText) view.findViewById(R.id.username_singup);
-        EditText emailText = (EditText) view.findViewById(R.id.email_text_singup);
-        EditText passwordText = (EditText) view.findViewById(R.id.password_text_singup);
-        EditText passwordTextConfirmation = (EditText) view.findViewById(R.id.password_text_singup2);
-
-        String username = usernameText.getText().toString();
-        String email = emailText.getText().toString();
-        String password = passwordText.getText().toString();
-        String passwordConfirmation = passwordTextConfirmation.getText().toString();
-
-
         toast = Toast.makeText(this,
-                username + ' ' + email + ' ' + password + ' ' + passwordConfirmation, Toast.LENGTH_SHORT);
+                "Registered button clicked!", Toast.LENGTH_SHORT);
         toast.show();
-
     }
 }
