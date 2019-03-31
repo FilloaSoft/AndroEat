@@ -13,7 +13,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.filloasoft.android.androeat.product.ScannerFragment;
+import com.filloasoft.android.androeat.product.ScannerActivity;
 import com.filloasoft.android.androeat.product.ShoppingBasketFragment;
 import com.filloasoft.android.androeat.recipe.FavouriteFragment;
 import com.filloasoft.android.androeat.recipe.HomeFragment;
@@ -21,6 +21,7 @@ import com.filloasoft.android.androeat.recipe.HowToFragment;
 import com.filloasoft.android.androeat.user.LoginFragment;
 import com.filloasoft.android.androeat.user.ProfileFragment;
 import com.filloasoft.android.androeat.user.SignupFragment;
+
 
 public class MainActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener, HomeFragment.OnClickHowTo, FavouriteFragment.OnClickHowTo{
 
@@ -90,14 +91,8 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
     }
 
     public void scan(View view){
-        ScannerFragment scannerFragment = (ScannerFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_scanner);
-        if (scannerFragment != null){
-            //Manage two pane layout
-        }
-        else{
-            ScannerFragment newScannerFragment = new ScannerFragment();
-            loadFragment(newScannerFragment, false);
-        }
+        Intent scanIntent = new Intent(getApplicationContext(), ScannerActivity.class);
+        startActivity(scanIntent);
     }
 
     public void findRecipes(View view) {

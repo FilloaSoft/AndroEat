@@ -25,16 +25,6 @@
         fab:fab_labelsPosition="left">
 
         <com.getbase.floatingactionbutton.FloatingActionButton
-            android:id="@+id/accion_buscar"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:onClick="openAddDialog"
-            fab:fab_colorNormal="#D9DCE0"
-            fab:fab_colorPressed="@color/colorPrimaryDark"
-            fab:fab_icon="@drawable/ic_search"
-            fab:fab_size="mini" />
-
-        <com.getbase.floatingactionbutton.FloatingActionButton
             android:id="@+id/accion_escanear"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -42,6 +32,26 @@
             fab:fab_colorNormal="#D9DCE0"
             fab:fab_colorPressed="@color/colorPrimaryDark"
             fab:fab_icon="@drawable/ic_camera"
+            fab:fab_size="mini" />
+
+        <com.getbase.floatingactionbutton.FloatingActionButton
+            android:id="@+id/accion_cammera"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="scan"
+            fab:fab_colorNormal="#D9DCE0"
+            fab:fab_colorPressed="@color/colorPrimaryDark"
+            fab:fab_icon="@drawable/ic_barcode"
+            fab:fab_size="mini" />
+
+        <com.getbase.floatingactionbutton.FloatingActionButton
+            android:id="@+id/accion_buscar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="openAddDialog"
+            fab:fab_colorNormal="#D9DCE0"
+            fab:fab_colorPressed="@color/colorPrimaryDark"
+            fab:fab_icon="@drawable/ic_search"
             fab:fab_size="mini" />
 
     </com.getbase.floatingactionbutton.FloatingActionsMenu>
