@@ -143,6 +143,8 @@ public class CameraActivity extends AppCompatActivity {
                     "Photo Saved!.", Toast.LENGTH_SHORT);
             toast.show();
             galleryAddPic();
+        } else {
+            this.finish();
         }
     }
 
