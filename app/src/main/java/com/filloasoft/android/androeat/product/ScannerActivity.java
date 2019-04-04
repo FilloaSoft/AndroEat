@@ -35,7 +35,6 @@ public class ScannerActivity extends AppCompatActivity {
         }
         else {
             scan();
-
         }
     }
 

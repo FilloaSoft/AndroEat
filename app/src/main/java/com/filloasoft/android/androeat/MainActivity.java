@@ -13,6 +13,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.filloasoft.android.androeat.product.CameraActivity;
 import com.filloasoft.android.androeat.product.ScannerActivity;
 import com.filloasoft.android.androeat.product.ShoppingBasketFragment;
 import com.filloasoft.android.androeat.recipe.FavouriteFragment;
@@ -93,6 +94,11 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
     public void scan(View view){
         Intent scanIntent = new Intent(getApplicationContext(), ScannerActivity.class);
         startActivity(scanIntent);
+    }
+
+    public void takePhoto(View view){
+        Intent cameraIntent = new Intent(getApplicationContext(), CameraActivity.class);
+        startActivity(cameraIntent);
     }
 
     public void findRecipes(View view) {
