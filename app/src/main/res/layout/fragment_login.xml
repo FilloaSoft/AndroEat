@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <Button
+    <android.support.v7.widget.AppCompatButton
         android:id="@+id/button"
         android:layout_width="395dp"
         android:layout_height="59dp"
@@ -18,7 +18,7 @@
         fab:layout_constraintStart_toStartOf="parent"
         fab:layout_constraintTop_toTopOf="parent" />
 
-    <Button
+    <android.support.v7.widget.AppCompatButton
         android:id="@+id/button2"
         android:layout_width="395dp"
         android:layout_height="59dp"
@@ -30,36 +30,53 @@
         fab:layout_constraintStart_toStartOf="parent"
         fab:layout_constraintTop_toTopOf="parent" />
 
-    <EditText
-        android:id="@+id/password_text"
-        android:layout_width="395dp"
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/textInputLayoutPassword"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="187dp"
-        android:autofillHints=""
-        android:ems="10"
-        android:hint="@string/password"
-        android:inputType="textPassword"
-        fab:layout_constraintEnd_toEndOf="parent"
-        fab:layout_constraintHorizontal_bias="0.5"
-        fab:layout_constraintStart_toStartOf="parent"
-        fab:layout_constraintTop_toTopOf="parent"
-        tools:targetApi="o" />
+        android:layout_marginTop="150dp"
+        fab:layout_constraintTop_toTopOf="parent">
 
-    <EditText
-        android:id="@+id/email_text"
-        android:layout_width="395dp"
+        <android.support.design.widget.TextInputEditText
+            android:id="@+id/password_text"
+            android:layout_width="395dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="187dp"
+            android:autofillHints=""
+            android:ems="10"
+            android:hint="@string/password"
+            android:inputType="textPassword"
+            fab:layout_constraintEnd_toEndOf="parent"
+            fab:layout_constraintHorizontal_bias="0.5"
+            fab:layout_constraintStart_toStartOf="parent"
+            fab:layout_constraintTop_toTopOf="parent"
+            tools:targetApi="o" />
+    </android.support.design.widget.TextInputLayout>
+
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/textInputLayoutEmail"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginTop="100dp"
-        android:autofillHints=""
-        android:ems="10"
-        android:hint="@string/email"
-        android:inputType="textAutoCorrect|textEmailAddress"
-        fab:layout_constraintEnd_toEndOf="parent"
-        fab:layout_constraintStart_toStartOf="parent"
-        fab:layout_constraintTop_toTopOf="parent"
-        tools:targetApi="o" />
+        android:layout_marginVertical="40dp"
+        android:layout_marginTop="40dp"
+        fab:layout_constraintTop_toTopOf="parent">
+
+        <android.support.design.widget.TextInputEditText
+            android:id="@+id/email_text"
+            android:layout_width="395dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginTop="100dp"
+            android:autofillHints=""
+            android:ems="10"
+            android:hint="@string/email"
+            android:inputType="textAutoCorrect|textEmailAddress"
+            fab:layout_constraintEnd_toEndOf="parent"
+            fab:layout_constraintStart_toStartOf="parent"
+            fab:layout_constraintTop_toTopOf="parent"
+            tools:targetApi="o" />
+    </android.support.design.widget.TextInputLayout>
 
     <TextView
         android:id="@+id/textView2"

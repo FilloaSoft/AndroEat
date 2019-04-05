@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <Button
+    <android.support.v7.widget.AppCompatButton
         android:id="@+id/button_singup_2"
         android:layout_width="395dp"
         android:layout_height="59dp"
@@ -18,63 +18,100 @@
         fab:layout_constraintStart_toStartOf="parent"
         fab:layout_constraintTop_toTopOf="parent" />
 
-    <EditText
-        android:id="@+id/password_text_singup"
-        android:layout_width="395dp"
-        android:layout_height="43dp"
-        android:layout_marginTop="187dp"
-        android:autofillHints=""
-        android:ems="10"
-        android:hint="@string/password"
-        android:inputType="textPassword"
-        fab:layout_constraintEnd_toEndOf="@+id/password_text_singup2"
-        fab:layout_constraintHorizontal_bias="0.5"
-        fab:layout_constraintStart_toStartOf="@+id/password_text_singup2"
-        fab:layout_constraintTop_toTopOf="parent"
-        tools:targetApi="o" />
-
-    <EditText
-        android:id="@+id/password_text_singup2"
-        android:layout_width="395dp"
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/textInputLayoutPassword"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="248dp"
-        android:autofillHints=""
-        android:ems="10"
-        android:hint="@string/password"
-        android:inputType="textPassword"
-        fab:layout_constraintTop_toTopOf="parent"
-        tools:layout_editor_absoluteX="8dp"
-        tools:targetApi="o" />
+        android:layout_marginTop="200dp"
+        fab:layout_constraintTop_toTopOf="parent">
 
-    <EditText
-        android:id="@+id/email_text_singup"
-        android:layout_width="395dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="108dp"
-        android:autofillHints=""
-        android:ems="10"
-        android:hint="@string/email"
-        android:inputType="textAutoCorrect|textEmailAddress"
-        fab:layout_constraintEnd_toEndOf="@+id/password_text_singup"
-        fab:layout_constraintHorizontal_bias="0.5"
-        fab:layout_constraintStart_toStartOf="@+id/password_text_singup"
-        fab:layout_constraintTop_toTopOf="parent"
-        tools:targetApi="o" />
+        <android.support.design.widget.TextInputEditText
+            android:id="@+id/password_text_singup"
+            android:layout_width="395dp"
+            android:layout_height="43dp"
+            android:layout_marginTop="187dp"
+            android:autofillHints=""
+            android:ems="10"
+            android:hint="@string/password"
+            android:inputType="textPassword"
+            fab:layout_constraintEnd_toEndOf="@+id/password_text_singup2"
+            fab:layout_constraintHorizontal_bias="0.5"
+            fab:layout_constraintStart_toStartOf="@+id/password_text_singup2"
+            fab:layout_constraintTop_toTopOf="parent"
+            tools:targetApi="o" />
+    </android.support.design.widget.TextInputLayout>
 
-    <EditText
-        android:id="@+id/username_singup"
-        android:layout_width="395dp"
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/textInputLayoutConfirmPassword"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="39dp"
-        android:autofillHints=""
-        android:ems="10"
-        android:focusable="auto"
-        android:hint="@string/username"
-        android:inputType="textPersonName"
-        fab:layout_constraintEnd_toEndOf="@+id/email_text_singup"
-        fab:layout_constraintHorizontal_bias="0.5"
-        fab:layout_constraintStart_toStartOf="@+id/email_text_singup"
-        fab:layout_constraintTop_toTopOf="parent"
-        tools:targetApi="o" />
+        android:layout_marginTop="280dp"
+        fab:layout_constraintTop_toTopOf="parent">
+
+        <android.support.design.widget.TextInputEditText
+            android:id="@+id/password_text_singup2"
+            android:layout_width="395dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="248dp"
+            android:autofillHints=""
+            android:ems="10"
+            android:hint="@string/password"
+            android:inputType="textPassword"
+            fab:layout_constraintEnd_toEndOf="@+id/password_text_singup"
+            fab:layout_constraintHorizontal_bias="0.5"
+            fab:layout_constraintStart_toStartOf="@+id/password_text_singup"
+            fab:layout_constraintTop_toTopOf="parent"
+            tools:layout_editor_absoluteX="8dp"
+            tools:targetApi="o" />
+    </android.support.design.widget.TextInputLayout>
+    <!--Añadimos las 3 primeros fabs solo para que compile, cuando ejecute mejorarlo-->
+
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/textInputLayoutEmail"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="110dp"
+        fab:layout_constraintTop_toTopOf="parent">
+
+        <android.support.design.widget.TextInputEditText
+            android:id="@+id/email_text_singup"
+            android:layout_width="395dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="108dp"
+            android:autofillHints=""
+            android:ems="10"
+            android:hint="@string/email"
+            android:inputType="textAutoCorrect|textEmailAddress"
+            fab:layout_constraintEnd_toEndOf="@+id/password_text_singup"
+            fab:layout_constraintHorizontal_bias="0.5"
+            fab:layout_constraintStart_toStartOf="@+id/password_text_singup"
+            fab:layout_constraintTop_toTopOf="parent"
+            tools:targetApi="o" />
+    </android.support.design.widget.TextInputLayout>
+
+
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/textInputLayoutName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="40dp"
+        fab:layout_constraintTop_toTopOf="parent">
+
+        <android.support.design.widget.TextInputEditText
+            android:id="@+id/username_singup"
+            android:layout_width="395dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="39dp"
+            android:autofillHints=""
+            android:ems="10"
+            android:focusable="auto"
+            android:hint="@string/username"
+            android:inputType="textPersonName"
+            fab:layout_constraintEnd_toEndOf="@+id/email_text_singup"
+            fab:layout_constraintHorizontal_bias="0.5"
+            fab:layout_constraintStart_toStartOf="@+id/email_text_singup"
+            fab:layout_constraintTop_toTopOf="parent"
+            tools:targetApi="o" />
+    </android.support.design.widget.TextInputLayout>
 
 </android.support.constraint.ConstraintLayout>
