@@ -1,12 +1,14 @@
 package com.filloasoft.android.androeat;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
@@ -40,8 +42,12 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         BottomNavigationView navigation = findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(this);
 
+        Toolbar myToolbar = (Toolbar) findViewById(R.id.toolbar);
+        myToolbar.setTitleTextColor(Color.WHITE);
+        setSupportActionBar(myToolbar);
+
         //loading the default fragment
-        loadFragment(new RecipeDetailsFragment(), true);
+        loadFragment(new HomeFragment(), true);
     }
 
     @Override
@@ -58,6 +64,8 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
                 fragment = new FavouriteFragment();
                 break;
             case R.id.navigation_profile:
+                Toolbar myToolbar = (Toolbar) findViewById(R.id.toolbar);
+                myToolbar.setTitleTextColor(Color.YELLOW);
                 fragment = new LoginFragment();
                 break;
         }
@@ -80,13 +88,13 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
     }
 
     public void onRecipeSelected(View view){
-        HowToFragment howToFragment = (HowToFragment) getSupportFragmentManager().findFragmentById(R.id.howto_fragment);
-        if (howToFragment != null){
+        RecipeDetailsFragment recipeDetailsFragment = (RecipeDetailsFragment) getSupportFragmentManager().findFragmentById(R.id.recipe_details);
+        if (recipeDetailsFragment != null){
             //Manage two pane layout
         }
         else{
-            HowToFragment newHowToFragment = new HowToFragment();
-            loadFragment(newHowToFragment, false);
+            RecipeDetailsFragment newRecipeDetailsFragment = new RecipeDetailsFragment();
+            loadFragment(newRecipeDetailsFragment, false);
         }
     }
 

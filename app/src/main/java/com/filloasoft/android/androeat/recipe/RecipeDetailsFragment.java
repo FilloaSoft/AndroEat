@@ -2,13 +2,11 @@ package com.filloasoft.android.androeat.recipe;
 
 import android.graphics.Color;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,18 +18,17 @@ public class RecipeDetailsFragment extends Fragment {
 
     private RecyclerView mRecyclerView;
 
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.recipe_details, container, false);
+        View view = inflater.inflate(R.layout.fragment_recipe_details, container, false);
 
-        TabLayout tabLayout = (TabLayout) view.findViewById(R.id.tabs);
+        TabLayout tabLayout = (TabLayout) view.findViewById(R.id.tab_layout);
         tabLayout.addTab(tabLayout.newTab().setText("Details"));
         tabLayout.addTab(tabLayout.newTab().setText("How to"));
         tabLayout.setTabTextColors(Color.GRAY, Color.WHITE);
 
-        final ViewPager viewPager = (ViewPager) view.findViewById(R.id.viewPager);
+        final ViewPager viewPager = (ViewPager) view.findViewById(R.id.my_view_pager);
 
         viewPager.setAdapter(new PagerAdapter
                 (getFragmentManager(), tabLayout.getTabCount()));
@@ -73,10 +70,10 @@ public class RecipeDetailsFragment extends Fragment {
 
             switch (position){
                 case 0:
-                    tabFragment = new HowToFragment();
+                    tabFragment = new FavouriteFragment();
                     break;
                 case 1:
-                    tabFragment = new FavouriteFragment();
+                    tabFragment = new HowToFragment();
                     break;
             }
             return tabFragment;
