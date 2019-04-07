@@ -11,7 +11,7 @@
         android:orientation="vertical"
         android:id="@+id/userInfo">
         <TextView
-            android:id="@+id/textView"
+            android:id="@+id/userName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
@@ -23,7 +23,7 @@
             android:textSize="32dp"/>
 
         <TextView
-            android:id="@+id/textView4"
+            android:id="@+id/userEmail"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
@@ -33,7 +33,105 @@
             android:text="User email"
             android:textColor="@color/colorPrimaryDark"
             android:textSize="22dp"/>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:id="@+id/vegan">
+            <TextView
+                android:id="@+id/veganText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentTop="true"
+                android:text="Vegan"
+                android:padding="@dimen/activity_vertical_margin"
+                android:textColor="@color/colorPrimaryDark"
+                android:textSize="16dp"/>
+
+            <android.support.v7.widget.SwitchCompat
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:textColorHighlight="@color/colorAccent">
+            </android.support.v7.widget.SwitchCompat>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:id="@+id/vegetarian">
+            <TextView
+                android:id="@+id/vegetarianText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentTop="true"
+                android:text="Vegetarian"
+                android:padding="@dimen/activity_vertical_margin"
+                android:textColor="@color/colorPrimaryDark"
+                android:textSize="16dp"/>
+
+            <android.support.v7.widget.SwitchCompat
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:textColorHighlight="@color/colorAccent">
+            </android.support.v7.widget.SwitchCompat>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:id="@+id/nosalt">
+            <TextView
+                android:id="@+id/nosaltText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentTop="true"
+                android:text="No salt"
+                android:padding="@dimen/activity_vertical_margin"
+                android:textColor="@color/colorPrimaryDark"
+                android:textSize="16dp"/>
+
+            <android.support.v7.widget.SwitchCompat
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:textColorHighlight="@color/colorAccent">
+            </android.support.v7.widget.SwitchCompat>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:id="@+id/nosugar">
+            <TextView
+                android:id="@+id/nosugarText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentTop="true"
+                android:text="No sugar"
+                android:padding="@dimen/activity_vertical_margin"
+                android:textColor="@color/colorPrimaryDark"
+                android:textSize="16dp"/>
+
+            <android.support.v7.widget.SwitchCompat
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:textColorHighlight="@color/colorAccent">
+            </android.support.v7.widget.SwitchCompat>
+        </LinearLayout>
     </LinearLayout>
+
+
 
     <android.support.v7.widget.AppCompatButton
         android:id="@+id/btn_signup"

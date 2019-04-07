@@ -22,6 +22,10 @@ public class ProfileFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         final View profileView = inflater.inflate(R.layout.fragment_profile, null);
+        Bundle args = getArguments();
+        String email = args.getString("email", "");
+        TextView textView = profileView.findViewById(R.id.userEmail);
+        textView.setText(email);
         return profileView;
     }
 }

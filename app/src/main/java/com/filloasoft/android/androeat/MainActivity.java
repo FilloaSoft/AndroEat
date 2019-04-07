@@ -52,6 +52,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         Fragment fragment = null;
+        Bundle bundle = null;
         switch (item.getItemId()) {
             case R.id.navigation_recipe:
                 fragment = new HomeFragment();
@@ -72,6 +73,9 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
                     databaseHelper = new DatabaseHelper(this);
                     if (databaseHelper.checkUser(email, password)) {
                         fragment = new ProfileFragment();
+                        Bundle args = new Bundle();
+                        args.putString("email", email);
+                        fragment.setArguments(args);
                         break;
                     }
                 }
