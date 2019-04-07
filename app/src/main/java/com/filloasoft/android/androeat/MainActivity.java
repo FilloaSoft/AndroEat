@@ -1,6 +1,8 @@
 package com.filloasoft.android.androeat;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
@@ -19,6 +21,7 @@ import com.filloasoft.android.androeat.product.ShoppingBasketFragment;
 import com.filloasoft.android.androeat.recipe.FavouriteFragment;
 import com.filloasoft.android.androeat.recipe.HomeFragment;
 import com.filloasoft.android.androeat.recipe.HowToFragment;
+import com.filloasoft.android.androeat.sql.DatabaseHelper;
 import com.filloasoft.android.androeat.user.LoginFragment;
 import com.filloasoft.android.androeat.user.ProfileFragment;
 import com.filloasoft.android.androeat.user.SignupFragment;
@@ -28,6 +31,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
 
     private TextView mTextMessage;
     private Toast toast;
+    private DatabaseHelper databaseHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,6 +52,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         Fragment fragment = null;
+        Bundle bundle = null;
         switch (item.getItemId()) {
             case R.id.navigation_recipe:
                 fragment = new HomeFragment();
@@ -59,6 +64,21 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
                 fragment = new FavouriteFragment();
                 break;
             case R.id.navigation_profile:
+                SharedPreferences preferences = this.getSharedPreferences(
+                        "com.filloasoft.android.androeat", Context.MODE_PRIVATE);
+                //Get saved user credentials
+                String email = preferences.getString("email",null);
+                String password = preferences.getString("password",null);
+                if (email!=null && password!=null) {
+                    databaseHelper = new DatabaseHelper(this);
+                    if (databaseHelper.checkUser(email, password)) {
+                        fragment = new ProfileFragment();
+                        Bundle args = new Bundle();
+                        args.putString("email", email);
+                        fragment.setArguments(args);
+                        break;
+                    }
+                }
                 fragment = new LoginFragment();
                 break;
         }
@@ -139,15 +159,14 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         }
     }
 
+    public void logout(View signupView) {
+        SharedPreferences preferences = this.getSharedPreferences(
+                "com.filloasoft.android.androeat", Context.MODE_PRIVATE);
 
+        //Remove credentians from shared preferences
+        preferences.edit().putString("email", null).apply();
+        preferences.edit().putString("password", null).apply();
 
-    /**
-     * Called when the user taps the Send button
-     */
-
-    public void signUp(View view) {
-        toast = Toast.makeText(this,
-                "Registered button clicked!", Toast.LENGTH_SHORT);
-        toast.show();
+        loadFragment(new LoginFragment(), false);
     }
 }

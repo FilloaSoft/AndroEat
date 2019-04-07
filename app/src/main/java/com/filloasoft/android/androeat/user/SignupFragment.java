@@ -1,5 +1,7 @@
 package com.filloasoft.android.androeat.user;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.BottomNavigationView;
@@ -21,6 +23,8 @@ import com.filloasoft.android.androeat.model.User;
 import com.filloasoft.android.androeat.recipe.HomeFragment;
 import com.filloasoft.android.androeat.sql.DatabaseHelper;
 
+import java.util.List;
+
 public class SignupFragment extends Fragment implements View.OnClickListener {
 
     Toast toast;
@@ -33,10 +37,10 @@ public class SignupFragment extends Fragment implements View.OnClickListener {
     private TextInputLayout textInputLayoutPassword;
     private TextInputLayout textInputLayoutConfirmPassword;
 
-    private TextInputEditText textInputEditTextName;
-    private TextInputEditText textInputEditTextEmail;
-    private TextInputEditText textInputEditTextPassword;
-    private TextInputEditText textInputEditTextConfirmPassword;
+    private EditText textInputEditTextName;
+    private EditText textInputEditTextEmail;
+    private EditText textInputEditTextPassword;
+    private EditText textInputEditTextConfirmPassword;
 
     private InputValidation inputValidation;
     private DatabaseHelper databaseHelper;
@@ -54,12 +58,11 @@ public class SignupFragment extends Fragment implements View.OnClickListener {
         textInputLayoutPassword = (TextInputLayout) signupView.findViewById(R.id.textInputLayoutPassword);
         textInputLayoutConfirmPassword = (TextInputLayout) signupView.findViewById(R.id.textInputLayoutConfirmPassword);
 
-
-        textInputEditTextName = (TextInputEditText) signupView.findViewById(R.id.username_singup);
-        textInputEditTextEmail = (TextInputEditText) signupView.findViewById(R.id.email_text_singup);
-        textInputEditTextPassword = (TextInputEditText) signupView.findViewById(R.id.password_text_singup);
-        textInputEditTextConfirmPassword = (TextInputEditText) signupView.findViewById(R.id.password_text_singup2);
-        appCompatButtonRegister = (AppCompatButton) signupView.findViewById(R.id.button_singup_2);
+        textInputEditTextName = (EditText) signupView.findViewById(R.id.input_user_name);
+        textInputEditTextEmail = (EditText) signupView.findViewById(R.id.input_email);
+        textInputEditTextPassword = (EditText) signupView.findViewById(R.id.input_password);
+        textInputEditTextConfirmPassword = (EditText) signupView.findViewById(R.id.input_repeat_password);
+        appCompatButtonRegister = (AppCompatButton) signupView.findViewById(R.id.btn_register);
 
         appCompatButtonRegister.setOnClickListener(this);
 
@@ -105,10 +108,18 @@ public class SignupFragment extends Fragment implements View.OnClickListener {
 
             databaseHelper.addUser(user);
 
+            SharedPreferences preferences = getActivity().getSharedPreferences(
+                    "com.filloasoft.android.androeat", Context.MODE_PRIVATE);
+
+            //Save it
+            preferences.edit().putString("email", user.getEmail()).apply();
+            preferences.edit().putString("password", user.getPassword()).apply();
+
             // show success message that record saved successfully
             toast = Toast.makeText(getActivity(),"Registered succesfully!", Toast.LENGTH_SHORT);
             toast.show();
             emptyInputEditText();
+
             HomeFragment homeFragment = new HomeFragment();
             loadFragment(homeFragment,false);
 

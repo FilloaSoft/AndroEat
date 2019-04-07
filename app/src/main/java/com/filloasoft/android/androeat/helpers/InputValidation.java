@@ -7,6 +7,7 @@ import android.support.design.widget.TextInputLayout;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.EditText;
 
 public class InputValidation {
 
@@ -29,7 +30,7 @@ public class InputValidation {
      * @param message
      * @return
      */
-    public boolean isInputEditTextFilled(TextInputEditText textInputEditText, TextInputLayout textInputLayout, String message) {
+    public boolean isInputEditTextFilled(EditText textInputEditText, TextInputLayout textInputLayout, String message) {
         String value = textInputEditText.getText().toString().trim();
         if (value.isEmpty()) {
             textInputLayout.setError(message);
@@ -51,7 +52,7 @@ public class InputValidation {
      * @param message
      * @return
      */
-    public boolean isInputEditTextEmail(TextInputEditText textInputEditText, TextInputLayout textInputLayout, String message) {
+    public boolean isInputEditTextEmail(EditText textInputEditText, TextInputLayout textInputLayout, String message) {
         String value = textInputEditText.getText().toString().trim();
         if (value.isEmpty() || !android.util.Patterns.EMAIL_ADDRESS.matcher(value).matches()) {
             textInputLayout.setError(message);
@@ -63,7 +64,7 @@ public class InputValidation {
         return true;
     }
 
-    public boolean isInputEditTextMatches(TextInputEditText textInputEditText1, TextInputEditText textInputEditText2, TextInputLayout textInputLayout, String message) {
+    public boolean isInputEditTextMatches(EditText textInputEditText1, EditText textInputEditText2, TextInputLayout textInputLayout, String message) {
         String value1 = textInputEditText1.getText().toString().trim();
         String value2 = textInputEditText2.getText().toString().trim();
         if (!value1.contentEquals(value2)) {
