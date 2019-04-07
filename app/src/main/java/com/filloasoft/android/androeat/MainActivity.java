@@ -64,11 +64,10 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
                 break;
             case R.id.navigation_profile:
                 SharedPreferences preferences = this.getSharedPreferences(
-                        "com.filloasoft.android.andoeat", Context.MODE_PRIVATE);
+                        "com.filloasoft.android.androeat", Context.MODE_PRIVATE);
                 //Get saved user credentials
-                String email = preferences.getString("email","");
-                String password = preferences.getString("password","");
-
+                String email = preferences.getString("email",null);
+                String password = preferences.getString("password",null);
                 if (email!=null && password!=null) {
                     databaseHelper = new DatabaseHelper(this);
                     if (databaseHelper.checkUser(email, password)) {
@@ -156,15 +155,14 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         }
     }
 
+    public void logout(View signupView) {
+        SharedPreferences preferences = this.getSharedPreferences(
+                "com.filloasoft.android.androeat", Context.MODE_PRIVATE);
 
+        //Remove credentians from shared preferences
+        preferences.edit().putString("email", null).apply();
+        preferences.edit().putString("password", null).apply();
 
-    /**
-     * Called when the user taps the Send button
-     */
-
-    public void signUp(View view) {
-        toast = Toast.makeText(this,
-                "Registered button clicked!", Toast.LENGTH_SHORT);
-        toast.show();
+        loadFragment(new LoginFragment(), false);
     }
 }

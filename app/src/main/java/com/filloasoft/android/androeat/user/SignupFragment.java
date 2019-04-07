@@ -109,7 +109,7 @@ public class SignupFragment extends Fragment implements View.OnClickListener {
             databaseHelper.addUser(user);
 
             SharedPreferences preferences = getActivity().getSharedPreferences(
-                    "com.filloasoft.android.andoeat", Context.MODE_PRIVATE);
+                    "com.filloasoft.android.androeat", Context.MODE_PRIVATE);
 
             //Save it
             preferences.edit().putString("email", user.getEmail()).apply();
