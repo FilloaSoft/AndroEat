@@ -1,6 +1,8 @@
 package com.filloasoft.android.androeat;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
@@ -19,6 +21,7 @@ import com.filloasoft.android.androeat.product.ShoppingBasketFragment;
 import com.filloasoft.android.androeat.recipe.FavouriteFragment;
 import com.filloasoft.android.androeat.recipe.HomeFragment;
 import com.filloasoft.android.androeat.recipe.HowToFragment;
+import com.filloasoft.android.androeat.sql.DatabaseHelper;
 import com.filloasoft.android.androeat.user.LoginFragment;
 import com.filloasoft.android.androeat.user.ProfileFragment;
 import com.filloasoft.android.androeat.user.SignupFragment;
@@ -28,6 +31,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
 
     private TextView mTextMessage;
     private Toast toast;
+    private DatabaseHelper databaseHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,6 +63,19 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
                 fragment = new FavouriteFragment();
                 break;
             case R.id.navigation_profile:
+                SharedPreferences preferences = this.getSharedPreferences(
+                        "com.filloasoft.android.andoeat", Context.MODE_PRIVATE);
+                //Get saved user credentials
+                String email = preferences.getString("email","");
+                String password = preferences.getString("password","");
+
+                if (email!=null && password!=null) {
+                    databaseHelper = new DatabaseHelper(this);
+                    if (databaseHelper.checkUser(email, password)) {
+                        fragment = new ProfileFragment();
+                        break;
+                    }
+                }
                 fragment = new LoginFragment();
                 break;
         }
