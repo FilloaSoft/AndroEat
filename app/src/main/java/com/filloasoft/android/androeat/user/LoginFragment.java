@@ -1,7 +1,11 @@
 package com.filloasoft.android.androeat.user;
 
+import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.Snackbar;
@@ -12,15 +16,28 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.AppCompatTextView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.filloasoft.android.androeat.MainActivity;
 import com.filloasoft.android.androeat.R;
 import com.filloasoft.android.androeat.helpers.InputValidation;
 import com.filloasoft.android.androeat.recipe.HomeFragment;
 import com.filloasoft.android.androeat.sql.DatabaseHelper;
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.common.SignInButton;
+import com.google.android.gms.common.api.ApiException;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
 
 public class LoginFragment extends Fragment implements View.OnClickListener {
 
@@ -33,8 +50,8 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
     private TextInputLayout textInputLayoutEmail;
     private TextInputLayout textInputLayoutPassword;
 
-    private TextInputEditText textInputEditTextEmail;
-    private TextInputEditText textInputEditTextPassword;
+    private EditText textInputEditTextEmail;
+    private EditText textInputEditTextPassword;
 
     private InputValidation inputValidation;
     private DatabaseHelper databaseHelper;
@@ -55,10 +72,10 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
         textInputLayoutEmail = (TextInputLayout) loginView.findViewById(R.id.textInputLayoutEmail);
         textInputLayoutPassword = (TextInputLayout) loginView.findViewById(R.id.textInputLayoutPassword);
 
-        textInputEditTextEmail = (TextInputEditText) loginView.findViewById(R.id.email_text);
-        textInputEditTextPassword = (TextInputEditText) loginView.findViewById(R.id.password_text);
-        appCompatButtonLogin = (AppCompatButton) loginView.findViewById(R.id.button);
-        appCompatButtonRegister = (AppCompatButton) loginView.findViewById(R.id.button2);
+        textInputEditTextEmail = (EditText) loginView.findViewById(R.id.input_email);
+        textInputEditTextPassword = (EditText) loginView.findViewById(R.id.input_password);
+        appCompatButtonLogin = (AppCompatButton) loginView.findViewById(R.id.btn_login);
+        appCompatButtonRegister = (AppCompatButton) loginView.findViewById(R.id.btn_signup);
 
         appCompatButtonLogin.setOnClickListener(this);
         appCompatButtonRegister.setOnClickListener(this);
@@ -66,25 +83,68 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
         databaseHelper = new DatabaseHelper(getActivity());
         inputValidation = new InputValidation(getActivity());
 
+        // Button listeners
+        loginView.findViewById(R.id.sign_in_button).setOnClickListener(this);
+        //  findViewById(R.id.signOutButton).setOnClickListener(this);
+        // findViewById(R.id.disconnectButton).setOnClickListener(this);
+
+        // [START customize_button]
+        // Set the dimensions of the sign-in button.
+        SignInButton signInButton = loginView.findViewById(R.id.sign_in_button);
+        signInButton.setSize(SignInButton.SIZE_STANDARD);
+        signInButton.setColorScheme(SignInButton.COLOR_LIGHT);
+        // [END customize_button]
+
+
         return loginView;
     }
-
 
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.button:
+            case R.id.btn_login:
                 verifyFromSQLite();
-                //TODO: falta que cuando el usuario se loguee correctamente se lance un mensaje de éxito
-                //Antes de acceder a HomeFragment
-                HomeFragment homeFragment = new HomeFragment();
-                loadFragment(homeFragment,false);
+                if (checkCredentialsFromSQLite()) {
+                    //TODO: falta que cuando el usuario se loguee correctamente se lance un mensaje de éxito
+                    //Antes de acceder a HomeFragment
+                    HomeFragment homeFragment = new HomeFragment();
+                    loadFragment(homeFragment, false);
+                    break;
+                }
+                toast = Toast.makeText(getActivity(),
+                        "Credenciales inválidas", Toast.LENGTH_SHORT);
+                toast.show();
                 break;
-            case R.id.button2:
+            case R.id.btn_signup:
                 // Navigate to SignupFragment
                 SignupFragment newSignupFragment = new SignupFragment();
                 loadFragment(newSignupFragment, false);
                 break;
+            case R.id.sign_in_button:  //LO MANEJAMOS DESDE EL ACTIVITY
+                ((MainActivity)getActivity()).signIn();
+
+                break;
+        }
+    }
+
+    private boolean checkCredentialsFromSQLite() {
+        if (databaseHelper.checkUser(textInputEditTextEmail.getText().toString().trim()
+                , textInputEditTextPassword.getText().toString().trim())) {
+
+            SharedPreferences preferences = getActivity().getSharedPreferences(
+                    "com.filloasoft.android.androeat", Context.MODE_PRIVATE);
+
+            //Save login credentials on shared preferences
+            preferences.edit().putString("email", textInputEditTextEmail.getText().toString().trim()).apply();
+            preferences.edit().putString("password", textInputEditTextPassword.getText().toString()).apply();
+            //TODO: falta que cuando el usuario se loguee correctamente se lance un mensaje de éxito
+            toast = Toast.makeText(getActivity(),"Logged in succesfully!", Toast.LENGTH_SHORT);
+            toast.show();
+            emptyInputEditText();
+            //Access to Home Fragment (inside the case)
+            return true;
+        } else {
+            return false;
         }
     }
 
@@ -116,18 +176,6 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
         }
         if (!inputValidation.isInputEditTextFilled(textInputEditTextPassword, textInputLayoutPassword, "Password not filled")) {
             return;
-        }
-
-        if (databaseHelper.checkUser(textInputEditTextEmail.getText().toString().trim()
-                , textInputEditTextPassword.getText().toString().trim())) {
-        //TODO: falta que cuando el usuario se loguee correctamente se lance un mensaje de éxito
-            toast = Toast.makeText(getActivity(),"Logged in succesfully!", Toast.LENGTH_SHORT);
-            toast.show();
-            emptyInputEditText();
-            //Access to Home Fragment (inside the case)
-        } else {
-            toast = Toast.makeText(getActivity(),
-                    "Credenciales inválidas", Toast.LENGTH_SHORT);
         }
     }
 

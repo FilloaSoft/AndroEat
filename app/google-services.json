@@ -1,38 +1,42 @@
 {
   "project_info": {
-    "project_number": "724235245190",
-    "firebase_url": "https://androeat-234bb.firebaseio.com",
-    "project_id": "androeat-234bb",
-    "storage_bucket": "androeat-234bb.appspot.com"
+    "project_number": "555057426274",
+    "firebase_url": "https://androeat-e7a7a.firebaseio.com",
+    "project_id": "androeat-e7a7a",
+    "storage_bucket": "androeat-e7a7a.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:724235245190:android:32f6f87982bf9ae6",
+        "mobilesdk_app_id": "1:555057426274:android:32f6f87982bf9ae6",
         "android_client_info": {
           "package_name": "com.filloasoft.android.androeat"
         }
       },
       "oauth_client": [
         {
-          "client_id": "724235245190-ldm78skanqq42cdi4k3ne1habvpl42uk.apps.googleusercontent.com",
+          "client_id": "555057426274-15efa308dtdff8lom4ubsi47spsg4lk0.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.filloasoft.android.androeat",
-            "certificate_hash": "057bd6e292b84fe2577197d9b113dda34fe49a92"
+            "certificate_hash": "c294ee97debb30f725095390efb519460eb08627"
           }
+        },
+        {
+          "client_id": "555057426274-57ciso932745dfc5dsedcftfvnc46qp9.apps.googleusercontent.com",
+          "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyAFc49kGGzE1DaAHRfZqPeCo0CV7vlPZgs"
+          "current_key": "AIzaSyCMeN1HyhFOa-hBebGqHt9ryYhKF-G9mbQ"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "724235245190-e16l9g29l2d35aa9hvnp77r7n7d0a5c1.apps.googleusercontent.com",
+              "client_id": "555057426274-57ciso932745dfc5dsedcftfvnc46qp9.apps.googleusercontent.com",
               "client_type": 3
             }
           ]
