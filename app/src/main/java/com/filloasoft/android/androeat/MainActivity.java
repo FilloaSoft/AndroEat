@@ -10,6 +10,7 @@ import android.support.annotation.Nullable;
 import android.support.annotation.VisibleForTesting;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -20,6 +21,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.filloasoft.android.androeat.model.User;
 import com.filloasoft.android.androeat.product.CameraActivity;
 import com.filloasoft.android.androeat.product.ScannerActivity;
 import com.filloasoft.android.androeat.product.ShoppingBasketFragment;
@@ -59,7 +61,8 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
     private static final String TAG = "MainActivity";
     private static final int RC_SIGN_IN = 9001;
     private GoogleSignInClient mGoogleSignInClient;
-
+    private FirebaseUser firebaseUser;
+    private User usuario;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,7 +79,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         // Configure sign-in to request the user's ID, email address, and basic
         // profile. ID and basic profile are included in DEFAULT_SIGN_IN.
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                //.requestIdToken("555057426274-57ciso932745dfc5dsedcftfvnc46qp9.apps.googleusercontent.com")
+                .requestIdToken("555057426274-57ciso932745dfc5dsedcftfvnc46qp9.apps.googleusercontent.com")
                 .requestEmail()
                 .build();
         // [END configure_signin]
@@ -85,7 +88,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
         // [END build_client]
         // [START initialize_auth]
-       // mAuth = FirebaseAuth.getInstance();
+        mAuth = FirebaseAuth.getInstance();
         // [END initialize_auth]
         //loading the default fragment
         loadFragment(new HomeFragment(), true);
@@ -146,19 +149,14 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
     public void onStart() {
         super.onStart();
         // Check if user is signed in (non-null) and update UI accordingly.
-       // FirebaseUser currentUser = mAuth.getCurrentUser();
-       // updateUI(currentUser);
-
-        // Check for existing Google Sign In account, if the user is already signed in
-        // the GoogleSignInAccount will be non-null.
-        GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(this);
-        updateUI(account);
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+        updateUI(currentUser);
     }
 
     // [START onactivityresult]
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-       /* super.onActivityResult(requestCode, resultCode, data);
+        super.onActivityResult(requestCode, resultCode, data);
 
         // Result returned from launching the Intent from GoogleSignInApi.getSignInIntent(...);
         if (requestCode == RC_SIGN_IN) {
@@ -174,36 +172,12 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
                 updateUI(null);
                 // [END_EXCLUDE]
             }
-        } */
-
-        super.onActivityResult(requestCode, resultCode, data);
-
-        // Result returned from launching the Intent from GoogleSignInClient.getSignInIntent(...);
-        if (requestCode == RC_SIGN_IN) {
-            // The Task returned from this call is always completed, no need to attach
-            // a listener.
-            Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
-            handleSignInResult(task);
         }
     }
     // [END onactivityresult]
 
-    private void handleSignInResult(Task<GoogleSignInAccount> completedTask) {
-        try {
-            GoogleSignInAccount account = completedTask.getResult(ApiException.class);
-
-            // Signed in successfully, show authenticated UI.
-            updateUI(account);
-        } catch (ApiException e) {
-            // The ApiException status code indicates the detailed failure reason.
-            // Please refer to the GoogleSignInStatusCodes class reference for more information.
-            Log.w(TAG, "signInResult:failed code=" + e.getStatusCode());
-            updateUI(null);
-        }
-    }
-
     // [START auth_with_google]
-  /*  private void firebaseAuthWithGoogle(GoogleSignInAccount acct) {
+    private void firebaseAuthWithGoogle(GoogleSignInAccount acct) {
         Log.d(TAG, "firebaseAuthWithGoogle:" + acct.getId());
         // [START_EXCLUDE silent]
         showProgressDialog();
@@ -230,7 +204,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
                         // [END_EXCLUDE]
                     }
                 });
-    } */
+    }
     // [END auth_with_google]
 
     // [START signin]
@@ -242,7 +216,12 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
 
     public void signOut() {
         // Firebase sign out
-    //    mAuth.signOut();
+        mAuth.signOut();
+
+        toast = Toast.makeText(this,
+                "Logging out...", Toast.LENGTH_SHORT);
+        // Do something in response to button
+        toast.show();
 
         // Google sign out
         mGoogleSignInClient.signOut().addOnCompleteListener(this,
@@ -252,37 +231,6 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
                         updateUI(null);
                     }
                 });
-    }
-
-    private void revokeAccess() {
-        // Firebase sign out
-     //   mAuth.signOut();
-
-        // Google revoke access
-        mGoogleSignInClient.revokeAccess().addOnCompleteListener(this,
-                new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        updateUI(null);
-                    }
-                });
-    }
-
-  //  private void updateUI(FirebaseUser user) {
-  private void updateUI(@Nullable GoogleSignInAccount account) {
-        hideProgressDialog();
-        //if (user != null) {
-        if(account!=null){
-            // mStatusTextView.setText(getString(R.string.google_status_fmt, user.getEmail()));
-            Fragment homeFragment = new HomeFragment();
-            loadFragment(homeFragment, false);
-            //findViewById(R.id.sign_in_button).setVisibility(View.GONE);
-            // findViewById(R.id.signOutAndDisconnect).setVisibility(View.VISIBLE);
-        } else {
-            // mStatusTextView.setText(R.string.signed_out);
-            //findViewById(R.id.sign_in_button).setVisibility(View.VISIBLE);
-            //findViewById(R.id.signOutAndDisconnect).setVisibility(View.GONE);
-        }
     }
 
     @VisibleForTesting
@@ -315,6 +263,75 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
     public void onStop() {
         super.onStop();
         hideProgressDialog();
+    }
+
+    private void revokeAccess() {
+        // Firebase sign out
+        mAuth.signOut();
+
+        // Google revoke access
+        mGoogleSignInClient.revokeAccess().addOnCompleteListener(this,
+                new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        updateUI(null);
+                    }
+                });
+    }
+
+    private void updateUI(FirebaseUser user) {
+        hideProgressDialog();
+        Fragment fragment = null;
+        FirebaseUser firebaseUser= FirebaseAuth.getInstance().getCurrentUser();
+
+        if (user != null) {
+
+           /* FragmentManager fm = getSupportFragmentManager();
+            LoginFragment loginFragment = (LoginFragment) fm.findFragmentById(R.id.sign_in_button);
+            loginFragment.setSignOutVisible(); */
+         /*   String email = firebaseUser.getEmail().trim();
+            String name = firebaseUser.getDisplayName().trim();
+                if (!databaseHelper.checkUser(email)) {
+                    usuario.setName(name);
+                    usuario.setEmail(email);
+
+                    databaseHelper.addUser(usuario);
+
+                    SharedPreferences preferences = this.getSharedPreferences(
+                            "com.filloasoft.android.androeat", Context.MODE_PRIVATE);
+                    //Save it
+                    preferences.edit().putString("email", user.getEmail()).apply();
+                    // show success message that record saved successfully
+                    toast = Toast.makeText(this,"Registered succesfully!", Toast.LENGTH_SHORT);
+                    toast.show();
+
+                    HomeFragment homeFragment = new HomeFragment();
+                    loadFragment(homeFragment,false);
+                } else {
+                    SharedPreferences preferences = this.getSharedPreferences(
+                            "com.filloasoft.android.androeat", Context.MODE_PRIVATE);
+                    //Get saved user credentials
+                    String email2 = preferences.getString(user.getEmail(),null);
+                    if (email2!=null) {
+                        databaseHelper = new DatabaseHelper(this);
+                        if (databaseHelper.checkUser(email2)) {
+                            fragment = new ProfileFragment();
+                            Bundle args = new Bundle();
+                            args.putString("email", email2);
+                            fragment.setArguments(args);
+                        }
+                    }
+                    loadFragment(fragment, false);
+                } */
+            fragment = new HomeFragment();
+            loadFragment(fragment,false);
+        } else {
+          /*  FragmentManager fm = getSupportFragmentManager();
+            LoginFragment loginFragment = (LoginFragment) fm.findFragmentById(R.id.sign_in_button);
+            loginFragment.setSignInVisible(); */
+            fragment = new LoginFragment();
+            loadFragment(fragment,false);
+        }
     }
 
     public void onRecipeSelected(View view){

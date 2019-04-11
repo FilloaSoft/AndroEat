@@ -2,6 +2,12 @@ apply plugin: 'com.android.application'
 
 android {
     signingConfigs {
+        prueba {
+            keyAlias 'androiddebugkey'
+            keyPassword 'android'
+            storeFile file('/home/user/Escritorio/APM/Practica/prueba.keystore')
+            storePassword 'android'
+        }
     }
     compileSdkVersion 28
     defaultConfig {

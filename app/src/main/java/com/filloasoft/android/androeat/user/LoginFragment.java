@@ -21,6 +21,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -49,6 +50,9 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
 
     private TextInputLayout textInputLayoutEmail;
     private TextInputLayout textInputLayoutPassword;
+
+    private LinearLayout signOutAndDisconnect;
+    private SignInButton signInButton;
 
     private EditText textInputEditTextEmail;
     private EditText textInputEditTextPassword;
@@ -85,16 +89,15 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
 
         // Button listeners
         loginView.findViewById(R.id.sign_in_button).setOnClickListener(this);
-        //  findViewById(R.id.signOutButton).setOnClickListener(this);
-        // findViewById(R.id.disconnectButton).setOnClickListener(this);
+        loginView.findViewById(R.id.sign_out_button).setOnClickListener(this);
 
-        // [START customize_button]
         // Set the dimensions of the sign-in button.
-        SignInButton signInButton = loginView.findViewById(R.id.sign_in_button);
+        signInButton = loginView.findViewById(R.id.sign_in_button);
         signInButton.setSize(SignInButton.SIZE_STANDARD);
         signInButton.setColorScheme(SignInButton.COLOR_LIGHT);
-        // [END customize_button]
 
+        signOutAndDisconnect = (LinearLayout) loginView.findViewById(R.id.sign_out_and_disconnect);
+        signOutAndDisconnect.setVisibility(View.VISIBLE);
 
         return loginView;
     }
@@ -122,7 +125,11 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
                 break;
             case R.id.sign_in_button:  //LO MANEJAMOS DESDE EL ACTIVITY
                 ((MainActivity)getActivity()).signIn();
-
+               // setSignOutVisible();
+                break;
+            case R.id.sign_out_button:
+                ((MainActivity)getActivity()).signOut();
+              //  setSignInVisible();
                 break;
         }
     }
@@ -186,4 +193,15 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
         textInputEditTextEmail.setText(null);
         textInputEditTextPassword.setText(null);
     }
+
+    public void setSignInVisible(){
+        signInButton.setVisibility(View.VISIBLE);
+        signOutAndDisconnect.setVisibility(View.GONE);
+    }
+
+    public void setSignOutVisible(){
+        signInButton.setVisibility(View.GONE);
+        signOutAndDisconnect.setVisibility(View.VISIBLE);
+    }
+
 }

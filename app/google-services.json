@@ -15,11 +15,11 @@
       },
       "oauth_client": [
         {
-          "client_id": "555057426274-15efa308dtdff8lom4ubsi47spsg4lk0.apps.googleusercontent.com",
+          "client_id": "555057426274-co869a2du95nn0mrfkktc23i9qgm4c2u.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.filloasoft.android.androeat",
-            "certificate_hash": "c294ee97debb30f725095390efb519460eb08627"
+            "certificate_hash": "3dec00a151db7ae4e7eedded76f00355274487c1"
           }
         },
         {
