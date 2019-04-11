@@ -32,6 +32,7 @@ import com.filloasoft.android.androeat.sql.DatabaseHelper;
 import com.filloasoft.android.androeat.user.LoginFragment;
 import com.filloasoft.android.androeat.user.ProfileFragment;
 import com.filloasoft.android.androeat.user.SignupFragment;
+import com.filloasoft.android.androeat.utilities.AuthUtils;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -106,36 +107,8 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
                 SharedPreferences preferences = this.getSharedPreferences(
                         "com.filloasoft.android.androeat", Context.MODE_PRIVATE);
                 FirebaseUser firebaseUser= FirebaseAuth.getInstance().getCurrentUser();
-                if (firebaseUser!=null){
-                    String firebaseEmail = firebaseUser.getEmail();
-                    if (firebaseEmail!=null) {
-                        databaseHelper = new DatabaseHelper(this);
-                        if (databaseHelper.checkUser(firebaseEmail)) {
-                            fragment = new ProfileFragment();
-                            Bundle args = new Bundle();
-                            args.putString("email", firebaseEmail);
-                            fragment.setArguments(args);
-                            break;
-                        }
-                    }
-                }
-                else {
-                    //Get saved user credentials
-                    String email = preferences.getString("email", null);
-                    String password = preferences.getString("password", null);
-                    if (email != null && password != null) {
-                        databaseHelper = new DatabaseHelper(this);
-                        if (databaseHelper.checkUser(email, password)) {
-                            fragment = new ProfileFragment();
-                            Bundle args = new Bundle();
-                            args.putString("email", email);
-                            fragment.setArguments(args);
-                            break;
-                        }
-                    }
-                }
-                fragment = new LoginFragment();
-                break;
+                databaseHelper = new DatabaseHelper(this);
+                fragment = AuthUtils.getLoginOrProfileFragment(preferences, firebaseUser, databaseHelper);
         }
         return loadFragment(fragment, false);
     }
