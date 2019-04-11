@@ -51,7 +51,6 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
     private TextInputLayout textInputLayoutEmail;
     private TextInputLayout textInputLayoutPassword;
 
-    private LinearLayout signOutAndDisconnect;
     private SignInButton signInButton;
 
     private EditText textInputEditTextEmail;
@@ -89,15 +88,11 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
 
         // Button listeners
         loginView.findViewById(R.id.sign_in_button).setOnClickListener(this);
-        loginView.findViewById(R.id.sign_out_button).setOnClickListener(this);
 
         // Set the dimensions of the sign-in button.
         signInButton = loginView.findViewById(R.id.sign_in_button);
         signInButton.setSize(SignInButton.SIZE_STANDARD);
         signInButton.setColorScheme(SignInButton.COLOR_LIGHT);
-
-        signOutAndDisconnect = (LinearLayout) loginView.findViewById(R.id.sign_out_and_disconnect);
-        signOutAndDisconnect.setVisibility(View.VISIBLE);
 
         return loginView;
     }
@@ -123,13 +118,8 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
                 SignupFragment newSignupFragment = new SignupFragment();
                 loadFragment(newSignupFragment, false);
                 break;
-            case R.id.sign_in_button:  //LO MANEJAMOS DESDE EL ACTIVITY
+            case R.id.sign_in_button:
                 ((MainActivity)getActivity()).signIn();
-               // setSignOutVisible();
-                break;
-            case R.id.sign_out_button:
-                ((MainActivity)getActivity()).signOut();
-              //  setSignInVisible();
                 break;
         }
     }
@@ -193,15 +183,4 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
         textInputEditTextEmail.setText(null);
         textInputEditTextPassword.setText(null);
     }
-
-    public void setSignInVisible(){
-        signInButton.setVisibility(View.VISIBLE);
-        signOutAndDisconnect.setVisibility(View.GONE);
-    }
-
-    public void setSignOutVisible(){
-        signInButton.setVisibility(View.GONE);
-        signOutAndDisconnect.setVisibility(View.VISIBLE);
-    }
-
 }

@@ -54,42 +54,36 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
     private Toast toast;
     private DatabaseHelper databaseHelper;
 
-    // [START declare_auth]
     private FirebaseAuth mAuth;
-    // [END declare_auth]
 
     private static final String TAG = "MainActivity";
     private static final int RC_SIGN_IN = 9001;
     private GoogleSignInClient mGoogleSignInClient;
-    private FirebaseUser firebaseUser;
     private User usuario;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-     //   setContentView(R.layout.activity_main);
 
         mTextMessage = (TextView) findViewById(R.id.message);
         setContentView(R.layout.activity_main);
 
         BottomNavigationView navigation = findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(this);
+        databaseHelper = new DatabaseHelper(this);
+        usuario = new User();
 
-       // [START configure_signin]
         // Configure sign-in to request the user's ID, email address, and basic
         // profile. ID and basic profile are included in DEFAULT_SIGN_IN.
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken("555057426274-57ciso932745dfc5dsedcftfvnc46qp9.apps.googleusercontent.com")
                 .requestEmail()
                 .build();
-        // [END configure_signin]
-        // [START build_client]
         // Build a GoogleSignInClient with the options specified by gso.
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
-        // [END build_client]
-        // [START initialize_auth]
+
         mAuth = FirebaseAuth.getInstance();
-        // [END initialize_auth]
+
         //loading the default fragment
         loadFragment(new HomeFragment(), true);
     }
@@ -111,17 +105,33 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
             case R.id.navigation_profile:
                 SharedPreferences preferences = this.getSharedPreferences(
                         "com.filloasoft.android.androeat", Context.MODE_PRIVATE);
-                //Get saved user credentials
-                String email = preferences.getString("email",null);
-                String password = preferences.getString("password",null);
-                if (email!=null && password!=null) {
-                    databaseHelper = new DatabaseHelper(this);
-                    if (databaseHelper.checkUser(email, password)) {
-                        fragment = new ProfileFragment();
-                        Bundle args = new Bundle();
-                        args.putString("email", email);
-                        fragment.setArguments(args);
-                        break;
+                FirebaseUser firebaseUser= FirebaseAuth.getInstance().getCurrentUser();
+                if (firebaseUser!=null){
+                    String firebaseEmail = firebaseUser.getEmail();
+                    if (firebaseEmail!=null) {
+                        databaseHelper = new DatabaseHelper(this);
+                        if (databaseHelper.checkUser(firebaseEmail)) {
+                            fragment = new ProfileFragment();
+                            Bundle args = new Bundle();
+                            args.putString("email", firebaseEmail);
+                            fragment.setArguments(args);
+                            break;
+                        }
+                    }
+                }
+                else {
+                    //Get saved user credentials
+                    String email = preferences.getString("email", null);
+                    String password = preferences.getString("password", null);
+                    if (email != null && password != null) {
+                        databaseHelper = new DatabaseHelper(this);
+                        if (databaseHelper.checkUser(email, password)) {
+                            fragment = new ProfileFragment();
+                            Bundle args = new Bundle();
+                            args.putString("email", email);
+                            fragment.setArguments(args);
+                            break;
+                        }
                     }
                 }
                 fragment = new LoginFragment();
@@ -153,7 +163,6 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         updateUI(currentUser);
     }
 
-    // [START onactivityresult]
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -168,20 +177,14 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
             } catch (ApiException e) {
                 // Google Sign In failed, update UI appropriately
                 Log.w(TAG, "Google sign in failed", e);
-                // [START_EXCLUDE]
                 updateUI(null);
-                // [END_EXCLUDE]
             }
         }
     }
-    // [END onactivityresult]
 
-    // [START auth_with_google]
     private void firebaseAuthWithGoogle(GoogleSignInAccount acct) {
         Log.d(TAG, "firebaseAuthWithGoogle:" + acct.getId());
-        // [START_EXCLUDE silent]
         showProgressDialog();
-        // [END_EXCLUDE]
 
         AuthCredential credential = GoogleAuthProvider.getCredential(acct.getIdToken(), null);
         mAuth.signInWithCredential(credential)
@@ -199,20 +202,15 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
                             //Show message: AUTHENTICATION FAILED
                             updateUI(null);
                         }
-                        // [START_EXCLUDE]
                         hideProgressDialog();
-                        // [END_EXCLUDE]
                     }
                 });
     }
-    // [END auth_with_google]
 
-    // [START signin]
     public void signIn() {
         Intent signInIntent = mGoogleSignInClient.getSignInIntent();
         startActivityForResult(signInIntent, RC_SIGN_IN);
     }
-    // [END signin]
 
     public void signOut() {
         // Firebase sign out
@@ -223,6 +221,13 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         // Do something in response to button
         toast.show();
 
+        SharedPreferences preferences = this.getSharedPreferences(
+                "com.filloasoft.android.androeat", Context.MODE_PRIVATE);
+
+        preferences.edit().putString("email", null).apply();
+        preferences.edit().putString("password", null).apply();
+
+
         // Google sign out
         mGoogleSignInClient.signOut().addOnCompleteListener(this,
                 new OnCompleteListener<Void>() {
@@ -231,6 +236,11 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
                         updateUI(null);
                     }
                 });
+        Intent intent = new Intent(this.getBaseContext(), MainActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        this.getBaseContext().startActivity(intent);
     }
 
     @VisibleForTesting
@@ -282,15 +292,14 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
     private void updateUI(FirebaseUser user) {
         hideProgressDialog();
         Fragment fragment = null;
-        FirebaseUser firebaseUser= FirebaseAuth.getInstance().getCurrentUser();
-
+        String email = "";
+        String name = "";
         if (user != null) {
-
-           /* FragmentManager fm = getSupportFragmentManager();
-            LoginFragment loginFragment = (LoginFragment) fm.findFragmentById(R.id.sign_in_button);
-            loginFragment.setSignOutVisible(); */
-         /*   String email = firebaseUser.getEmail().trim();
-            String name = firebaseUser.getDisplayName().trim();
+            FirebaseUser firebaseUser= FirebaseAuth.getInstance().getCurrentUser();
+            if(firebaseUser!=null) {
+                email = firebaseUser.getEmail().trim();
+                name = firebaseUser.getDisplayName().trim();
+            }
                 if (!databaseHelper.checkUser(email)) {
                     usuario.setName(name);
                     usuario.setEmail(email);
@@ -310,25 +319,18 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
                 } else {
                     SharedPreferences preferences = this.getSharedPreferences(
                             "com.filloasoft.android.androeat", Context.MODE_PRIVATE);
-                    //Get saved user credentials
-                    String email2 = preferences.getString(user.getEmail(),null);
-                    if (email2!=null) {
+                    if (email!=null) {
                         databaseHelper = new DatabaseHelper(this);
-                        if (databaseHelper.checkUser(email2)) {
+                        if (databaseHelper.checkUser(email)) {
                             fragment = new ProfileFragment();
                             Bundle args = new Bundle();
-                            args.putString("email", email2);
+                            args.putString("email", email);
                             fragment.setArguments(args);
+                            loadFragment(fragment, false);
                         }
                     }
-                    loadFragment(fragment, false);
-                } */
-            fragment = new HomeFragment();
-            loadFragment(fragment,false);
+                }
         } else {
-          /*  FragmentManager fm = getSupportFragmentManager();
-            LoginFragment loginFragment = (LoginFragment) fm.findFragmentById(R.id.sign_in_button);
-            loginFragment.setSignInVisible(); */
             fragment = new LoginFragment();
             loadFragment(fragment,false);
         }
