@@ -304,7 +304,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
                     }
                 }
         } else {
-            fragment = new LoginFragment();
+            fragment = new HomeFragment();
             loadFragment(fragment,false);
         }
     }
