@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "555057426274",
+    "firebase_url": "https://androeat-e7a7a.firebaseio.com",
+    "project_id": "androeat-e7a7a",
+    "storage_bucket": "androeat-e7a7a.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:555057426274:android:32f6f87982bf9ae6",
+        "android_client_info": {
+          "package_name": "com.filloasoft.android.androeat"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "555057426274-co869a2du95nn0mrfkktc23i9qgm4c2u.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.filloasoft.android.androeat",
+            "certificate_hash": "3dec00a151db7ae4e7eedded76f00355274487c1"
+          }
+        },
+        {
+          "client_id": "555057426274-57ciso932745dfc5dsedcftfvnc46qp9.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCMeN1HyhFOa-hBebGqHt9ryYhKF-G9mbQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "555057426274-57ciso932745dfc5dsedcftfvnc46qp9.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

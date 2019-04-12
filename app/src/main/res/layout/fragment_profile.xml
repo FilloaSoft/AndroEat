@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.widget.RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:fab="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/profile_fragment">
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:id="@+id/userInfo">
+        <TextView
+            android:id="@+id/userName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:text="User name"
+            android:padding="@dimen/activity_vertical_margin"
+            android:textColor="@color/colorAccent"
+            android:textSize="32dp"/>
+
+        <TextView
+            android:id="@+id/userEmail"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:padding="@dimen/activity_vertical_margin"
+            android:text="User email"
+            android:textColor="@color/colorPrimaryDark"
+            android:textSize="22dp"/>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:id="@+id/vegan">
+            <TextView
+                android:id="@+id/veganText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentTop="true"
+                android:text="Vegan"
+                android:padding="@dimen/activity_vertical_margin"
+                android:textColor="@color/colorPrimaryDark"
+                android:textSize="16dp"/>
+
+            <android.support.v7.widget.SwitchCompat
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:textColorHighlight="@color/colorAccent">
+            </android.support.v7.widget.SwitchCompat>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:id="@+id/vegetarian">
+            <TextView
+                android:id="@+id/vegetarianText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentTop="true"
+                android:text="Vegetarian"
+                android:padding="@dimen/activity_vertical_margin"
+                android:textColor="@color/colorPrimaryDark"
+                android:textSize="16dp"/>
+
+            <android.support.v7.widget.SwitchCompat
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:textColorHighlight="@color/colorAccent">
+            </android.support.v7.widget.SwitchCompat>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:id="@+id/nosalt">
+            <TextView
+                android:id="@+id/nosaltText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentTop="true"
+                android:text="No salt"
+                android:padding="@dimen/activity_vertical_margin"
+                android:textColor="@color/colorPrimaryDark"
+                android:textSize="16dp"/>
+
+            <android.support.v7.widget.SwitchCompat
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:textColorHighlight="@color/colorAccent">
+            </android.support.v7.widget.SwitchCompat>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:id="@+id/nosugar">
+            <TextView
+                android:id="@+id/nosugarText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentTop="true"
+                android:text="No sugar"
+                android:padding="@dimen/activity_vertical_margin"
+                android:textColor="@color/colorPrimaryDark"
+                android:textSize="16dp"/>
+
+            <android.support.v7.widget.SwitchCompat
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:textColorHighlight="@color/colorAccent">
+            </android.support.v7.widget.SwitchCompat>
+        </LinearLayout>
+    </LinearLayout>
+
+    <android.support.v7.widget.AppCompatButton
+        android:id="@+id/sign_out_button"
+        android:textColor="@color/colorAccent"
+        android:background="@drawable/rounded_button"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/userInfo"
+        android:layout_margin="@dimen/form_margin"
+        android:onClick="logout"
+        android:padding="12dp"
+        android:text="Logout"/>
+
+
+</android.widget.RelativeLayout>
