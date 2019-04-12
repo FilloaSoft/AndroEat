@@ -1,9 +1,11 @@
 package com.filloasoft.android.androeat.user;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.Snackbar;
@@ -14,16 +16,29 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.AppCompatTextView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.filloasoft.android.androeat.MainActivity;
 import com.filloasoft.android.androeat.R;
 import com.filloasoft.android.androeat.helpers.InputValidation;
 import com.filloasoft.android.androeat.recipe.HomeFragment;
 import com.filloasoft.android.androeat.sql.DatabaseHelper;
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.common.SignInButton;
+import com.google.android.gms.common.api.ApiException;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
 
 public class LoginFragment extends Fragment implements View.OnClickListener {
 
@@ -35,6 +50,8 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
 
     private TextInputLayout textInputLayoutEmail;
     private TextInputLayout textInputLayoutPassword;
+
+    private SignInButton signInButton;
 
     private EditText textInputEditTextEmail;
     private EditText textInputEditTextPassword;
@@ -69,9 +86,16 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
         databaseHelper = new DatabaseHelper(getActivity());
         inputValidation = new InputValidation(getActivity());
 
+        // Button listeners
+        loginView.findViewById(R.id.sign_in_button).setOnClickListener(this);
+
+        // Set the dimensions of the sign-in button.
+        signInButton = loginView.findViewById(R.id.sign_in_button);
+        signInButton.setSize(SignInButton.SIZE_STANDARD);
+        signInButton.setColorScheme(SignInButton.COLOR_LIGHT);
+
         return loginView;
     }
-
 
     @Override
     public void onClick(View v) {
@@ -93,6 +117,9 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
                 // Navigate to SignupFragment
                 SignupFragment newSignupFragment = new SignupFragment();
                 loadFragment(newSignupFragment, false);
+                break;
+            case R.id.sign_in_button:
+                ((MainActivity)getActivity()).signIn();
                 break;
         }
     }
