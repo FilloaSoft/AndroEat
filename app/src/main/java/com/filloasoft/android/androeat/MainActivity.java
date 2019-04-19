@@ -105,7 +105,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
                 fragment = new HomeFragment();
                 break;
             case R.id.navigation_basket:
-                fragment = new ShoppingBasketFragment().getInstance();
+                fragment = new ShoppingBasketFragment();
                 break;
             case R.id.navigation_fav:
                 fragment = new FavouriteFragment();
@@ -144,7 +144,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
             if(resultCode == Activity.RESULT_OK){
             String barcode = data.getStringExtra("barcode");
 
-                ShoppingBasketFragment apiCall = new ShoppingBasketFragment().getInstance();
+                ShoppingBasketFragment apiCall = new ShoppingBasketFragment();
                 apiCall.apiCall.execute(barcode);
 
             }

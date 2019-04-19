@@ -40,17 +40,17 @@ public class ShoppingBasketFragment extends Fragment {
     private static ShoppingBasketFragment single_instance = null;
 
 
-    ShoppingBasketListAdapter adapter;
-    ArrayList<ProductListView> products = new ArrayList<>();
+    static ShoppingBasketListAdapter adapter;
+    static ArrayList<ProductListView> products = new ArrayList<>();
     public rapidEat apiCall = new rapidEat();
 
-    public static ShoppingBasketFragment getInstance()
-    {
-        if (single_instance == null)
-            single_instance = new ShoppingBasketFragment();
-
-        return single_instance;
-    }
+//    public static ShoppingBasketFragment getInstance()
+//    {
+//        if (single_instance == null)
+//            single_instance = new ShoppingBasketFragment();
+//
+//        return single_instance;
+//    }
 
     @Nullable
     @Override
