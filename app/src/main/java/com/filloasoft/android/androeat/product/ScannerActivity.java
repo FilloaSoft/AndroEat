@@ -1,6 +1,8 @@
 package com.filloasoft.android.androeat.product;
 
 import android.Manifest;
+import android.app.Activity;
+import android.app.Fragment;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
@@ -8,6 +10,9 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.Toast;
+
+import com.filloasoft.android.androeat.R;
+import com.filloasoft.android.androeat.model.Product;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 
@@ -65,9 +70,9 @@ public class ScannerActivity extends AppCompatActivity {
         integrator.setBeepEnabled(true);
         integrator.initiateScan();
 
-        toast = Toast.makeText(getApplicationContext(),
-                "Escaneando codigo...", Toast.LENGTH_SHORT);
-        toast.show();
+//        toast = Toast.makeText(getApplicationContext(),
+//                "Escaneando codigo...", Toast.LENGTH_SHORT);
+//        toast.show();
     }
 
 
@@ -76,13 +81,15 @@ public class ScannerActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         IntentResult intentResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
         if (intentResult != null) {
-            if (intentResult.getContents() == null) {
-                Toast.makeText(this, "Cancelled", Toast.LENGTH_LONG).show();
-
-            } else {
-                Toast.makeText(this, "Scanned: " + intentResult.getContents(), Toast.LENGTH_LONG).show();
+            if (intentResult.getContents() != null) {
+                Intent returnIntent = new Intent();
+                returnIntent.putExtra("barcode",intentResult.getContents());
+                setResult(Activity.RESULT_OK, returnIntent);
+                finish();
             }
         }
-        this.finish();
+        finish();
     }
+
+
 }

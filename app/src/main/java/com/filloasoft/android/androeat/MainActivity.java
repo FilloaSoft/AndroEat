@@ -1,5 +1,6 @@
 package com.filloasoft.android.androeat;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -17,10 +18,12 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.filloasoft.android.androeat.model.Product;
 import com.filloasoft.android.androeat.model.User;
 import com.filloasoft.android.androeat.product.CameraActivity;
 import com.filloasoft.android.androeat.product.ScannerActivity;
@@ -47,6 +50,8 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 
+import static java.security.AccessController.getContext;
+
 
 public class MainActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener, HomeFragment.OnClickHowTo,
         FavouriteFragment.OnClickHowTo{
@@ -61,6 +66,8 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
     private static final int RC_SIGN_IN = 9001;
     private GoogleSignInClient mGoogleSignInClient;
     private User usuario;
+    private static final int REQUEST_CODE = 123;
+//    ShoppingBasketFragment shoppingBasketFragment = new ShoppingBasketFragment();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -98,7 +105,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
                 fragment = new HomeFragment();
                 break;
             case R.id.navigation_basket:
-                fragment = new ShoppingBasketFragment();
+                fragment = new ShoppingBasketFragment().getInstance();
                 break;
             case R.id.navigation_fav:
                 fragment = new FavouriteFragment();
@@ -113,7 +120,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         return loadFragment(fragment, false);
     }
 
-    private boolean loadFragment(Fragment fragment, boolean firstFragment) {
+    public boolean loadFragment(Fragment fragment, boolean firstFragment) {
         //switching fragment
         if (fragment != null) {
             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
@@ -129,18 +136,19 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
     }
 
     @Override
-    public void onStart() {
-        super.onStart();
-        // Check if user is signed in (non-null) and update UI accordingly.
-        FirebaseUser currentUser = mAuth.getCurrentUser();
-        updateUI(currentUser);
-    }
-
-    @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
         // Result returned from launching the Intent from GoogleSignInApi.getSignInIntent(...);
+        if (requestCode == REQUEST_CODE) {
+            if(resultCode == Activity.RESULT_OK){
+            String barcode = data.getStringExtra("barcode");
+
+                ShoppingBasketFragment apiCall = new ShoppingBasketFragment().getInstance();
+                apiCall.apiCall.execute(barcode);
+
+            }
+        }
         if (requestCode == RC_SIGN_IN) {
             Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
             try {
@@ -152,8 +160,18 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
                 Log.w(TAG, "Google sign in failed", e);
                 updateUI(null);
             }
+
         }
     }
+
+
+//    @Override
+//    public void onStart() {
+//        super.onStart();
+//        // Check if user is signed in (non-null) and update UI accordingly.
+//        FirebaseUser currentUser = mAuth.getCurrentUser();
+//        updateUI(currentUser);
+//    }
 
     private void firebaseAuthWithGoogle(GoogleSignInAccount acct) {
         Log.d(TAG, "firebaseAuthWithGoogle:" + acct.getId());
@@ -322,7 +340,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
 
     public void scan(View view){
         Intent scanIntent = new Intent(getApplicationContext(), ScannerActivity.class);
-        startActivity(scanIntent);
+        startActivityForResult(scanIntent, REQUEST_CODE);
     }
 
     public void takePhoto(View view){

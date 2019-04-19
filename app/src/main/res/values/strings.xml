@@ -11,4 +11,5 @@
     <string name="email">Email</string>
     <string name="camera_image">Imagen de camara</string>
     <string name="scan_button">Escanear codigo</string>
+    <string name="baseURL">http://androeat.dynu.net</string>
 </resources>
