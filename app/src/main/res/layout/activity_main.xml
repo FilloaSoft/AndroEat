@@ -26,6 +26,18 @@
                 app:popupTheme="@style/Widget.AppCompat.ActionBar" />
         </android.support.design.widget.AppBarLayout>
 
+
+        <!-- Login progress -->
+        <ProgressBar
+            android:id="@+id/progress"
+            style="?android:attr/progressBarStyleLarge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:layout_centerInParent="true"
+            android:visibility="gone" />
+
         <FrameLayout
             android:id="@+id/fragment_container"
             android:layout_width="match_parent"

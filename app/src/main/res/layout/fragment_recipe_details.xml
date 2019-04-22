@@ -1,95 +1,110 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/recipe_details"
+<android.widget.RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:id="@+id/fragment_recipe_details">
 
-        <android.support.design.widget.AppBarLayout
-            android:id="@+id/main.appbar"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        >
 
-            <android.support.design.widget.CollapsingToolbarLayout
-                android:id="@+id/main.collapsing"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="#ffffff"
-                app:scrimAnimationDuration="0">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="vertical">
-
-                    <FrameLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
-                        <ImageView
-                            android:layout_width="match_parent"
-                            android:layout_height="150dp"
-                            android:scaleType="centerCrop"
-                            android:src="@drawable/espaguetis"/>
-                        <RelativeLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="60dp"
-                            android:background="@drawable/image_gradient"
-                            android:layout_gravity="bottom">
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="Spaguetti carbonara"
-                                android:textColor="#FFFFFF"
-                                android:layout_margin="5dp"
-                                android:textSize="25dp"
-                                android:layout_alignParentBottom="true"/>
-                        </RelativeLayout>
-                        <LinearLayout
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:orientation="vertical"
-                            android:layout_gravity="right">
-                        <android.support.design.widget.FloatingActionButton
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_margin="5dp"
-                            android:layout_gravity="center"
-                            android:layout_alignParentRight="true"
-                            android:backgroundTint="#D9DCE0"
-                            android:src="@drawable/ic_share"
-                            android:tint="@color/colorAccent"
-                            />
-                        <android.support.design.widget.FloatingActionButton
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_margin="5dp"
-                            android:layout_gravity="center"
-                            android:layout_alignParentRight="true"
-                            android:backgroundTint="#D9DCE0"
-                            android:src="@drawable/ic_fav"
-                            android:tint="@color/colorAccent"
-                            />
-                        </LinearLayout>
-                    </FrameLayout>
-                    <android.support.design.widget.TabLayout
-                        android:id="@+id/tab_layout"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:background="@color/colorPrimaryDark"
-                        app:tabTextColor="#FFFFFF"
-                        app:tabIndicatorColor="#D9DCE0"
-                        app:tabIndicatorHeight="3dp"
-                        android:visibility="visible"/>
-                </LinearLayout>
-            </android.support.design.widget.CollapsingToolbarLayout>
-
-        </android.support.design.widget.AppBarLayout>
-
-        <android.support.v4.view.ViewPager
-            android:id="@+id/my_view_pager"
-            android:layout_width="match_parent"
+        <LinearLayout
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior">
-        </android.support.v4.view.ViewPager>
+            android:orientation="horizontal"
+            android:layout_margin="@dimen/activity_vertical_margin">
 
-</android.support.design.widget.CoordinatorLayout>
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:src="@drawable/ic_timer"
+                android:tint="@color/colorAccent"
+                />
+            <TextView
+                android:paddingLeft="@dimen/activity_horizontal_margin"
+                android:id="@+id/recipeTime"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/not_available"
+                android:textColor="@color/colorPrimaryDark"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_margin="@dimen/activity_vertical_margin">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:src="@drawable/ic_alert"
+                android:tint="@color/colorAccent"
+                />
+            <TextView
+                android:paddingLeft="@dimen/activity_horizontal_margin"
+                android:id="@+id/recipeAlerts"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/not_available"
+                android:textColor="@color/colorPrimaryDark"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_margin="@dimen/activity_vertical_margin">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:src="@drawable/ic_check"
+                android:tint="@color/colorAccent"
+                />
+            <TextView
+                android:paddingLeft="@dimen/activity_horizontal_margin"
+                android:id="@+id/recipeDiets"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/not_available"
+                android:textColor="@color/colorPrimaryDark"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_margin="@dimen/activity_vertical_margin">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:src="@drawable/ic_recipe"
+                android:tint="@color/colorAccent"
+                />
+            <TextView
+                android:paddingLeft="@dimen/activity_horizontal_margin"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/ingredients"
+                android:textColor="@color/colorAccent"/>
+
+        </LinearLayout>
+
+        <ListView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/ingredient_list">
+        </ListView>
+
+
+    </LinearLayout>
+
+</android.widget.RelativeLayout>

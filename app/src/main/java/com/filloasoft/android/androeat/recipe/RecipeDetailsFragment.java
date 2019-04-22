@@ -1,87 +1,51 @@
 package com.filloasoft.android.androeat.recipe;
 
-import android.graphics.Color;
 import android.os.Bundle;
-import android.support.design.widget.TabLayout;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentStatePagerAdapter;
-import android.support.v4.view.ViewPager;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.ImageView;
+import android.widget.ListView;
+import android.widget.TextView;
 
 import com.filloasoft.android.androeat.R;
+import com.filloasoft.android.androeat.model.Recipe;
+import com.filloasoft.android.androeat.product.ShoppingBasketListAdapter;
 
 public class RecipeDetailsFragment extends Fragment {
 
-    private RecyclerView mRecyclerView;
+    ListView list;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_recipe_details, container, false);
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        View recipeDetailsView = inflater.inflate(R.layout.fragment_recipe_details, null);
+        Bundle bundle = getArguments();
+        Recipe recipe = (Recipe) bundle.getSerializable("recipe");
 
-        TabLayout tabLayout = (TabLayout) view.findViewById(R.id.tab_layout);
-        tabLayout.addTab(tabLayout.newTab().setText("Details"));
-        tabLayout.addTab(tabLayout.newTab().setText("How to"));
-        tabLayout.setTabTextColors(Color.GRAY, Color.WHITE);
+        IngredientListAdapter adapter = new IngredientListAdapter(getActivity(), recipe.getRecipeIngredients());
+        list = (ListView) recipeDetailsView.findViewById(R.id.ingredient_list);
+        list.setAdapter(adapter);
 
-        final ViewPager viewPager = (ViewPager) view.findViewById(R.id.my_view_pager);
 
-        viewPager.setAdapter(new PagerAdapter
-                (getFragmentManager(), tabLayout.getTabCount()));
-        viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
-        tabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+        if (recipe.getCookingTimeMinutes()!=null) {
+            TextView timeText = (TextView) recipeDetailsView.findViewById(R.id.recipeTime);
+            timeText.setText(android.text.TextUtils.concat(recipe.getCookingTimeMinutes()," minutes"));
+        }
+        if (recipe.getRecipeDiets()!=null) {
+            TextView alertText = (TextView) recipeDetailsView.findViewById(R.id.recipeAlerts);
+            //imageView.setImageResource(productImage[position]);
+        }
+        if (recipe.getRecipeDiets()!=null) {
+            TextView dietText = (TextView) recipeDetailsView.findViewById(R.id.recipeDiets);
+            String diets = android.text.TextUtils.join(", ", recipe.getRecipeDiets());
+            diets = diets.substring(0, 1).toUpperCase() + diets.substring(1);
+            dietText.setText(diets);
+        }
 
-            @Override
-            public void onTabSelected(TabLayout.Tab tab) {
-                viewPager.setCurrentItem(tab.getPosition());
-            }
-
-            @Override
-            public void onTabUnselected(TabLayout.Tab tab) {
-
-            }
-
-            @Override
-            public void onTabReselected(TabLayout.Tab tab) {
-
-            }
-        });
-
-        return view;
+        return recipeDetailsView;
     }
 
-    public class PagerAdapter extends FragmentStatePagerAdapter {
-        int mNumOfTabs;
-
-        public PagerAdapter(FragmentManager fm, int NumOfTabs) {
-            super(fm);
-            this.mNumOfTabs = NumOfTabs;
-        }
-
-
-
-        @Override
-        public Fragment getItem(int position) {
-            Fragment tabFragment = null;
-
-            switch (position){
-                case 0:
-                    tabFragment = new FavouriteFragment();
-                    break;
-                case 1:
-                    tabFragment = new HowToFragment();
-                    break;
-            }
-            return tabFragment;
-        }
-
-        @Override
-        public int getCount() {
-            return mNumOfTabs;
-        }
-    }
 }

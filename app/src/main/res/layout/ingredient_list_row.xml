@@ -1,0 +1,41 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="?android:attr/listPreferredItemHeight"
+    android:padding="6dip" >
+
+    <ImageView
+        android:id="@+id/ingredientImage"
+        android:src="@drawable/ic_eat"
+        android:tint="@color/colorPrimaryDark"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_centerVertical="true"
+        />
+
+    <TextView
+        android:id="@+id/ingredientName"
+        android:text="@string/name_not_available"
+        android:textSize="14dp"
+        android:layout_marginTop="8dp"
+        android:textColor="@color/colorAccent"
+        android:maxLines="1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_toRightOf="@+id/ingredientImage"
+        android:layout_toEndOf="@+id/ingredientImage"
+        android:layout_marginLeft="12dp"
+        android:layout_marginStart="12dp" />
+
+    <TextView
+        android:id="@+id/ingredientDescription"
+        android:text="@string/not_available"
+        android:textSize="12sp"
+        android:maxLines="1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/ingredientName"
+        android:layout_alignLeft="@+id/ingredientName"
+        android:layout_alignStart="@+id/ingredientName" />
+
+</RelativeLayout>
