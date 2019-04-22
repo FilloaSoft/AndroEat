@@ -5,207 +5,143 @@
     android:layout_height="match_parent"
     android:id="@+id/profile_fragment">
 
-    <ImageView
-        android:id="@+id/imageView"
-        android:layout_width="141dp"
-        android:layout_height="148dp"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginStart="20dp"
-        android:layout_marginLeft="20dp"
-        android:layout_marginTop="21dp"
-        fab:layout_editor_absoluteX="16dp"
-        fab:layout_editor_absoluteY="16dp"
-        fab:srcCompat="@mipmap/ic_launcher_round" />
-
-    <TextView
-        android:id="@+id/textView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginStart="179dp"
-        android:layout_marginLeft="179dp"
-        android:layout_marginTop="26dp"
-        android:text="Vicent Finch"
-        android:textColor="#670028"
-        android:textSize="32dp"
-        fab:layout_editor_absoluteX="176dp"
-        fab:layout_editor_absoluteY="29dp" />
-
-    <TextView
-        android:id="@+id/textView4"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
-        android:layout_marginTop="105dp"
-        android:layout_marginEnd="142dp"
-        android:layout_marginRight="142dp"
-        android:text="User info"
-        android:textColor="#8c8888"
-        android:textSize="22dp"
-        fab:layout_editor_absoluteX="176dp"
-        fab:layout_editor_absoluteY="79dp" />
-
-    <TextView
-        android:id="@+id/textView2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginStart="19dp"
-        android:layout_marginLeft="19dp"
-        android:layout_marginTop="363dp"
-        android:text="Your activity"
-        android:textColor="#000"
-        android:textSize="22dp"
-        fab:layout_editor_absoluteX="16dp"
-        fab:layout_editor_absoluteY="318dp" />
-
-    <TextView
-        android:id="@+id/textView3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginStart="20dp"
-        android:layout_marginLeft="20dp"
-        android:layout_marginTop="191dp"
-        android:text="Stats"
-        android:textColor="#000"
-        android:textSize="22dp"
-        fab:layout_editor_absoluteX="16dp"
-        fab:layout_editor_absoluteY="183dp" />
-
-    <android.support.constraint.Guideline
-        android:id="@+id/guideline"
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        fab:layout_constraintGuide_begin="20dp" />
+        android:id="@+id/userInfo">
+        <TextView
+            android:id="@+id/userName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:text="User name"
+            android:padding="@dimen/activity_vertical_margin"
+            android:textColor="@color/colorAccent"
+            android:textSize="32dp"/>
 
-    <android.support.constraint.Guideline
-        android:id="@+id/guideline2"
-        android:layout_width="wrap_content"
+        <TextView
+            android:id="@+id/userEmail"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:padding="@dimen/activity_vertical_margin"
+            android:text="User email"
+            android:textColor="@color/colorPrimaryDark"
+            android:textSize="22dp"/>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:id="@+id/vegan">
+            <TextView
+                android:id="@+id/veganText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentTop="true"
+                android:text="Vegan"
+                android:padding="@dimen/activity_vertical_margin"
+                android:textColor="@color/colorPrimaryDark"
+                android:textSize="16dp"/>
+
+            <android.support.v7.widget.SwitchCompat
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:textColorHighlight="@color/colorAccent">
+            </android.support.v7.widget.SwitchCompat>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:id="@+id/vegetarian">
+            <TextView
+                android:id="@+id/vegetarianText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentTop="true"
+                android:text="Vegetarian"
+                android:padding="@dimen/activity_vertical_margin"
+                android:textColor="@color/colorPrimaryDark"
+                android:textSize="16dp"/>
+
+            <android.support.v7.widget.SwitchCompat
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:textColorHighlight="@color/colorAccent">
+            </android.support.v7.widget.SwitchCompat>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:id="@+id/nosalt">
+            <TextView
+                android:id="@+id/nosaltText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentTop="true"
+                android:text="No salt"
+                android:padding="@dimen/activity_vertical_margin"
+                android:textColor="@color/colorPrimaryDark"
+                android:textSize="16dp"/>
+
+            <android.support.v7.widget.SwitchCompat
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:textColorHighlight="@color/colorAccent">
+            </android.support.v7.widget.SwitchCompat>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:id="@+id/nosugar">
+            <TextView
+                android:id="@+id/nosugarText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentTop="true"
+                android:text="No sugar"
+                android:padding="@dimen/activity_vertical_margin"
+                android:textColor="@color/colorPrimaryDark"
+                android:textSize="16dp"/>
+
+            <android.support.v7.widget.SwitchCompat
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:textColorHighlight="@color/colorAccent">
+            </android.support.v7.widget.SwitchCompat>
+        </LinearLayout>
+    </LinearLayout>
+
+    <android.support.v7.widget.AppCompatButton
+        android:id="@+id/sign_out_button"
+        android:textColor="@color/colorAccent"
+        android:background="@drawable/rounded_button"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        fab:layout_constraintGuide_begin="20dp" />
+        android:layout_below="@id/userInfo"
+        android:layout_margin="@dimen/form_margin"
+        android:onClick="logout"
+        android:padding="12dp"
+        android:text="Logout"/>
 
-    <android.support.constraint.Guideline
-        android:id="@+id/guideline3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        fab:layout_constraintGuide_begin="20dp" />
-
-    <android.support.constraint.Guideline
-        android:id="@+id/guideline4"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        fab:layout_constraintGuide_begin="20dp" />
-
-    <android.support.constraint.Guideline
-        android:id="@+id/guideline5"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        fab:layout_constraintGuide_begin="20dp" />
-
-    <android.support.constraint.Group
-        android:id="@+id/group"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
-
-
-    <TextView
-        android:id="@+id/editText31"
-        android:layout_width="359dp"
-        android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginStart="20dp"
-        android:layout_marginLeft="20dp"
-        android:layout_marginTop="280dp"
-        android:text="TOP 2 --> Vegetables"
-        fab:layout_editor_absoluteX="16dp"
-        fab:layout_editor_absoluteY="203dp" />
-
-    <TextView
-        android:id="@+id/editText32"
-        android:layout_width="359dp"
-        android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginStart="19dp"
-        android:layout_marginLeft="19dp"
-        android:layout_marginTop="498dp"
-        android:text="ACTIVITY 3"
-        fab:layout_editor_absoluteX="16dp"
-        fab:layout_editor_absoluteY="203dp" />
-
-    <TextView
-        android:id="@+id/editText33"
-        android:layout_width="358dp"
-        android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginStart="20dp"
-        android:layout_marginLeft="20dp"
-        android:layout_marginTop="235dp"
-        android:text="TOP 1 --> Fats"
-        fab:layout_editor_absoluteX="16dp"
-        fab:layout_editor_absoluteY="203dp" />
-
-    <TextView
-        android:id="@+id/editText3"
-        android:layout_width="359dp"
-        android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginStart="19dp"
-        android:layout_marginLeft="19dp"
-        android:layout_marginTop="452dp"
-        android:text="ACTIVITY 2"
-        fab:layout_editor_absoluteX="16dp"
-        fab:layout_editor_absoluteY="203dp" />
-
-    <TextView
-        android:id="@+id/editText34"
-        android:layout_width="359dp"
-        android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginStart="20dp"
-        android:layout_marginLeft="20dp"
-        android:layout_marginTop="326dp"
-        android:text="TOP 3 --> Fruit"
-        fab:layout_editor_absoluteX="16dp"
-        fab:layout_editor_absoluteY="203dp" />
-
-    <TextView
-        android:id="@+id/editText35"
-        android:layout_width="358dp"
-        android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginStart="19dp"
-        android:layout_marginLeft="19dp"
-        android:layout_marginTop="407dp"
-        android:text="ACTIVITY 1"
-        fab:layout_editor_absoluteX="16dp"
-        fab:layout_editor_absoluteY="203dp" />
 
 </android.widget.RelativeLayout>

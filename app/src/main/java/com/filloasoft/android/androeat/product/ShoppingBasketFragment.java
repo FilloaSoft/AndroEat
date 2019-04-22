@@ -9,6 +9,8 @@ import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
+import com.google.zxing.integration.android.IntentIntegrator;
+import com.google.zxing.integration.android.IntentResult;
 
 import com.filloasoft.android.androeat.R;
 import com.filloasoft.android.androeat.product.ShoppingBasketListAdapter;
@@ -56,6 +58,4 @@ public class ShoppingBasketFragment extends Fragment {
         //if it is DashboardFragment it should have R.layout.fragment_dashboard
         return basketView;
     }
-
-
 }
