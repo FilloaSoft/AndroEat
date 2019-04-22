@@ -18,7 +18,7 @@
         android:layout_gravity="end|bottom"
         android:layout_marginRight="0dp"
         android:layout_alignParentBottom="true"
-        fab:fab_addButtonColorNormal="?attr/colorPrimary"
+        fab:fab_addButtonColorNormal="@color/colorAccent"
         fab:fab_addButtonColorPressed="@color/colorPrimaryDark"
         fab:fab_addButtonSize="normal"
         fab:fab_labelStyle="@style/Etiquetas"
