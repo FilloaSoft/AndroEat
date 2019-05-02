@@ -4,11 +4,22 @@
     <string name="title_basket">Basket</string>
     <string name="title_fav">Favourites</string>
     <string name="title_profile">Profile</string>
+    <string name="base_url">http://androeat.dynu.net</string>
+
+    <!-- Camera strings -->
+    <string name="camera_image">Imagen de camara</string>
+    <string name="scan_button">Escanear codigo</string>
+
+    <!-- User strings -->
     <string name="login">Login</string>
     <string name="password">Password</string>
     <string name="singup">SINGUP</string>
     <string name="username">Username</string>
     <string name="email">Email</string>
-    <string name="camera_image">Imagen de camara</string>
-    <string name="scan_button">Escanear codigo</string>
+
+    <!-- Recipes strings -->
+    <string name="not_available">Not available</string>
+    <string name="ingredients">Ingredients</string>
+    <string name="name_not_available">Product name not available</string>
+    <string name="baseURL">http://androeat.dynu.net</string>
 </resources>

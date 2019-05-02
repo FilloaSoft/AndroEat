@@ -1,5 +1,14 @@
 package com.filloasoft.android.androeat;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.annotation.TargetApi;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Color;
+import android.os.AsyncTask;
+import android.os.Build;
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -13,14 +22,26 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
+import android.util.Log;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.TextView;
+import android.widget.Toast;
+import com.filloasoft.android.androeat.model.Recipe;
+import com.filloasoft.android.androeat.product.ShoppingBasketFragment;
+import com.filloasoft.android.androeat.recipe.FavouriteFragment;
+import com.filloasoft.android.androeat.recipe.HomeFragment;
+import com.filloasoft.android.androeat.recipe.RecipeFragment;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
-
+import com.filloasoft.android.androeat.model.Product;
 import com.filloasoft.android.androeat.model.User;
 import com.filloasoft.android.androeat.product.CameraActivity;
 import com.filloasoft.android.androeat.product.ScannerActivity;
@@ -46,10 +67,19 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
+import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.web.client.RestTemplate;
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
+import static java.security.AccessController.getContext;
 
+public class MainActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener, HomeFragment.OnClickHowTo, FavouriteFragment.OnClickHowTo{
 
-public class MainActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener, HomeFragment.OnClickHowTo,
-        FavouriteFragment.OnClickHowTo{
+    /**
+     * Keep track of the login task to ensure we can cancel it if requested.
+     */
+    private RecipeTask mRecipeTask = null;
 
     private TextView mTextMessage;
     private Toast toast;
@@ -61,6 +91,8 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
     private static final int RC_SIGN_IN = 9001;
     private GoogleSignInClient mGoogleSignInClient;
     private User usuario;
+    private static final int REQUEST_CODE = 123;
+//    ShoppingBasketFragment shoppingBasketFragment = new ShoppingBasketFragment();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,6 +116,10 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
 
         mAuth = FirebaseAuth.getInstance();
+
+        Toolbar myToolbar = (Toolbar) findViewById(R.id.toolbar);
+        myToolbar.setTitleTextColor(Color.WHITE);
+        setSupportActionBar(myToolbar);
 
         //loading the default fragment
         loadFragment(new HomeFragment(), true);
@@ -113,7 +149,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         return loadFragment(fragment, false);
     }
 
-    private boolean loadFragment(Fragment fragment, boolean firstFragment) {
+    public boolean loadFragment(Fragment fragment, boolean firstFragment) {
         //switching fragment
         if (fragment != null) {
             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
@@ -137,10 +173,20 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
     }
 
     @Override
+
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
         // Result returned from launching the Intent from GoogleSignInApi.getSignInIntent(...);
+        if (requestCode == REQUEST_CODE) {
+            if(resultCode == Activity.RESULT_OK){
+            String barcode = data.getStringExtra("barcode");
+
+                ShoppingBasketFragment apiCall = new ShoppingBasketFragment();
+                apiCall.apiCall.execute(barcode);
+
+            }
+        }
         if (requestCode == RC_SIGN_IN) {
             Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
             try {
@@ -152,8 +198,18 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
                 Log.w(TAG, "Google sign in failed", e);
                 updateUI(null);
             }
+
         }
     }
+
+
+//    @Override
+//    public void onStart() {
+//        super.onStart();
+//        // Check if user is signed in (non-null) and update UI accordingly.
+//        FirebaseUser currentUser = mAuth.getCurrentUser();
+//        updateUI(currentUser);
+//    }
 
     private void firebaseAuthWithGoogle(GoogleSignInAccount acct) {
         Log.d(TAG, "firebaseAuthWithGoogle:" + acct.getId());
@@ -310,19 +366,20 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
     }
 
     public void onRecipeSelected(View view){
-        HowToFragment howToFragment = (HowToFragment) getSupportFragmentManager().findFragmentById(R.id.howto_fragment);
-        if (howToFragment != null){
+        RecipeFragment recipeFragment = (RecipeFragment) getSupportFragmentManager().findFragmentById(R.id.recipe_details);
+        if (recipeFragment != null){
             //Manage two pane layout
         }
         else{
-            HowToFragment newHowToFragment = new HowToFragment();
-            loadFragment(newHowToFragment, false);
+            showProgress(true);
+            mRecipeTask = new RecipeTask(123L);
+            mRecipeTask.execute((Void) null);
         }
     }
 
     public void scan(View view){
         Intent scanIntent = new Intent(getApplicationContext(), ScannerActivity.class);
-        startActivity(scanIntent);
+        startActivityForResult(scanIntent, REQUEST_CODE);
     }
 
     public void takePhoto(View view){
@@ -378,5 +435,89 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
 
         loadFragment(new LoginFragment(), false);
     }
+    /**
+     * Shows the progress UI and hides the login form.
+     */
+    @TargetApi(Build.VERSION_CODES.HONEYCOMB_MR2)
+    private void showProgress(final boolean show) {
+        // On Honeycomb MR2 we have the ViewPropertyAnimator APIs, which allow
+        // for very easy animations. If available, use these APIs to fade-in
+        // the progress spinner.
+        final View mProgressView = findViewById(R.id.progress);
+        final View mContainerView = findViewById(R.id.fragment_container);
 
+        int shortAnimTime = getResources().getInteger(android.R.integer.config_shortAnimTime);
+
+        mContainerView.setVisibility(show ? View.GONE : View.VISIBLE);
+        mContainerView.animate().setDuration(shortAnimTime).alpha(
+                show ? 0 : 1).setListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                mContainerView.setVisibility(show ? View.GONE : View.VISIBLE);
+            }
+        });
+
+        mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
+        mProgressView.animate().setDuration(shortAnimTime).alpha(
+                show ? 1 : 0).setListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
+            }
+        });
+    }
+
+
+    public class RecipeTask extends AsyncTask<Void, Void, Recipe> {
+
+        private final Long mId;
+        private Recipe recipe;
+
+        RecipeTask(Long id) {
+            mId = id;
+        }
+
+        @Override
+        protected Recipe doInBackground(Void... params) {
+            try {
+                final String url;
+                //url = getResources().getString(R.string.recipe_url)+mId;
+                url = "http://androeat.dynu.net/recipe/262682";
+                RestTemplate restTemplate = new RestTemplate();
+                restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
+                recipe = restTemplate.getForObject(url, Recipe.class);
+                URL newurl = null;
+                try {
+                    newurl = new URL(recipe.getRecipeImage());
+                    Bitmap mIcon_val = BitmapFactory.decodeStream(newurl.openConnection().getInputStream());
+                    recipe.setRecipeBitmapImage(mIcon_val);
+                } catch (MalformedURLException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                return recipe;
+            } catch (Exception e) {
+                Log.e("Error getting recipe -", e.getMessage(), e);
+            }
+            return null;
+        }
+
+
+        @Override
+        protected void onPostExecute(final Recipe recipe) {
+            mRecipeTask = null;
+            showProgress(false);
+            Bundle args = new Bundle();
+            args.putSerializable("recipe", recipe);
+            RecipeFragment newRecipeFragment = new RecipeFragment();
+            newRecipeFragment.setArguments(args);
+            loadFragment(newRecipeFragment, false);
+        }
+
+        @Override
+        protected void onCancelled() {
+
+        }
+    }
 }

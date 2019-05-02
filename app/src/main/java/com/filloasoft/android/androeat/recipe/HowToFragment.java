@@ -1,46 +1,32 @@
 package com.filloasoft.android.androeat.recipe;
 
-import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
-import android.widget.Toast;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 
 import com.filloasoft.android.androeat.R;
+import com.filloasoft.android.androeat.model.Recipe;
+import com.filloasoft.android.androeat.product.ShoppingBasketListAdapter;
+
+import java.lang.reflect.Array;
 
 public class HowToFragment extends Fragment {
 
-
-    private TextView mTextMessage;
-    private Toast toast;
-
-
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View howToView = inflater.inflate(R.layout.fragment_howto, null);
+        View howToView = inflater.inflate(R.layout.fragment_recipe_steps, null);
+        Bundle bundle = getArguments();
+        Recipe recipe = (Recipe) bundle.getSerializable("recipe");
+        HowToListAdapter adapter = new HowToListAdapter(getActivity(), recipe.getRecipeInstructions());
+        ListView stepsList = (ListView) howToView.findViewById(R.id.stepsList);
+        stepsList.setAdapter(adapter);
 
         return  howToView;
-    }
-
-    public void addToFavorite(View view) {
-        toast = Toast.makeText(getActivity(),
-                "FAVORITE!", Toast.LENGTH_SHORT);
-        toast.show();
-
-    }
-
-    public void shareRecipe(View view) {
-        toast = Toast.makeText(getActivity(),
-                "SHARING RECIPE!", Toast.LENGTH_SHORT);
-        toast.show();
-
     }
 
 }

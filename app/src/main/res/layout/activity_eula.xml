@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.widget.LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_gravity="center_horizontal"
+    android:orientation="vertical">
+
+
+    <TextView
+        android:id="@+id/eulaTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingTop="30dp"
+        android:text="AndroEat EULA"
+        android:textSize="16dp"
+        android:textColor="@color/colorAccent"
+        android:layout_gravity="center"
+        />
+
+    <TextView
+        android:id="@+id/eulaText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/activity_horizontal_margin"
+        android:text="You agree that you are solely responsible for (and that FilloaSoft has no responsibility to you or to any third party for) any data, content, or resources that you create, transmit or display through Android and/or applications for Android, and for the consequences of your actions (including any loss or damage which FilloaSoft may suffer) by doing so." />
+
+    <TextView
+        android:id="@+id/eulaText2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/activity_horizontal_margin"
+        android:text="You agree that you are solely responsible for (and that FilloaSoft has no responsibility to you or to any third party for) the ingredients or food allergens indicated in the application or the consequences of consumption by the user. "/>
+
+    <TextView
+        android:id="@+id/eulaText3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/activity_horizontal_margin"
+        android:text="You agree that you are solely responsible for (and that FilloaSoft has no responsibility to you or to any third party for) any breach of your obligations under the License Agreement, any applicable third party contract or Terms of Service, or any applicable law or regulation, and for the consequences (including any loss or damage which FilloaSoft or any third party may suffer) of any such breach." />
+
+    <android.support.v7.widget.AppCompatButton
+        android:id="@+id/sign_out_button"
+        android:textColor="@color/colorAccent"
+        android:background="@drawable/rounded_button"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/form_margin"
+        android:onClick="confirmEULA"
+        android:padding="12dp"
+        android:text="Accept"/>
+
+</android.widget.LinearLayout>
