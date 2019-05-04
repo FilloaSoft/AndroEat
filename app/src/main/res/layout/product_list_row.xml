@@ -9,7 +9,9 @@
         android:src="@drawable/ic_profile"
         android:layout_width="60dp"
         android:layout_height="60dp"
-        android:layout_centerVertical="true"/>
+        android:layout_centerVertical="true"
+        android:focusable="false"
+        />
 
     <TextView
         android:id="@+id/productName"
@@ -24,7 +26,9 @@
         android:layout_toRightOf="@+id/productImage"
         android:layout_toEndOf="@+id/productImage"
         android:layout_marginLeft="12dp"
-        android:layout_marginStart="12dp" />
+        android:layout_marginStart="12dp"
+        android:focusable="false"
+        />
 
     <TextView
         android:id="@+id/productDescription"
@@ -35,7 +39,9 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/productName"
         android:layout_alignLeft="@+id/productName"
-        android:layout_alignStart="@+id/productName" />
+        android:layout_alignStart="@+id/productName"
+        android:focusable="false"
+        />
     <CheckBox
         android:id="@+id/checkBox"
         android:layout_width="wrap_content"
@@ -43,6 +49,8 @@
         android:layout_centerHorizontal="false"
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
-        android:layout_marginRight="10dp"/>
+        android:layout_marginRight="10dp"
+        android:focusable="false"
+        />
 
 </RelativeLayout>

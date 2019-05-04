@@ -83,7 +83,7 @@ public class ScannerActivity extends AppCompatActivity {
         if (intentResult != null) {
             if (intentResult.getContents() != null) {
                 Intent returnIntent = new Intent();
-                returnIntent.putExtra("barcode",intentResult.getContents());
+                returnIntent.putExtra("barcode", intentResult.getContents());
                 setResult(Activity.RESULT_OK, returnIntent);
                 finish();
             }

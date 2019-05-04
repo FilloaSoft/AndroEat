@@ -19,6 +19,7 @@ import android.support.annotation.Nullable;
 import android.support.annotation.VisibleForTesting;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
@@ -122,13 +123,14 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         setSupportActionBar(myToolbar);
 
         //loading the default fragment
-        loadFragment(new HomeFragment(), true);
+//        loadFragment(new HomeFragment(), true);
     }
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         Fragment fragment = null;
         Bundle bundle = null;
+
         switch (item.getItemId()) {
             case R.id.navigation_recipe:
                 fragment = new HomeFragment();
@@ -153,10 +155,15 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         //switching fragment
         if (fragment != null) {
             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-
+//            transaction.add(R.id.fragment_basket, fragment);
             transaction.replace(R.id.fragment_container, fragment);
+//            toast = Toast.makeText(this, Toast.LENGTH_SHORT);
+//            toast.show();
+
+
             if (!firstFragment) {
                 transaction.addToBackStack(null);
+
             }
             transaction.commit();
             return true;
@@ -388,10 +395,22 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
     }
 
     public void findRecipes(View view) {
-        toast = Toast.makeText(this,
-                "Buscando recetas...", Toast.LENGTH_SHORT);
-        // Do something in response to button
-        toast.show();
+
+//        ShoppingBasketFragment profileFragment = (ShoppingBasketFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_basket);
+//
+//        if (profileFragment != null){
+//
+//            profileFragment.getRecipes();
+//            //Manage two pane layout
+//        }
+//        else{
+//            ShoppingBasketFragment newProfileFragment = new ShoppingBasketFragment();
+//            loadFragment(newProfileFragment, false);
+//            profileFragment.getRecipes();
+//
+//        }
+        ShoppingBasketFragment aaa = (ShoppingBasketFragment) this.getSupportFragmentManager().findFragmentById(R.id.fragment_container);
+//        aaa.getRecipes();
     }
 
     public void openAddDialog(View view) {

@@ -1,15 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.widget.RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:fab="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/fragment_basket">
+    android:id="@+id/fragment_basket"
+    android:focusable="false"
+    >
 
     <ListView
         android:id="@+id/basketList"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
-    />
+        android:layout_height="wrap_content"
+        android:clickable="false"
+        android:focusable="false"
+        android:focusableInTouchMode="false"
+        android:longClickable="false" />
 
     <com.getbase.floatingactionbutton.FloatingActionsMenu
         android:id="@+id/menu_fab"
@@ -23,7 +29,9 @@
         fab:fab_addButtonColorPressed="@color/colorPrimaryDark"
         fab:fab_addButtonSize="normal"
         fab:fab_labelStyle="@style/Etiquetas"
-        fab:fab_labelsPosition="left">
+        fab:fab_labelsPosition="left"
+        android:focusable="false"
+        >
 
         <com.getbase.floatingactionbutton.FloatingActionButton
             android:id="@+id/accion_camara"
@@ -33,7 +41,9 @@
             fab:fab_colorNormal="@color/colorGrey"
             fab:fab_colorPressed="@color/colorPrimaryDark"
             fab:fab_icon="@drawable/ic_camera"
-            fab:fab_size="mini" />
+            fab:fab_size="mini"
+            android:focusable="false"
+            />
 
         <com.getbase.floatingactionbutton.FloatingActionButton
             android:id="@+id/accion_escanear"
@@ -43,7 +53,9 @@
             fab:fab_colorNormal="@color/colorGrey"
             fab:fab_colorPressed="@color/colorPrimaryDark"
             fab:fab_icon="@drawable/ic_barcode"
-            fab:fab_size="mini" />
+            fab:fab_size="mini"
+            android:focusable="false"
+            />
 
         <com.getbase.floatingactionbutton.FloatingActionButton
             android:id="@+id/accion_buscar"
@@ -53,7 +65,9 @@
             fab:fab_colorNormal="@color/colorGrey"
             fab:fab_colorPressed="@color/colorPrimaryDark"
             fab:fab_icon="@drawable/ic_search"
-            fab:fab_size="mini" />
+            fab:fab_size="mini"
+            android:focusable="false"
+            />
 
     </com.getbase.floatingactionbutton.FloatingActionsMenu>
 
@@ -61,8 +75,8 @@
         android:id="@+id/findButtonBasket"
         android:layout_width="110dp"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
         android:layout_alignBaseline="@id/menu_fab"
+        android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:layout_marginStart="17dp"
         android:layout_marginLeft="17dp"
@@ -71,8 +85,8 @@
         android:layout_marginRight="17dp"
         android:layout_marginBottom="17dp"
         android:background="@color/colorAccent"
+        android:focusable="false"
         android:gravity="center"
-        android:onClick="findRecipes"
         android:text="Find recipes"
         android:textColor="#FFFFFF" />
 
