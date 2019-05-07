@@ -67,11 +67,19 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
+
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.web.client.RestTemplate;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
+
+
 import static java.security.AccessController.getContext;
 
 public class MainActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener, HomeFragment.OnClickHowTo, FavouriteFragment.OnClickHowTo{
@@ -80,6 +88,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
      * Keep track of the login task to ensure we can cancel it if requested.
      */
     private RecipeTask mRecipeTask = null;
+    private RecipesTask mRecipesTask = null;
 
     private TextView mTextMessage;
     private Toast toast;
@@ -93,6 +102,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
     private User usuario;
     private static final int REQUEST_CODE = 123;
 //    ShoppingBasketFragment shoppingBasketFragment = new ShoppingBasketFragment();
+    private List<Recipe> recipesList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -122,7 +132,9 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         setSupportActionBar(myToolbar);
 
         //loading the default fragment
-        loadFragment(new HomeFragment(), true);
+        mRecipesTask = new RecipesTask(123L);
+        mRecipesTask.execute((Void) null);
+        //loadFragment(new HomeFragment(), true);
     }
 
     @Override
@@ -131,7 +143,14 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         Bundle bundle = null;
         switch (item.getItemId()) {
             case R.id.navigation_recipe:
-                fragment = new HomeFragment();
+                if(recipesList==null){
+                    mRecipesTask = new RecipesTask(123L);
+                    mRecipesTask.execute((Void) null);
+                    return true;
+                }
+                else{
+                    fragment = new HomeFragment();
+                }
                 break;
             case R.id.navigation_basket:
                 fragment = new ShoppingBasketFragment();
@@ -151,6 +170,9 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
 
     public boolean loadFragment(Fragment fragment, boolean firstFragment) {
         //switching fragment
+        //comprobar que si es homeFragment se hayan cargado las recetas primero
+
+
         if (fragment != null) {
             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
 
@@ -343,8 +365,16 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
                     toast = Toast.makeText(this,"Registered succesfully!", Toast.LENGTH_SHORT);
                     toast.show();
 
-                    HomeFragment homeFragment = new HomeFragment();
-                    loadFragment(homeFragment,false);
+                   // HomeFragment homeFragment = new HomeFragment();
+                    //loadFragment(homeFragment,false);
+                    if(recipesList==null){
+                        mRecipesTask = new RecipesTask(123L);
+                        mRecipesTask.execute((Void) null);
+                    }
+                    else{
+                        HomeFragment homeFragment = new HomeFragment();
+                        loadFragment(homeFragment,false);
+                    }
                 } else {
                     SharedPreferences preferences = this.getSharedPreferences(
                             "com.filloasoft.android.androeat", Context.MODE_PRIVATE);
@@ -360,8 +390,16 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
                     }
                 }
         } else {
-            fragment = new HomeFragment();
-            loadFragment(fragment,false);
+           // fragment = new HomeFragment();
+           // loadFragment(fragment,false);
+            if(recipesList==null){
+                mRecipesTask = new RecipesTask(123L);
+                mRecipesTask.execute((Void) null);
+            }
+            else{
+                fragment = new HomeFragment();
+                loadFragment(fragment,false);
+            }
         }
     }
 
@@ -520,4 +558,74 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
 
         }
     }
+
+
+    public class RecipesTask extends AsyncTask<Void, Void, List<Recipe>> {
+
+        private final Long mId;
+        private List<Recipe> recipes;
+
+        RecipesTask(Long id) {
+            mId = id;
+        }
+
+        @Override
+        protected void onPreExecute(){
+
+        }
+
+        @Override
+        protected List<Recipe> doInBackground(Void... params) {
+            try {
+                final String url;
+                url = "http://androeat.dynu.net/recipe/random?tags=vegetarian";
+                RestTemplate restTemplate = new RestTemplate();
+                restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
+                ResponseEntity<List<Recipe>> response = restTemplate.exchange(
+                        url,
+                        HttpMethod.GET,
+                        null,
+                        new ParameterizedTypeReference<List<Recipe>>() {
+                        });
+                recipes = response.getBody();
+                URL newurl = null;
+                for (Recipe r : recipes) {
+                    try {
+                        newurl = new URL(r.getRecipeImage());
+                        Bitmap mIcon_val = BitmapFactory.decodeStream(newurl.openConnection().getInputStream());
+                        r.setRecipeBitmapImage(mIcon_val);
+                    } catch (MalformedURLException e) {
+                        e.printStackTrace();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    //recipes.add(r);
+                }
+                recipesList=recipes;
+                return recipes;
+            } catch (Exception e) {
+                Log.e("Error getting recipe -", e.getMessage(), e);
+            }
+            return null;
+        }
+
+
+        @Override
+        protected void onPostExecute(final List<Recipe> recipes) {
+            mRecipesTask = null;
+            Bundle args = new Bundle();
+            ArrayList<Recipe> casted = new ArrayList<Recipe>(recipes);
+            args.putParcelableArrayList("list", casted);
+
+             HomeFragment homeFragment = new HomeFragment();
+             homeFragment.setArguments(args);
+             loadFragment(homeFragment,true);
+        }
+
+        @Override
+        protected void onCancelled() {
+
+        }
+    }
+
 }
