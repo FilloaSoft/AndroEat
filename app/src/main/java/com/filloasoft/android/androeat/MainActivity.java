@@ -132,6 +132,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         setSupportActionBar(myToolbar);
 
         //loading the default fragment
+        showProgress(true);
         mRecipesTask = new RecipesTask(123L);
         mRecipesTask.execute((Void) null);
         //loadFragment(new HomeFragment(), true);
@@ -144,12 +145,18 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         switch (item.getItemId()) {
             case R.id.navigation_recipe:
                 if(recipesList==null){
+                    showProgress(true);
                     mRecipesTask = new RecipesTask(123L);
                     mRecipesTask.execute((Void) null);
                     return true;
                 }
                 else{
+                    Bundle args = new Bundle();
+                    ArrayList<Recipe> casted = new ArrayList<Recipe>(recipesList);
+                    args.putParcelableArrayList("list", casted);
+
                     fragment = new HomeFragment();
+                    fragment.setArguments(args);
                 }
                 break;
             case R.id.navigation_basket:
@@ -368,17 +375,23 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
                    // HomeFragment homeFragment = new HomeFragment();
                     //loadFragment(homeFragment,false);
                     if(recipesList==null){
+                        showProgress(true);
                         mRecipesTask = new RecipesTask(123L);
                         mRecipesTask.execute((Void) null);
                     }
                     else{
+                        Bundle args = new Bundle();
+                        ArrayList<Recipe> casted = new ArrayList<Recipe>(recipesList);
+                        args.putParcelableArrayList("list", casted);
+
                         HomeFragment homeFragment = new HomeFragment();
+                        homeFragment.setArguments(args);
                         loadFragment(homeFragment,false);
                     }
                 } else {
                     SharedPreferences preferences = this.getSharedPreferences(
                             "com.filloasoft.android.androeat", Context.MODE_PRIVATE);
-                    if (email!=null) {
+                    /*if (email!=null) {
                         databaseHelper = new DatabaseHelper(this);
                         if (databaseHelper.checkUser(email)) {
                             fragment = new ProfileFragment();
@@ -387,17 +400,23 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
                             fragment.setArguments(args);
                             loadFragment(fragment, false);
                         }
-                    }
+                    }*/
                 }
         } else {
            // fragment = new HomeFragment();
            // loadFragment(fragment,false);
             if(recipesList==null){
+                showProgress(true);
                 mRecipesTask = new RecipesTask(123L);
                 mRecipesTask.execute((Void) null);
             }
             else{
+                Bundle args = new Bundle();
+                ArrayList<Recipe> casted = new ArrayList<Recipe>(recipesList);
+                args.putParcelableArrayList("list", casted);
+
                 fragment = new HomeFragment();
+                fragment.setArguments(args);
                 loadFragment(fragment,false);
             }
         }
@@ -613,6 +632,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         @Override
         protected void onPostExecute(final List<Recipe> recipes) {
             mRecipesTask = null;
+            showProgress(false);
             Bundle args = new Bundle();
             ArrayList<Recipe> casted = new ArrayList<Recipe>(recipes);
             args.putParcelableArrayList("list", casted);
