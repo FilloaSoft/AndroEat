@@ -71,7 +71,7 @@ public class HomeFragment extends Fragment {
         grid.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-               mCallback.onRecipeSelected(homeView);
+               mCallback.onRecipeSelected(homeView, position);
             }
         });
 
@@ -84,7 +84,7 @@ public class HomeFragment extends Fragment {
     }
 
     public interface OnClickHowTo{
-        public void onRecipeSelected(View view);
+        public void onRecipeSelected(View view, int position);
     }
 
     @Override

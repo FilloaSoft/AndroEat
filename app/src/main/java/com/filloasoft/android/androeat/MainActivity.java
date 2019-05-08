@@ -422,15 +422,20 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         }
     }
 
-    public void onRecipeSelected(View view){
+    public void onRecipeSelected(View view, int position){
         RecipeFragment recipeFragment = (RecipeFragment) getSupportFragmentManager().findFragmentById(R.id.recipe_details);
         if (recipeFragment != null){
             //Manage two pane layout
         }
         else{
             showProgress(true);
-            mRecipeTask = new RecipeTask(123L);
-            mRecipeTask.execute((Void) null);
+            if (recipesList!=null) {
+                mRecipeTask = new RecipeTask(recipesList.get(position).getRecipeID());
+                mRecipeTask.execute((Void) null);
+            }
+            else {
+                Toast.makeText(this, "Unable to get selected recipe", Toast.LENGTH_SHORT).show();
+            }
         }
     }
 
@@ -527,10 +532,10 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
 
     public class RecipeTask extends AsyncTask<Void, Void, Recipe> {
 
-        private final Long mId;
+        private final String mId;
         private Recipe recipe;
 
-        RecipeTask(Long id) {
+        RecipeTask(String id) {
             mId = id;
         }
 
@@ -539,7 +544,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
             try {
                 final String url;
                 //url = getResources().getString(R.string.recipe_url)+mId;
-                url = "http://androeat.dynu.net/recipe/262682";
+                url = "http://androeat.dynu.net/recipe/"+mId;
                 RestTemplate restTemplate = new RestTemplate();
                 restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
                 recipe = restTemplate.getForObject(url, Recipe.class);

@@ -50,7 +50,7 @@ public class FavouriteFragment extends Fragment {
         grid.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                mCallback.onRecipeSelected(favouriteView);
+                mCallback.onRecipeSelected(favouriteView, position);
             }
         });
         mTextMessage = (TextView) favouriteView.findViewById(R.id.message);
@@ -63,7 +63,7 @@ public class FavouriteFragment extends Fragment {
     }
 
     public interface OnClickHowTo{
-        public void onRecipeSelected(View view);
+        public void onRecipeSelected(View view, int position);
     }
 
     @Override
