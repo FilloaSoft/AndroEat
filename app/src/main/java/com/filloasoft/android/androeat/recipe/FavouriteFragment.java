@@ -13,6 +13,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.filloasoft.android.androeat.R;
+import com.filloasoft.android.androeat.model.Recipe;
+
+import java.util.List;
 
 public class FavouriteFragment extends Fragment {
 
@@ -38,27 +41,29 @@ public class FavouriteFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         final View favouriteView = inflater.inflate(R.layout.fragment_favourites, null);
 
-        HomeListAdapter adapter = new HomeListAdapter(getActivity(), recipeName, recipeDescription, recipeImage);
+        Bundle bundle = getArguments();
+        List<Recipe> recipes = bundle.getParcelableArrayList("list");
+
+        HomeListAdapter adapter = new HomeListAdapter(getActivity(), recipes);
         grid = favouriteView.findViewById(R.id.home_grid);
         grid.setAdapter(adapter);
         grid.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                mCallback.onRecipeSelected(favouriteView);
+                mCallback.onRecipeSelected(favouriteView, position);
             }
         });
         mTextMessage = (TextView) favouriteView.findViewById(R.id.message);
 
         toast = Toast.makeText(getActivity(),
                 "Pantalla de inicio!", Toast.LENGTH_SHORT);
-
         toast.show();
 
         return favouriteView;
     }
 
     public interface OnClickHowTo{
-        public void onRecipeSelected(View view);
+        public void onRecipeSelected(View view, int position);
     }
 
     @Override
