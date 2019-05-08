@@ -12,9 +12,11 @@ import android.widget.GridView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.filloasoft.android.androeat.MainActivity;
 import com.filloasoft.android.androeat.R;
 import com.filloasoft.android.androeat.model.Recipe;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class FavouriteFragment extends Fragment {
@@ -42,9 +44,9 @@ public class FavouriteFragment extends Fragment {
         final View favouriteView = inflater.inflate(R.layout.fragment_favourites, null);
 
         Bundle bundle = getArguments();
-        List<Recipe> recipes = bundle.getParcelableArrayList("list");
+        //List<Recipe> recipes = bundle.getParcelableArrayList("list");
 
-        HomeListAdapter adapter = new HomeListAdapter(getActivity(), recipes);
+        HomeListAdapter adapter = new HomeListAdapter(getActivity(), new ArrayList<Recipe>());
         grid = favouriteView.findViewById(R.id.home_grid);
         grid.setAdapter(adapter);
         grid.setOnItemClickListener(new AdapterView.OnItemClickListener() {
