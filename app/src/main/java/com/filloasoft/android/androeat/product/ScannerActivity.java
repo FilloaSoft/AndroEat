@@ -69,10 +69,6 @@ public class ScannerActivity extends AppCompatActivity {
         integrator.setCameraId(0);
         integrator.setBeepEnabled(true);
         integrator.initiateScan();
-
-//        toast = Toast.makeText(getApplicationContext(),
-//                "Escaneando codigo...", Toast.LENGTH_SHORT);
-//        toast.show();
     }
 
 

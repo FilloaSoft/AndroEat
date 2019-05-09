@@ -15,12 +15,9 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.annotation.VisibleForTesting;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -29,27 +26,22 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.filloasoft.android.androeat.model.ProductListView;
 import com.filloasoft.android.androeat.model.Recipe;
+import com.filloasoft.android.androeat.product.ProductDetailsFragment;
+import com.filloasoft.android.androeat.product.RapidEatAsyncTask;
 import com.filloasoft.android.androeat.product.ShoppingBasketFragment;
+import com.filloasoft.android.androeat.product.ShoppingBasketListAdapter;
 import com.filloasoft.android.androeat.recipe.FavouriteFragment;
 import com.filloasoft.android.androeat.recipe.HomeFragment;
 import com.filloasoft.android.androeat.recipe.RecipeFragment;
-import android.util.Log;
-import android.view.MenuItem;
-import android.view.View;
+
 import android.view.inputmethod.InputMethodManager;
-import android.widget.ArrayAdapter;
-import android.widget.EditText;
-import android.widget.TextView;
-import android.widget.Toast;
-import com.filloasoft.android.androeat.model.Product;
+
 import com.filloasoft.android.androeat.model.User;
 import com.filloasoft.android.androeat.product.CameraActivity;
 import com.filloasoft.android.androeat.product.ScannerActivity;
-import com.filloasoft.android.androeat.product.ShoppingBasketFragment;
-import com.filloasoft.android.androeat.recipe.FavouriteFragment;
-import com.filloasoft.android.androeat.recipe.HomeFragment;
-import com.filloasoft.android.androeat.recipe.HowToFragment;
 import com.filloasoft.android.androeat.sql.DatabaseHelper;
 import com.filloasoft.android.androeat.user.LoginFragment;
 import com.filloasoft.android.androeat.user.ProfileFragment;
@@ -59,7 +51,6 @@ import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
-import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -73,9 +64,8 @@ import org.springframework.web.client.RestTemplate;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
-import static java.security.AccessController.getContext;
 
-public class MainActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener, HomeFragment.OnClickHowTo, FavouriteFragment.OnClickHowTo{
+public class MainActivity extends AppCompatActivity implements ShoppingBasketListAdapter.OnItemClickedListener, BottomNavigationView.OnNavigationItemSelectedListener, HomeFragment.OnClickHowTo, FavouriteFragment.OnClickHowTo{
 
     /**
      * Keep track of the login task to ensure we can cancel it if requested.
@@ -93,11 +83,21 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
     private GoogleSignInClient mGoogleSignInClient;
     private User usuario;
     private static final int REQUEST_CODE = 123;
+    private ShoppingBasketListAdapter basketListAdapter ;
 //    ShoppingBasketFragment shoppingBasketFragment = new ShoppingBasketFragment();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        this.basketListAdapter = new ShoppingBasketListAdapter();
+        this.basketListAdapter.setOnItemClickedListener(new ShoppingBasketListAdapter.OnItemClickedListener() {
+            @Override
+            public void onItemClicked(ProductListView product) {
+                ProductDetailsFragment nextFrag = new ProductDetailsFragment().newInstance(product);
+                loadFragment(nextFrag,false);
+            }
+    });
 
         mTextMessage = (TextView) findViewById(R.id.message);
         setContentView(R.layout.activity_main);
@@ -124,6 +124,10 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
 
         //loading the default fragment
 //        loadFragment(new HomeFragment(), true);
+    }
+
+    public ShoppingBasketListAdapter getListAdapter(){
+        return this.basketListAdapter;
     }
 
     @Override
@@ -171,13 +175,13 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         return false;
     }
 
-    @Override
-    public void onStart() {
-        super.onStart();
-        // Check if user is signed in (non-null) and update UI accordingly.
-        FirebaseUser currentUser = mAuth.getCurrentUser();
-        updateUI(currentUser);
-    }
+//    @Override
+//    public void onStart() {
+//        super.onStart();
+//        // Check if user is signed in (non-null) and update UI accordingly.
+//        FirebaseUser currentUser = mAuth.getCurrentUser();
+//        updateUI(currentUser);
+//    }
 
     @Override
 
@@ -189,9 +193,9 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
             if(resultCode == Activity.RESULT_OK){
             String barcode = data.getStringExtra("barcode");
 
-                ShoppingBasketFragment apiCall = new ShoppingBasketFragment();
-                apiCall.apiCall.execute(barcode);
-
+//                ShoppingBasketFragment apiCall = new ShoppingBasketFragment();
+                RapidEatAsyncTask apiCall = new RapidEatAsyncTask(basketListAdapter);
+                apiCall.execute(barcode);
             }
         }
         if (requestCode == RC_SIGN_IN) {
@@ -410,7 +414,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
 //
 //        }
         ShoppingBasketFragment aaa = (ShoppingBasketFragment) this.getSupportFragmentManager().findFragmentById(R.id.fragment_container);
-//        aaa.getRecipes();
+        aaa.getRecipes();
     }
 
     public void openAddDialog(View view) {
@@ -484,6 +488,15 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
                 mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
             }
         });
+    }
+
+    @Override
+    public void onItemClicked(ProductListView product) {
+        ProductDetailsFragment nextFrag = new ProductDetailsFragment().newInstance(product);
+        this.getSupportFragmentManager().beginTransaction()
+                .replace(R.id.fragment_container, nextFrag)
+                .addToBackStack(null)
+                .commit();
     }
 
 
