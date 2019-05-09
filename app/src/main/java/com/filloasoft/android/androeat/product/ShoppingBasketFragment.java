@@ -76,15 +76,16 @@ public class ShoppingBasketFragment extends Fragment {
         recyclerView = basketView.findViewById(R.id.basketList);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this.getContext());
         recyclerView.setLayoutManager(layoutManager);
-
+        this.mAdapter = ((MainActivity) getActivity()).getListAdapter();
+//        this.mAdapter.addItem(new ProductListView("test","text", null, null, null));
         recyclerView.setAdapter(mAdapter);
-        final Toast toast = Toast.makeText(this.getContext(),
-                mAdapter.getData().toString(), Toast.LENGTH_SHORT);
+
 
         final FloatingActionsMenu menuFab = basketView.findViewById(R.id.menu_fab);
-        menuFab.collapseImmediately();
 
         final Button findButtom = basketView.findViewById(R.id.findButtonBasket);
+        // Do something in response to button
+//        toast.show();
         enableSwipeToDeleteAndUndo();
 
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {

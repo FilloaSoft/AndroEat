@@ -59,11 +59,18 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
+
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.web.client.RestTemplate;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
+
 
 public class MainActivity extends AppCompatActivity implements ShoppingBasketListAdapter.OnItemClickedListener, BottomNavigationView.OnNavigationItemSelectedListener, HomeFragment.OnClickHowTo, FavouriteFragment.OnClickHowTo{
 
@@ -71,6 +78,7 @@ public class MainActivity extends AppCompatActivity implements ShoppingBasketLis
      * Keep track of the login task to ensure we can cancel it if requested.
      */
     private RecipeTask mRecipeTask = null;
+    private RecipesTask mRecipesTask = null;
 
     private TextView mTextMessage;
     private Toast toast;
@@ -85,6 +93,7 @@ public class MainActivity extends AppCompatActivity implements ShoppingBasketLis
     private static final int REQUEST_CODE = 123;
     private ShoppingBasketListAdapter basketListAdapter ;
 //    ShoppingBasketFragment shoppingBasketFragment = new ShoppingBasketFragment();
+    private List<Recipe> recipesList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -137,7 +146,20 @@ public class MainActivity extends AppCompatActivity implements ShoppingBasketLis
 
         switch (item.getItemId()) {
             case R.id.navigation_recipe:
-                fragment = new HomeFragment();
+                if(recipesList==null){
+                    showProgress(true);
+                    mRecipesTask = new RecipesTask(123L);
+                    mRecipesTask.execute((Void) null);
+                    return true;
+                }
+                else{
+                    Bundle args = new Bundle();
+                    ArrayList<Recipe> casted = new ArrayList<Recipe>(recipesList);
+                    args.putParcelableArrayList("list", casted);
+
+                    fragment = new HomeFragment();
+                    fragment.setArguments(args);
+                }
                 break;
             case R.id.navigation_basket:
                 fragment = new ShoppingBasketFragment();
@@ -157,6 +179,9 @@ public class MainActivity extends AppCompatActivity implements ShoppingBasketLis
 
     public boolean loadFragment(Fragment fragment, boolean firstFragment) {
         //switching fragment
+        //comprobar que si es homeFragment se hayan cargado las recetas primero
+
+
         if (fragment != null) {
             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
 //            transaction.add(R.id.fragment_basket, fragment);
@@ -354,12 +379,26 @@ public class MainActivity extends AppCompatActivity implements ShoppingBasketLis
                     toast = Toast.makeText(this,"Registered succesfully!", Toast.LENGTH_SHORT);
                     toast.show();
 
-                    HomeFragment homeFragment = new HomeFragment();
-                    loadFragment(homeFragment,false);
+                   // HomeFragment homeFragment = new HomeFragment();
+                    //loadFragment(homeFragment,false);
+                    if(recipesList==null){
+                        showProgress(true);
+                        mRecipesTask = new RecipesTask(123L);
+                        mRecipesTask.execute((Void) null);
+                    }
+                    else{
+                        Bundle args = new Bundle();
+                        ArrayList<Recipe> casted = new ArrayList<Recipe>(recipesList);
+                        args.putParcelableArrayList("list", casted);
+
+                        HomeFragment homeFragment = new HomeFragment();
+                        homeFragment.setArguments(args);
+                        loadFragment(homeFragment,false);
+                    }
                 } else {
                     SharedPreferences preferences = this.getSharedPreferences(
                             "com.filloasoft.android.androeat", Context.MODE_PRIVATE);
-                    if (email!=null) {
+                    /*if (email!=null) {
                         databaseHelper = new DatabaseHelper(this);
                         if (databaseHelper.checkUser(email)) {
                             fragment = new ProfileFragment();
@@ -368,23 +407,42 @@ public class MainActivity extends AppCompatActivity implements ShoppingBasketLis
                             fragment.setArguments(args);
                             loadFragment(fragment, false);
                         }
-                    }
+                    }*/
                 }
         } else {
-            fragment = new HomeFragment();
-            loadFragment(fragment,false);
+           // fragment = new HomeFragment();
+           // loadFragment(fragment,false);
+            if(recipesList==null){
+                showProgress(true);
+                mRecipesTask = new RecipesTask(123L);
+                mRecipesTask.execute((Void) null);
+            }
+            else{
+                Bundle args = new Bundle();
+                ArrayList<Recipe> casted = new ArrayList<Recipe>(recipesList);
+                args.putParcelableArrayList("list", casted);
+
+                fragment = new HomeFragment();
+                fragment.setArguments(args);
+                loadFragment(fragment,false);
+            }
         }
     }
 
-    public void onRecipeSelected(View view){
+    public void onRecipeSelected(View view, int position){
         RecipeFragment recipeFragment = (RecipeFragment) getSupportFragmentManager().findFragmentById(R.id.recipe_details);
         if (recipeFragment != null){
             //Manage two pane layout
         }
         else{
             showProgress(true);
-            mRecipeTask = new RecipeTask(123L);
-            mRecipeTask.execute((Void) null);
+            if (recipesList!=null) {
+                mRecipeTask = new RecipeTask(recipesList.get(position).getRecipeID());
+                mRecipeTask.execute((Void) null);
+            }
+            else {
+                Toast.makeText(this, "Unable to get selected recipe", Toast.LENGTH_SHORT).show();
+            }
         }
     }
 
@@ -502,10 +560,10 @@ public class MainActivity extends AppCompatActivity implements ShoppingBasketLis
 
     public class RecipeTask extends AsyncTask<Void, Void, Recipe> {
 
-        private final Long mId;
+        private final String mId;
         private Recipe recipe;
 
-        RecipeTask(Long id) {
+        RecipeTask(String id) {
             mId = id;
         }
 
@@ -514,7 +572,7 @@ public class MainActivity extends AppCompatActivity implements ShoppingBasketLis
             try {
                 final String url;
                 //url = getResources().getString(R.string.recipe_url)+mId;
-                url = "http://androeat.dynu.net/recipe/262682";
+                url = "http://androeat.dynu.net/recipe/"+mId;
                 RestTemplate restTemplate = new RestTemplate();
                 restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
                 recipe = restTemplate.getForObject(url, Recipe.class);
@@ -545,6 +603,76 @@ public class MainActivity extends AppCompatActivity implements ShoppingBasketLis
             RecipeFragment newRecipeFragment = new RecipeFragment();
             newRecipeFragment.setArguments(args);
             loadFragment(newRecipeFragment, false);
+        }
+
+        @Override
+        protected void onCancelled() {
+
+        }
+    }
+
+
+    public class RecipesTask extends AsyncTask<Void, Void, List<Recipe>> {
+
+        private final Long mId;
+        private List<Recipe> recipes;
+
+        RecipesTask(Long id) {
+            mId = id;
+        }
+
+        @Override
+        protected void onPreExecute(){
+
+        }
+
+        @Override
+        protected List<Recipe> doInBackground(Void... params) {
+            try {
+                final String url;
+                url = "http://androeat.dynu.net/recipe/random?tags=vegetarian";
+                RestTemplate restTemplate = new RestTemplate();
+                restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
+                ResponseEntity<List<Recipe>> response = restTemplate.exchange(
+                        url,
+                        HttpMethod.GET,
+                        null,
+                        new ParameterizedTypeReference<List<Recipe>>() {
+                        });
+                recipes = response.getBody();
+                URL newurl = null;
+                for (Recipe r : recipes) {
+                    try {
+                        newurl = new URL(r.getRecipeImage());
+                        Bitmap mIcon_val = BitmapFactory.decodeStream(newurl.openConnection().getInputStream());
+                        r.setRecipeBitmapImage(mIcon_val);
+                    } catch (MalformedURLException e) {
+                        e.printStackTrace();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    //recipes.add(r);
+                }
+                recipesList=recipes;
+                return recipes;
+            } catch (Exception e) {
+                Log.e("Error getting recipe -", e.getMessage(), e);
+            }
+            return null;
+        }
+
+
+        @Override
+        protected void onPostExecute(final List<Recipe> recipes) {
+            mRecipesTask = null;
+            showProgress(false);
+            Bundle args = new Bundle();
+            ArrayList<Recipe> casted = new ArrayList<Recipe>(recipes);
+            args.putParcelableArrayList("list", casted);
+
+             HomeFragment homeFragment = new HomeFragment();
+             homeFragment.setArguments(args);
+             loadFragment(homeFragment,true);
         }
 
         @Override
