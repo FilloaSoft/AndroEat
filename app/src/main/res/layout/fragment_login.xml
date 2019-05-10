@@ -20,12 +20,23 @@
         <ImageView android:src="@drawable/ic_basket"
             android:layout_width="100dp"
             android:layout_height="100dp"
-            android:layout_marginBottom="24dp"
+            android:layout_marginBottom="10dp"
             android:tint="@color/colorAccent"
             android:layout_gravity="center_horizontal"
             android:outlineSpotShadowColor="@color/colorAccent"/>
 
-        <!-- Email Label -->
+        <TextView
+            android:layout_margin="30dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Sign in with Google to enjoy AndroEat's customized diets among other features!"
+            android:textColor="@color/colorPrimaryDark"
+            android:textSize="20dp"
+            android:gravity="center"
+            />
+
+
+        <!-- Email Label
         <android.support.design.widget.TextInputLayout
             android:id="@+id/textInputLayoutEmail"
             android:layout_width="match_parent"
@@ -44,7 +55,7 @@
                 android:hint="Email" />
         </android.support.design.widget.TextInputLayout>
 
-        <!-- Password Label -->
+         Password Label
         <android.support.design.widget.TextInputLayout
             android:id="@+id/textInputLayoutPassword"
             android:layout_width="match_parent"
@@ -60,29 +71,7 @@
                 android:layout_height="wrap_content"
                 android:inputType="textPassword"
                 android:hint="Password"/>
-        </android.support.design.widget.TextInputLayout>
-
-        <android.support.v7.widget.AppCompatButton
-            android:id="@+id/btn_login"
-            android:textColor="@color/colorAccent"
-            android:background="@drawable/rounded_button"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
-            android:layout_marginBottom="24dp"
-            android:padding="12dp"
-            android:text="Login"/>
-
-        <android.support.v7.widget.AppCompatButton
-            android:id="@+id/btn_signup"
-            android:textColor="@color/colorAccent"
-            android:background="@drawable/rounded_button"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
-            android:layout_marginBottom="24dp"
-            android:padding="12dp"
-            android:text="No account yet? Create one"/>
+        </android.support.design.widget.TextInputLayout>-->
 
         <com.google.android.gms.common.SignInButton
             android:id="@+id/sign_in_button"

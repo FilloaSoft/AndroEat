@@ -1,13 +1,17 @@
 package com.filloasoft.android.androeat.recipe;
 
+import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.ColorFilter;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -37,6 +41,25 @@ public class RecipeFragment extends Fragment {
 
         Bundle bundle = getArguments();
         recipe = (Recipe) bundle.getSerializable("recipe");
+
+        final FloatingActionButton favouriteButton = (FloatingActionButton) view.findViewById(R.id.favButton);
+        favouriteButton.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                if (favouriteButton.getColorFilter().toString().equals(String.valueOf(ContextCompat.getColor(getActivity(),
+                        R.color.colorWhite2)))){
+                    int color = Color.parseColor("#670028");
+                    favouriteButton.setColorFilter(color);
+                }
+                else{
+                    int color = Color.parseColor("#333333");
+                    favouriteButton.setColorFilter(color);
+                }
+            }
+        });
+
 
         TabLayout tabLayout = (TabLayout) view.findViewById(R.id.tab_layout);
         tabLayout.addTab(tabLayout.newTab().setText("Details"));
@@ -108,4 +131,5 @@ public class RecipeFragment extends Fragment {
             return mNumOfTabs;
         }
     }
+
 }

@@ -62,14 +62,18 @@
                             android:tint="@color/colorAccent"
                             />
                         <android.support.design.widget.FloatingActionButton
+                            android:id="@+id/favButton"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_margin="5dp"
+                            android:onClick="addToFavourites"
                             android:layout_gravity="center"
                             android:layout_alignParentRight="true"
-                            android:backgroundTint="#D9DCE0"
+                            android:backgroundTint="@color/colorGrey"
+                            app:borderWidth="0dp"
+                            app:elevation="2dp"
                             android:src="@drawable/ic_fav"
-                            android:tint="@color/colorAccent"
+                            android:tint="@color/colorWhite"
                             />
                         </LinearLayout>
                     </FrameLayout>
