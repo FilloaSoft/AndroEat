@@ -47,6 +47,7 @@ import com.filloasoft.android.androeat.user.LoginFragment;
 import com.filloasoft.android.androeat.user.ProfileFragment;
 import com.filloasoft.android.androeat.user.SignupFragment;
 import com.filloasoft.android.androeat.utilities.AuthUtils;
+import com.filloasoft.android.androeat.utilities.ImageUtils;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -59,6 +60,7 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
+import com.squareup.picasso.Picasso;
 
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
@@ -132,7 +134,10 @@ public class MainActivity extends AppCompatActivity implements ShoppingBasketLis
         setSupportActionBar(myToolbar);
 
         //loading the default fragment
-//        loadFragment(new HomeFragment(), true);
+        showProgress(true);
+        mRecipesTask = new RecipesTask(123L);
+        mRecipesTask.execute((Void) null);
+        //loadFragment(new HomeFragment(), true);
     }
 
     public ShoppingBasketListAdapter getListAdapter(){
@@ -200,13 +205,13 @@ public class MainActivity extends AppCompatActivity implements ShoppingBasketLis
         return false;
     }
 
-//    @Override
-//    public void onStart() {
-//        super.onStart();
-//        // Check if user is signed in (non-null) and update UI accordingly.
-//        FirebaseUser currentUser = mAuth.getCurrentUser();
-//        updateUI(currentUser);
-//    }
+    @Override
+    public void onStart() {
+        super.onStart();
+        // Check if user is signed in (non-null) and update UI accordingly.
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+        updateUI(currentUser);
+    }
 
     @Override
 
@@ -238,15 +243,6 @@ public class MainActivity extends AppCompatActivity implements ShoppingBasketLis
         }
     }
 
-
-//    @Override
-//    public void onStart() {
-//        super.onStart();
-//        // Check if user is signed in (non-null) and update UI accordingly.
-//        FirebaseUser currentUser = mAuth.getCurrentUser();
-//        updateUI(currentUser);
-//    }
-
     private void firebaseAuthWithGoogle(GoogleSignInAccount acct) {
         Log.d(TAG, "firebaseAuthWithGoogle:" + acct.getId());
         showProgressDialog();
@@ -260,6 +256,11 @@ public class MainActivity extends AppCompatActivity implements ShoppingBasketLis
                             // Sign in success, update UI with the signed-in user's information
                             Log.d(TAG, "signInWithCredential:success");
                             FirebaseUser user = mAuth.getCurrentUser();
+                            SharedPreferences preferences = getApplicationContext().getSharedPreferences(
+                                    "com.filloasoft.android.androeat", Context.MODE_PRIVATE);
+
+                            preferences.edit().putString("username", user.getDisplayName()).apply();
+                            Picasso.with(getApplicationContext()).load(user.getPhotoUrl()).into(ImageUtils.picassoImageTarget(getApplicationContext(), "imageDir", "my_image.jpeg"));
                             updateUI(user);
                         } else {
                             // If sign in fails, display a message to the user.

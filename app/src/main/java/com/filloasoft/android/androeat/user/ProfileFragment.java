@@ -1,6 +1,7 @@
 package com.filloasoft.android.androeat.user;
 
 import android.content.Context;
+import android.content.ContextWrapper;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -12,12 +13,16 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.filloasoft.android.androeat.MainActivity;
 import com.filloasoft.android.androeat.R;
+import com.squareup.picasso.Picasso;
+
+import java.io.File;
 
 public class ProfileFragment extends Fragment implements View.OnClickListener{
 
@@ -31,6 +36,17 @@ public class ProfileFragment extends Fragment implements View.OnClickListener{
         String email = args.getString("email", "");
         TextView textView = profileView.findViewById(R.id.userEmail);
         textView.setText(email);
+
+        String username = args.getString("username", "");
+        TextView usernameText = profileView.findViewById(R.id.userName);
+        usernameText.setText(username);
+
+        //Retrieve user profile image from storage and load into imageview
+        ImageView profileImage = profileView.findViewById(R.id.profile_image);
+        ContextWrapper cw = new ContextWrapper(getActivity());
+        File directory = cw.getDir("imageDir", Context.MODE_PRIVATE);
+        File myImageFile = new File(directory, "my_image.jpeg");
+        Picasso.with(getContext()).load(myImageFile).into(profileImage);
 
         AppCompatButton appCompatButtonLogin = (AppCompatButton) profileView.findViewById(R.id.sign_out_button);
 

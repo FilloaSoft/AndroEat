@@ -18,11 +18,12 @@
         android:gravity="center"
         android:onClick="findRecipes"
         android:textColor="#FFFFFF"
-        android:background="@color/colorAccent"
+        android:background="@drawable/rounded_accent_button"
+        android:elevation="2dp"
         android:layout_alignParentBottom="true"
         android:layout_alignBaseline="@id/menu_fab"
         android:layout_margin="17dp"
         android:layout_centerHorizontal="true"
-        android:text="Find recipes" />
+        android:text="Discover recipes" />
 
 </android.widget.RelativeLayout>
