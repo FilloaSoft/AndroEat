@@ -21,6 +21,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -66,6 +67,7 @@ import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.util.StringUtils;
 import org.springframework.web.client.RestTemplate;
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -630,8 +632,11 @@ public class MainActivity extends AppCompatActivity implements ShoppingBasketLis
         @Override
         protected List<Recipe> doInBackground(Void... params) {
             try {
+                //get user preferences if exists
+                String userPreferences = getUserPreferences();
+
                 final String url;
-                url = "http://androeat.dynu.net/recipe/random?tags=vegetarian";
+                url = "http://androeat.dynu.net/recipe/random?tags="+userPreferences;
                 RestTemplate restTemplate = new RestTemplate();
                 restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
                 ResponseEntity<List<Recipe>> response = restTemplate.exchange(
@@ -680,5 +685,35 @@ public class MainActivity extends AppCompatActivity implements ShoppingBasketLis
         protected void onCancelled() {
 
         }
+    }
+
+    private String getUserPreferences(){
+        SharedPreferences preferences = this.getSharedPreferences(
+                "com.filloasoft.android.androeat", Context.MODE_PRIVATE);
+
+        List<String> preferencesList = new ArrayList<>();
+
+        String vegan = preferences.getString("vegan", "");
+        if (!vegan.isEmpty()){
+            preferencesList.add(vegan);
+        }
+        String vegetarian = preferences.getString("vegetarian", "");
+        if (!vegetarian.isEmpty()){
+            preferencesList.add(vegetarian);
+        }
+        String glutenFree = preferences.getString("glutenfree", "");
+        if (!glutenFree.isEmpty()){
+            preferencesList.add(glutenFree);
+        }
+        String dairyFree = preferences.getString("dairyfree", "");
+        if (!dairyFree.isEmpty()){
+            preferencesList.add(dairyFree);
+        }
+        String sustainable = preferences.getString("sustainable", "");
+        if (!sustainable.isEmpty()){
+            preferencesList.add(sustainable);
+        }
+
+        return TextUtils.join("%20", preferencesList);
     }
 }
