@@ -43,6 +43,7 @@ import android.view.inputmethod.InputMethodManager;
 import com.filloasoft.android.androeat.model.User;
 import com.filloasoft.android.androeat.product.CameraActivity;
 import com.filloasoft.android.androeat.product.ScannerActivity;
+import com.filloasoft.android.androeat.recipe.RecipeResultFragment;
 import com.filloasoft.android.androeat.sql.DatabaseHelper;
 import com.filloasoft.android.androeat.user.LoginFragment;
 import com.filloasoft.android.androeat.user.ProfileFragment;
@@ -69,6 +70,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.util.StringUtils;
 import org.springframework.web.client.RestTemplate;
+import org.w3c.dom.Text;
+
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -76,13 +79,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class MainActivity extends AppCompatActivity implements ShoppingBasketListAdapter.OnItemClickedListener, BottomNavigationView.OnNavigationItemSelectedListener, HomeFragment.OnClickHowTo, FavouriteFragment.OnClickHowTo{
+public class MainActivity extends AppCompatActivity implements ShoppingBasketListAdapter.OnItemClickedListener, BottomNavigationView.OnNavigationItemSelectedListener, HomeFragment.OnClickHowTo, RecipeResultFragment.OnClickHowTo, FavouriteFragment.OnClickHowTo{
 
     /**
      * Keep track of the login task to ensure we can cancel it if requested.
      */
     private RecipeTask mRecipeTask = null;
     private RecipesTask mRecipesTask = null;
+    private List<String> mIngredients = null;
 
     private TextView mTextMessage;
     private Toast toast;
@@ -474,8 +478,17 @@ public class MainActivity extends AppCompatActivity implements ShoppingBasketLis
 //            profileFragment.getRecipes();
 //
 //        }
-        ShoppingBasketFragment aaa = (ShoppingBasketFragment) this.getSupportFragmentManager().findFragmentById(R.id.fragment_container);
-        aaa.getRecipes();
+        ShoppingBasketFragment shoppingBasketFragment = (ShoppingBasketFragment) this.getSupportFragmentManager().findFragmentById(R.id.fragment_container);
+        mIngredients = shoppingBasketFragment.getRecipes();
+        if (mIngredients==null || mIngredients.isEmpty()){
+            Toast.makeText(getBaseContext(),"No products selected!",Toast.LENGTH_LONG).show();
+        }
+        else {
+            showProgress(true);
+            mRecipesTask = new RecipesTask(120L);
+            mRecipesTask.execute((Void) null);
+        }
+
     }
 
     public void openAddDialog(View view) {
@@ -636,7 +649,18 @@ public class MainActivity extends AppCompatActivity implements ShoppingBasketLis
                 String userPreferences = getUserPreferences();
 
                 final String url;
-                url = "http://androeat.dynu.net/recipe/random?tags="+userPreferences;
+                if (mId==123L) {
+                    url = "http://androeat.dynu.net/recipe/random?tags=" + userPreferences;
+                }
+                else{
+                    if (!mIngredients.isEmpty()) {
+                        String ingredients = TextUtils.join("%2C", mIngredients);
+                        url = "http://androeat.dynu.net/recipe/search?ingredients=" + ingredients;
+                    }
+                    else{
+                        return null;
+                    }
+                }
                 RestTemplate restTemplate = new RestTemplate();
                 restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
                 ResponseEntity<List<Recipe>> response = restTemplate.exchange(
@@ -672,13 +696,24 @@ public class MainActivity extends AppCompatActivity implements ShoppingBasketLis
         protected void onPostExecute(final List<Recipe> recipes) {
             mRecipesTask = null;
             showProgress(false);
-            Bundle args = new Bundle();
-            ArrayList<Recipe> casted = new ArrayList<Recipe>(recipes);
-            args.putParcelableArrayList("list", casted);
 
-             HomeFragment homeFragment = new HomeFragment();
-             homeFragment.setArguments(args);
-             loadFragment(homeFragment,true);
+            if (recipes==null ||recipes.isEmpty()){
+                Toast.makeText(getBaseContext(),"Error getting recipes",Toast.LENGTH_LONG).show();
+            }
+            else {
+                Bundle args = new Bundle();
+                ArrayList<Recipe> casted = new ArrayList<Recipe>(recipes);
+                args.putParcelableArrayList("list", casted);
+                if (mId == 123L) {
+                    HomeFragment homeFragment = new HomeFragment();
+                    homeFragment.setArguments(args);
+                    loadFragment(homeFragment, true);
+                } else {
+                    RecipeResultFragment recipeResultFragment = new RecipeResultFragment();
+                    recipeResultFragment.setArguments(args);
+                    loadFragment(recipeResultFragment, false);
+                }
+            }
         }
 
         @Override
