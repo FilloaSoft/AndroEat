@@ -119,8 +119,20 @@ public class MainActivity extends AppCompatActivity implements RecipeFragment.On
         this.favouritesListAdapter.setOnItemClickedListener(new FavouriteListAdapter.OnItemRecipeClickedListener() {
             @Override
             public void onItemRecipeClicked(Recipe recipe) {
-                RecipeResultFragment nextFrag = new RecipeResultFragment();
-                loadFragment(nextFrag,false);
+                RecipeFragment recipeFragment = (RecipeFragment) getSupportFragmentManager().findFragmentById(R.id.recipe_details);
+                if (recipeFragment != null){
+                    //Manage two pane layout
+                }
+                else{
+                    showProgress(true);
+                    if (recipesList!=null) {
+                        mRecipeTask = new RecipeTask(recipe.getRecipeID());
+                        mRecipeTask.execute((Void) null);
+                    }
+                    else {
+                        Toast.makeText(getApplicationContext(), "Unable to get selected recipe", Toast.LENGTH_SHORT).show();
+                    }
+                }
             }
         });
 
@@ -601,7 +613,20 @@ public class MainActivity extends AppCompatActivity implements RecipeFragment.On
 
     @Override
     public void onItemRecipeClicked(Recipe recipe) {
-    // do something
+        RecipeFragment recipeFragment = (RecipeFragment) getSupportFragmentManager().findFragmentById(R.id.recipe_details);
+        if (recipeFragment != null){
+            //Manage two pane layout
+        }
+        else{
+            showProgress(true);
+            if (recipesList!=null) {
+                mRecipeTask = new RecipeTask(recipe.getRecipeID());
+                mRecipeTask.execute((Void) null);
+            }
+            else {
+                Toast.makeText(this, "Unable to get selected recipe", Toast.LENGTH_SHORT).show();
+            }
+        }
     }
 
     @Override
