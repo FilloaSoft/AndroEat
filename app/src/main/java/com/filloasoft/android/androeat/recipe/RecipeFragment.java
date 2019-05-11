@@ -17,8 +17,10 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.filloasoft.android.androeat.R;
 import com.filloasoft.android.androeat.model.Recipe;
@@ -33,6 +35,15 @@ public class RecipeFragment extends Fragment {
 
     private RecyclerView mRecyclerView;
     private Recipe recipe;
+    private OnRecipeFavouriteListener callback;
+
+    public void setOnRecipeFavouriteListener(OnRecipeFavouriteListener callback) {
+        this.callback = callback;
+    }
+
+    public interface OnRecipeFavouriteListener{
+        void onFavouriteClicked(Recipe recipe);
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -48,18 +59,20 @@ public class RecipeFragment extends Fragment {
             @Override
             public void onClick(View v)
             {
-                if (favouriteButton.getColorFilter().toString().equals(String.valueOf(ContextCompat.getColor(getActivity(),
-                        R.color.colorWhite2)))){
-                    int color = Color.parseColor("#670028");
-                    favouriteButton.setColorFilter(color);
-                }
-                else{
-                    int color = Color.parseColor("#333333");
-                    favouriteButton.setColorFilter(color);
-                }
+
+                callback.onFavouriteClicked(recipe);
+//                if (favouriteButton.getColorFilter().toString().equals(String.valueOf(ContextCompat.getColor(getActivity(),
+//                        R.color.colorWhite2)))){
+//                    int color = Color.parseColor("#670028");
+//                    favouriteButton.setBackgroundColor(color);
+//                }
+//                else{
+//                    int color = Color.parseColor("#333333");
+//                    favouriteButton.setBackgroundColor(color);
+//                }
+
             }
         });
-
 
         TabLayout tabLayout = (TabLayout) view.findViewById(R.id.tab_layout);
         tabLayout.addTab(tabLayout.newTab().setText("Details"));

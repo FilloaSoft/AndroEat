@@ -91,7 +91,9 @@ public class ShoppingBasketListAdapter extends RecyclerView.Adapter<ShoppingBask
 
         textView.setText(mDataset.get(position).getProductName());
         textViewDescr.setText(mDataset.get(position).getProductDescription());
-        imageView.setImageBitmap(mDataset.get(position).getProductImage());
+        if (mDataset.get(position).getProductImage() != null){
+            imageView.setImageBitmap(mDataset.get(position).getProductImage());
+        }
     }
 
         ProductListView getCheckedItemAtPosition(int position){
