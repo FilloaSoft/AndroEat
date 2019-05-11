@@ -4,24 +4,35 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.filloasoft.android.androeat.model.Product;
 import com.filloasoft.android.androeat.model.ProductListView;
 
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.web.client.RestTemplate;
-
 import java.net.URL;
 
 public class RapidEatAsyncTask extends AsyncTask<Object, Void, Product> {
 
     private String barcode;
     ShoppingBasketListAdapter mAdapter;
+    OnHeadlineSelectedListener callback;
 
 
     public RapidEatAsyncTask(ShoppingBasketListAdapter adapter) {
             this.mAdapter = adapter;
     }
+
+    public void setOnHeadlineSelectedListener(OnHeadlineSelectedListener callback) {
+        this.callback = callback;
+    }
+
+    public interface OnHeadlineSelectedListener{
+        void onTaskCompleted(Boolean bool, String msg);
+    }
+
+
 
     @Override
     protected Product doInBackground(Object... params) {
@@ -55,9 +66,15 @@ public class RapidEatAsyncTask extends AsyncTask<Object, Void, Product> {
 
     @Override
     protected void onPostExecute(Product product) {
-        ProductListView pdLview = new ProductListView(product.getGenericName(), product.getProductName(), product.getImage(), product.getLabelsTags(), product.getIngredientsText());
+        try{
+            ProductListView pdLview = new ProductListView(product.getGenericName(), product.getProductName(), product.getImage(), product.getLabelsTags(), product.getIngredientsText());
+            mAdapter.addItem(pdLview);
+            callback.onTaskCompleted(false, "Product Added!");
+        } catch (Exception e){
+            callback.onTaskCompleted(false, "Product not found!");
 
-        mAdapter.addItem(pdLview);
+        }
+
     }
 
 }

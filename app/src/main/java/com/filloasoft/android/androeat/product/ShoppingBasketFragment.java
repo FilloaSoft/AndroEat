@@ -188,7 +188,7 @@ public class ShoppingBasketFragment extends Fragment {
                     }
                 });
 
-                snackbar.setActionTextColor(Color.RED);
+                snackbar.setActionTextColor(getResources().getColor(R.color.colorWhite));
                 snackbar.show();
 
             }

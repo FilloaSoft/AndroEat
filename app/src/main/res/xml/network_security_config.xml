@@ -4,5 +4,6 @@
         <domain includeSubdomains="true">androeat.dynu.net</domain>
         <domain includeSubdomains="true">openfoodfacts.org</domain>
         <domain includeSubdomains="true">spoonacular.com</domain>
+        <domain includeSubdomains="true">gooeat.dynu.net</domain>
     </domain-config>
 </network-security-config>

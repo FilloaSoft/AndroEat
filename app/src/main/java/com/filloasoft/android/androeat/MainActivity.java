@@ -76,7 +76,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class MainActivity extends AppCompatActivity implements ShoppingBasketListAdapter.OnItemClickedListener, BottomNavigationView.OnNavigationItemSelectedListener, HomeFragment.OnClickHowTo, FavouriteFragment.OnClickHowTo{
+public class MainActivity extends AppCompatActivity implements RapidEatAsyncTask.OnHeadlineSelectedListener, ShoppingBasketListAdapter.OnItemClickedListener, BottomNavigationView.OnNavigationItemSelectedListener, HomeFragment.OnClickHowTo, FavouriteFragment.OnClickHowTo{
 
     /**
      * Keep track of the login task to ensure we can cancel it if requested.
@@ -226,7 +226,9 @@ public class MainActivity extends AppCompatActivity implements ShoppingBasketLis
             String barcode = data.getStringExtra("barcode");
 
 //                ShoppingBasketFragment apiCall = new ShoppingBasketFragment();
+                showProgress(true);
                 RapidEatAsyncTask apiCall = new RapidEatAsyncTask(basketListAdapter);
+                apiCall.setOnHeadlineSelectedListener(this);
                 apiCall.execute(barcode);
             }
         }
@@ -558,6 +560,13 @@ public class MainActivity extends AppCompatActivity implements ShoppingBasketLis
                 .replace(R.id.fragment_container, nextFrag)
                 .addToBackStack(null)
                 .commit();
+    }
+
+    @Override
+    public void onTaskCompleted(Boolean bool, String msg) {
+        toast = Toast.makeText(this, msg, Toast.LENGTH_SHORT);
+        toast.show();
+        showProgress(false);
     }
 
 

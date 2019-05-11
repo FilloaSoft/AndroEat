@@ -20,6 +20,7 @@ import java.util.Map;
 public class ShoppingBasketListAdapter extends RecyclerView.Adapter<ShoppingBasketListAdapter.MyViewHolder> {
     private static ArrayList<ProductListView> mDataset = new ArrayList<>();
     private Map<Integer, Boolean> checkedList = new HashMap<>();
+    private OnItemClickedListener mItemClickListener;
 
     // Provide a reference to the views for each data item
     // Complex data items may need more than one view per item, and
@@ -47,8 +48,6 @@ public class ShoppingBasketListAdapter extends RecyclerView.Adapter<ShoppingBask
 
         return vh;
     }
-
-    private OnItemClickedListener mItemClickListener;
 
     public void setOnItemClickedListener(OnItemClickedListener l) {
         mItemClickListener = l;

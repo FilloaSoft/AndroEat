@@ -1,7 +1,9 @@
 package com.filloasoft.android.androeat.product;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -12,18 +14,28 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.Toast;
+
+import com.filloasoft.android.androeat.MainActivity;
+import com.filloasoft.android.androeat.R;
+
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
 
-public class CameraActivity extends AppCompatActivity {
+public class CameraActivity extends AppCompatActivity implements CameraAsyncTask.OnTaskCompleted {
 
     static final int REQUEST_TAKE_PHOTO = 1;
     private static final int MY_PERMISSIONS_REQUEST_CAMERA = 1;
     private static final int MY_PERMISSIONS_EXTERNAL_STORAGE = 2;
     String currentPhotoPath;
+    File photoFile = null;
+
 
     Toast toast;
 
@@ -114,7 +126,6 @@ public class CameraActivity extends AppCompatActivity {
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         // Ensure that there's a camera activity to handle the intent
         if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
-            File photoFile = null;
             try {
                 photoFile = createImageFile();
             } catch (IOException ex) {
@@ -129,8 +140,11 @@ public class CameraActivity extends AppCompatActivity {
                 toast = Toast.makeText(getApplicationContext(),
                         photoURI.toString(), Toast.LENGTH_SHORT);
                 toast.show();
-                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
-                startActivityForResult(takePictureIntent, REQUEST_TAKE_PHOTO);
+//                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
+//                takePictureIntent.putExtra("crop", "true");
+                if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
+                    startActivityForResult(takePictureIntent, REQUEST_TAKE_PHOTO);
+                }
             }
         }
     }
@@ -142,18 +156,34 @@ public class CameraActivity extends AppCompatActivity {
             toast = Toast.makeText(getApplicationContext(),
                     "Photo Saved!.", Toast.LENGTH_SHORT);
             toast.show();
-            galleryAddPic();
+
+            Bitmap bmp = (Bitmap) data.getExtras().get("data");
+            ByteArrayOutputStream stream = new ByteArrayOutputStream();
+            bmp.compress(Bitmap.CompressFormat.PNG, 100, stream);
+            try {
+                FileOutputStream fos = new FileOutputStream(photoFile);
+                fos.flush();
+                fos.write(stream.toByteArray());
+                fos.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            CameraAsyncTask apiCall = new CameraAsyncTask();
+
+            apiCall.execute(currentPhotoPath);
+//            galleryAddPic();
         } else {
             this.finish();
         }
     }
 
-    private void galleryAddPic() {
-        Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
-        File f = new File(currentPhotoPath);
-        Uri contentUri = Uri.fromFile(f);
-        mediaScanIntent.setData(contentUri);
-        this.sendBroadcast(mediaScanIntent);
-        this.finish();
-    }
+//    private void galleryAddPic() {
+//        Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+//        File f = new File(currentPhotoPath);
+//        Uri contentUri = Uri.fromFile(f);
+//        mediaScanIntent.setData(contentUri);
+//        this.sendBroadcast(mediaScanIntent);
+//        this.finish();
+//    }
 }
