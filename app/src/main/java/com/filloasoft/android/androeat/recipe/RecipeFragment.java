@@ -60,9 +60,9 @@ public class RecipeFragment extends Fragment {
             }
         });
 
-
         TabLayout tabLayout = (TabLayout) view.findViewById(R.id.tab_layout);
         tabLayout.addTab(tabLayout.newTab().setText("Details"));
+        tabLayout.addTab(tabLayout.newTab().setText("Ingredients"));
         tabLayout.addTab(tabLayout.newTab().setText("How to"));
         tabLayout.setTabTextColors(Color.GRAY, Color.WHITE);
 
@@ -118,6 +118,7 @@ public class RecipeFragment extends Fragment {
                     break;
                 case 1:
                     tabFragment = new IngredientsFragment();
+                    break;
                 case 2:
                     tabFragment = new HowToFragment();
                     break;

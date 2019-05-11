@@ -18,7 +18,7 @@ public class IngredientsFragment extends Fragment {
         View howToView = inflater.inflate(R.layout.fragment_recipe_steps, null);
         Bundle bundle = getArguments();
         Recipe recipe = (Recipe) bundle.getSerializable("recipe");
-        HowToListAdapter adapter = new HowToListAdapter(getActivity(), recipe.getRecipeInstructions());
+        IngredientListAdapter adapter = new IngredientListAdapter(getActivity(), recipe.getRecipeIngredients());
         ListView stepsList = (ListView) howToView.findViewById(R.id.stepsList);
         stepsList.setAdapter(adapter);
 

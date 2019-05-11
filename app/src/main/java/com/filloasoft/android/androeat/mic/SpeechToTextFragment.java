@@ -69,5 +69,6 @@ public class SpeechToTextFragment extends Fragment {
             }
 
         }
+
     }
 }
