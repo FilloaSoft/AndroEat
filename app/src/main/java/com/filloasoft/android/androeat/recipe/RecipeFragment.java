@@ -117,6 +117,8 @@ public class RecipeFragment extends Fragment {
                     tabFragment = new RecipeDetailsFragment();
                     break;
                 case 1:
+                    tabFragment = new IngredientsFragment();
+                case 2:
                     tabFragment = new HowToFragment();
                     break;
             }
