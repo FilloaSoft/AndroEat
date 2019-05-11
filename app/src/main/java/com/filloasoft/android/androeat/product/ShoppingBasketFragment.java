@@ -14,6 +14,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.DrawableContainer;
 import android.graphics.drawable.GradientDrawable;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.VibrationEffect;
@@ -30,6 +31,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.telecom.Call;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.LayoutInflater;
@@ -51,9 +53,20 @@ import android.widget.Toast;
 import com.filloasoft.android.androeat.MainActivity;
 import com.filloasoft.android.androeat.R;
 import com.filloasoft.android.androeat.model.ProductListView;
+import com.filloasoft.android.androeat.model.Recipe;
+import com.filloasoft.android.androeat.recipe.HomeFragment;
 import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.getbase.floatingactionbutton.FloatingActionsMenu;
 
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.web.client.RestTemplate;
+
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -61,7 +74,7 @@ import java.util.Map;
 import static android.content.Context.VIBRATOR_SERVICE;
 import static android.support.v4.content.ContextCompat.getSystemService;
 
-public class ShoppingBasketFragment extends Fragment {
+public class    ShoppingBasketFragment extends Fragment {
 
     private RecyclerView recyclerView;
     private ShoppingBasketListAdapter mAdapter;
@@ -198,19 +211,20 @@ public class ShoppingBasketFragment extends Fragment {
         itemTouchhelper.attachToRecyclerView(recyclerView);
     }
 
-
-
-    public void getRecipes(){
+    public List<String> getRecipes(){
         List<String> markedList = new ArrayList<>();
         Map<Integer, Boolean> checked = mAdapter.getCheckedList();
-
-
 
         for (int i = 0; i < mAdapter.getItemCount() ; i++) {
             ProductListView product = (ProductListView) mAdapter.getCheckedItemAtPosition(i);
             if (checked.containsKey(i)) {
                 if (checked.get(i)){
-                    markedList.add(product.getProductName());
+                    if(product.productName.contains(" ")){
+                        String firstWord= product.productName.substring(0, product.productName.indexOf(" "));
+                        markedList.add(firstWord);
+                    }else{
+                        markedList.add(product.getProductName());
+                    }
                 }
             }
         }
@@ -218,6 +232,8 @@ public class ShoppingBasketFragment extends Fragment {
         Toast toast = Toast.makeText(getContext(),
                 markedList.toString(), Toast.LENGTH_SHORT);
         toast.show();
+
+        return markedList;
     }
 }
 

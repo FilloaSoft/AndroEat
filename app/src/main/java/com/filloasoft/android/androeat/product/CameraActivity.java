@@ -28,7 +28,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 
-public class CameraActivity extends AppCompatActivity implements CameraAsyncTask.OnTaskCompleted {
+public class CameraActivity extends AppCompatActivity {
 
     static final int REQUEST_TAKE_PHOTO = 1;
     private static final int MY_PERMISSIONS_REQUEST_CAMERA = 1;
