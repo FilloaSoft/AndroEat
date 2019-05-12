@@ -23,7 +23,8 @@
         <TextView
             android:id="@+id/voiceInput"
             android:layout_width="match_parent"
-            android:layout_height="200dp" />
+            android:layout_height="150dp"
+            android:text="Examples: Can you recommend me recipes with chocolate? How many calories does chocolate have?"/>
 
         <View
             android:layout_width="fill_parent"
@@ -35,9 +36,14 @@
         <TextView
             android:id="@+id/answer"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:text="Answer:"
             android:textColor="@color/colorAccent"/>
+        <TextView
+            android:id="@+id/answerOutput"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:autoLink="web"/>
     </LinearLayout>
 
     <LinearLayout
