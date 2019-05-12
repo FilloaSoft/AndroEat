@@ -1,10 +1,13 @@
 package com.filloasoft.android.androeat.recipe;
 
 import android.app.Activity;
+import android.content.res.ColorStateList;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.ColorFilter;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
@@ -12,6 +15,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.view.ViewCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -36,41 +40,53 @@ public class RecipeFragment extends Fragment {
     private RecyclerView mRecyclerView;
     private Recipe recipe;
     private OnRecipeFavouriteListener callback;
+    private onGetRecipeFavouriteListener callbackFav;
+    private Boolean isRecipeFavourite;
 
-    public void setOnRecipeFavouriteListener(OnRecipeFavouriteListener callback) {
+    public void setOnRecipeFavouriteListener(OnRecipeFavouriteListener callback, onGetRecipeFavouriteListener callbackFav) {
         this.callback = callback;
+        this.callbackFav = callbackFav;
     }
 
     public interface OnRecipeFavouriteListener{
-        void onFavouriteClicked(Recipe recipe);
+        void onFavouriteClicked(Recipe recipe, Boolean addFavourite);
+    }
+
+    public interface onGetRecipeFavouriteListener{
+        Boolean onRecipeFavourite(Recipe recipe);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_recipe, container, false);
+        final View view = inflater.inflate(R.layout.fragment_recipe, container, false);
 
         Bundle bundle = getArguments();
         recipe = (Recipe) bundle.getSerializable("recipe");
+        final FloatingActionButton favouriteButton = view.findViewById(R.id.favButton);
+        isRecipeFavourite = callbackFav.onRecipeFavourite(recipe);
 
-        final FloatingActionButton favouriteButton = (FloatingActionButton) view.findViewById(R.id.favButton);
+        int color = Color.parseColor("#D9DCE0");
+        if (isRecipeFavourite){
+            color = Color.parseColor("#ff0000");
+        }
+        favouriteButton.setBackgroundTintList(ColorStateList.valueOf(color));
+
         favouriteButton.setOnClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View v)
             {
-
-                callback.onFavouriteClicked(recipe);
-//                if (favouriteButton.getColorFilter().toString().equals(String.valueOf(ContextCompat.getColor(getActivity(),
-//                        R.color.colorWhite2)))){
-//                    int color = Color.parseColor("#670028");
-//                    favouriteButton.setBackgroundColor(color);
-//                }
-//                else{
-//                    int color = Color.parseColor("#333333");
-//                    favouriteButton.setBackgroundColor(color);
-//                }
-
+                int color;
+                if (isRecipeFavourite){
+                    color = Color.parseColor("#D9DCE0");
+                    callback.onFavouriteClicked(recipe, false);
+                }
+                else{
+                    color = Color.parseColor("#ff0000");
+                    callback.onFavouriteClicked(recipe, true);
+                }
+                favouriteButton.setBackgroundTintList(ColorStateList.valueOf(color));
             }
         });
 

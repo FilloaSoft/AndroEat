@@ -78,7 +78,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class MainActivity extends AppCompatActivity implements RecipeFragment.OnRecipeFavouriteListener, FavouriteListAdapter.OnItemRecipeClickedListener, RapidEatAsyncTask.OnHeadlineSelectedListener, ShoppingBasketListAdapter.OnItemClickedListener, BottomNavigationView.OnNavigationItemSelectedListener, HomeFragment.OnClickHowTo{
+public class MainActivity extends AppCompatActivity implements RecipeFragment.onGetRecipeFavouriteListener, RecipeFragment.OnRecipeFavouriteListener, FavouriteListAdapter.OnItemRecipeClickedListener, RapidEatAsyncTask.OnHeadlineSelectedListener, ShoppingBasketListAdapter.OnItemClickedListener, BottomNavigationView.OnNavigationItemSelectedListener, HomeFragment.OnClickHowTo{
     /**
      * Keep track of the login task to ensure we can cancel it if requested.
      */
@@ -212,8 +212,8 @@ public class MainActivity extends AppCompatActivity implements RecipeFragment.On
         return loadFragment(fragment, false);
     }
 
-    public void setOnRecipeFavouriteListener(RecipeFragment fragment){
-        fragment.setOnRecipeFavouriteListener(this);
+    public void setOnRecipeFavouriteListener(RecipeFragment fragment, Recipe recipe){
+        fragment.setOnRecipeFavouriteListener(this, this);
     };
 
 
@@ -630,8 +630,20 @@ public class MainActivity extends AppCompatActivity implements RecipeFragment.On
     }
 
     @Override
-    public void onFavouriteClicked(Recipe recipe) {
-        favouritesListAdapter.addItem(recipe);
+    public void onFavouriteClicked(Recipe recipe,Boolean addFavourite) {
+        if (addFavourite){
+            favouritesListAdapter.addItem(recipe);
+            Toast.makeText(this, "Recipe added to favourites", Toast.LENGTH_SHORT).show();
+
+        } else{
+            favouritesListAdapter.removeItemByRecipe(recipe);
+            Toast.makeText(this, "Recipe removed from favourites", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    @Override
+    public Boolean onRecipeFavourite(Recipe recipe) {
+        return favouritesListAdapter.isRecipeFavourite(recipe);
     }
 
     public class RecipeTask extends AsyncTask<Void, Void, Recipe> {
@@ -678,7 +690,7 @@ public class MainActivity extends AppCompatActivity implements RecipeFragment.On
             args.putSerializable("recipe", recipe);
             RecipeFragment newRecipeFragment = new RecipeFragment();
             newRecipeFragment.setArguments(args);
-            setOnRecipeFavouriteListener(newRecipeFragment);
+            setOnRecipeFavouriteListener(newRecipeFragment, recipe);
             loadFragment(newRecipeFragment, false);
         }
 

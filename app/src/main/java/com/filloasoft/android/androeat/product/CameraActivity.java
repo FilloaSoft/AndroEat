@@ -176,6 +176,7 @@ public class CameraActivity extends AppCompatActivity {
         } else {
             this.finish();
         }
+    this.finish();
     }
 
 //    private void galleryAddPic() {

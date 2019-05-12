@@ -82,15 +82,25 @@ public class FavouriteListAdapter extends RecyclerView.Adapter<FavouriteListAdap
         return mDatasetFavourites.get(position);
     }
 
-    public void removeItem(int position) {
+    public void removeItemByPosition(int position) {
         mDatasetFavourites.remove(position);
         notifyItemRemoved(position);
     }
 
+    public void removeItemByRecipe(Recipe recipe){
+        Recipe r = existsRecipe(recipe);
+        if (r != null) {
+            mDatasetFavourites.remove(r);
+            notifyDataSetChanged();
+        }
+    }
+
     public void addItem(Recipe item) {
-        mDatasetFavourites.add(item);
-        notifyItemInserted(mDatasetFavourites.size());
-        notifyDataSetChanged();
+        if (existsRecipe(item) == null){
+            mDatasetFavourites.add(item);
+            notifyItemInserted(mDatasetFavourites.size());
+            notifyDataSetChanged();
+        }
     }
 
     public void restoreItem(Recipe item, int position) {
@@ -98,9 +108,28 @@ public class FavouriteListAdapter extends RecyclerView.Adapter<FavouriteListAdap
         notifyItemInserted(position);
     }
 
+    public Boolean isRecipeFavourite(Recipe recipe){
+        return existsRecipe(recipe) != null;
+    }
+
     public ArrayList<Recipe> getData() {
         return mDatasetFavourites;
     }
+
+    public Recipe existsRecipe(Object other){
+        if (other == null) return null;
+        if (other == this) return null;
+        if (!(other instanceof Recipe))return null;
+        Recipe recipeFav = (Recipe) other;
+        for (Recipe r: mDatasetFavourites) {
+            if (r.getRecipeID().equals(recipeFav.getRecipeID())){
+                return r;
+            }
+        }
+        return null;
+    }
+
+
 
 //    Map<Integer, Boolean> getCheckedList(){
 //        return checkedList;
