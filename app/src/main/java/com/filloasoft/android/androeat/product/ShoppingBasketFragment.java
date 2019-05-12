@@ -74,7 +74,7 @@ import java.util.Map;
 import static android.content.Context.VIBRATOR_SERVICE;
 import static android.support.v4.content.ContextCompat.getSystemService;
 
-public class    ShoppingBasketFragment extends Fragment {
+public class ShoppingBasketFragment extends Fragment {
 
     private RecyclerView recyclerView;
     private ShoppingBasketListAdapter mAdapter;

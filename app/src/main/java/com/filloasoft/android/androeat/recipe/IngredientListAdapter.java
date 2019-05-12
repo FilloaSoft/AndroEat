@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.filloasoft.android.androeat.R;
 import com.filloasoft.android.androeat.model.RecipeIngredient;
@@ -41,7 +42,7 @@ public class IngredientListAdapter extends ArrayAdapter<RecipeIngredient> {
             titleText.setText(ingredientName);
         }
         if (ingredient.getImageUrl()!=null) {
-            //imageView.setImageResource(productImage[position]);
+            imageView.setImageBitmap(ingredient.getIngredientImage());
         }
         if (genericName!=null) {
             genericName = genericName.toString().substring(0, 1).toUpperCase() + genericName.toString().substring(1);

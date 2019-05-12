@@ -1,83 +1,82 @@
-package com.filloasoft.android.androeat.recipe;
+package com.filloasoft.android.androeat.product;
 
-import android.app.Activity;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
-import android.view.LayoutInflater;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.View;
+import android.view.LayoutInflater;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.GridView;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import com.filloasoft.android.androeat.MainActivity;
 import com.filloasoft.android.androeat.R;
 import com.filloasoft.android.androeat.model.Recipe;
-
-import java.util.ArrayList;
-import java.util.List;
+import com.filloasoft.android.androeat.recipe.FavouriteListAdapter;
 
 public class FavouriteFragment extends Fragment {
 
-    FavouriteFragment.OnClickHowTo mCallback;
-    private TextView mTextMessage;
-    GridView grid;
-    Toast toast;
-
-    String[] recipeName = {
-            "Espaguetis","Tortilla"
-    };
-
-    String[] recipeDescription = {
-            "Espaguetis description", "Tortilla description"
-    };
-
-    Integer[] recipeImage = {
-            R.drawable.espaguetis, R.drawable.tortilla
-    };
+    private RecyclerView recyclerView;
+    private FavouriteListAdapter mAdapter;
 
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        final View favouriteView = inflater.inflate(R.layout.fragment_favourites, null);
+    public View onCreateView(final LayoutInflater inflater, @Nullable final ViewGroup container, @Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        final View favouritesView = (View) inflater.inflate(R.layout.fragment_favourites, container , false);
 
-        Bundle bundle = getArguments();
-        //List<Recipe> recipes = bundle.getParcelableArrayList("list");
 
-        HomeListAdapter adapter = new HomeListAdapter(getActivity(), new ArrayList<Recipe>());
-        grid = favouriteView.findViewById(R.id.home_grid);
-        grid.setAdapter(adapter);
-        grid.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        recyclerView = favouritesView.findViewById(R.id.recycler_favourites);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this.getContext());
+        recyclerView.setLayoutManager(layoutManager);
+        this.mAdapter = ((MainActivity) getActivity()).getFavouritesAdapter();
+//        this.mAdapter.addItem(new ProductListView("test","text", null, null, null));
+        recyclerView.setAdapter(mAdapter);
+
+
+        // Do something in response to button
+//        toast.show();
+        enableSwipeToDeleteAndUndo();
+
+        return favouritesView;
+    }
+
+
+    private void enableSwipeToDeleteAndUndo() {
+        SwipeToDelete swipeToDeleteCallback = new SwipeToDelete(this.getContext()) {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                mCallback.onRecipeSelected(favouriteView, position);
+            public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int i) {
+
+
+                final int position = viewHolder.getAdapterPosition();
+                final Recipe item = mAdapter.getData().get(position);
+
+                mAdapter.removeItemByPosition(position);
+
+
+                Snackbar snackbar = Snackbar
+                        .make(getView(), "Item was removed from the list.", Snackbar.LENGTH_LONG);
+                snackbar.setAction("UNDO", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+
+                        mAdapter.restoreItem(item, position);
+                        recyclerView.scrollToPosition(position);
+                    }
+                });
+
+                snackbar.setActionTextColor(getResources().getColor(R.color.colorWhite));
+                snackbar.show();
+
             }
-        });
-        mTextMessage = (TextView) favouriteView.findViewById(R.id.message);
+        };
 
-        toast = Toast.makeText(getActivity(),
-                "Pantalla de inicio!", Toast.LENGTH_SHORT);
-        toast.show();
-
-        return favouriteView;
+        ItemTouchHelper itemTouchhelper = new ItemTouchHelper(swipeToDeleteCallback);
+        itemTouchhelper.attachToRecyclerView(recyclerView);
     }
 
-    public interface OnClickHowTo{
-        public void onRecipeSelected(View view, int position);
-    }
-
-    @Override
-    public void onAttach(Activity activity){
-        super.onAttach(activity);
-
-        try{
-            mCallback = (OnClickHowTo) activity;
-        }catch (ClassCastException e){
-            throw new ClassCastException(activity.toString());
-        }
-
-    }
 }
 

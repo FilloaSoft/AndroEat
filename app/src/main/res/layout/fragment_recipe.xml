@@ -51,41 +51,45 @@
                             android:layout_height="wrap_content"
                             android:orientation="vertical"
                             android:layout_gravity="right">
-                        <android.support.design.widget.FloatingActionButton
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_margin="5dp"
-                            android:layout_gravity="center"
-                            android:layout_alignParentRight="true"
-                            android:backgroundTint="#D9DCE0"
-                            android:src="@drawable/ic_share"
-                            android:tint="@color/colorAccent"
-                            />
-                        <android.support.design.widget.FloatingActionButton
-                            android:id="@+id/favButton"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_margin="5dp"
-                            android:onClick="addToFavourites"
-                            android:layout_gravity="center"
-                            android:layout_alignParentRight="true"
-                            android:backgroundTint="@color/colorGrey"
-                            app:borderWidth="0dp"
-                            app:elevation="2dp"
-                            android:src="@drawable/ic_fav"
-                            android:tint="@color/colorWhite"
-                            />
+
+                            <android.support.design.widget.FloatingActionButton
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_alignParentRight="true"
+                                android:layout_gravity="center"
+                                android:layout_margin="5dp"
+                                android:backgroundTint="#D9DCE0"
+                                android:src="@drawable/ic_share"
+                                android:tint="@color/colorAccent"
+                                app:backgroundTint="#D9DCE0"
+                                app:maxImageSize="30dp" />
+
+                            <android.support.design.widget.FloatingActionButton
+                                android:id="@+id/favButton"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_alignParentRight="true"
+                                android:layout_gravity="center|fill|fill_horizontal"
+                                android:layout_margin="5dp"
+                                android:onClick="addToFavourites"
+                                android:src="@drawable/ic_fav"
+                                app:backgroundTint="#D9DCE0"
+                                app:backgroundTintMode="src_in"
+                                app:borderWidth="0dp"
+                                app:elevation="0dp"
+                                app:maxImageSize="35dp" />
                         </LinearLayout>
                     </FrameLayout>
+
                     <android.support.design.widget.TabLayout
                         android:id="@+id/tab_layout"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:background="@color/colorPrimaryDark"
-                        app:tabTextColor="#FFFFFF"
+                        android:visibility="visible"
                         app:tabIndicatorColor="#D9DCE0"
                         app:tabIndicatorHeight="3dp"
-                        android:visibility="visible"/>
+                        app:tabTextColor="#FFFFFF" />
                 </LinearLayout>
             </android.support.design.widget.CollapsingToolbarLayout>
 

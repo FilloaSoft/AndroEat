@@ -5,12 +5,10 @@
 
     <ImageView
         android:id="@+id/ingredientImage"
-        android:src="@drawable/ic_eat"
-        android:tint="@color/colorPrimaryDark"
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:layout_centerVertical="true"
-        />
+        android:src="@drawable/ic_eat" />
 
     <TextView
         android:id="@+id/ingredientName"

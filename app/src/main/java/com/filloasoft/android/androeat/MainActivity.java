@@ -31,11 +31,13 @@ import android.widget.Toast;
 import com.filloasoft.android.androeat.mic.SpeechToTextFragment;
 import com.filloasoft.android.androeat.model.ProductListView;
 import com.filloasoft.android.androeat.model.Recipe;
+import com.filloasoft.android.androeat.model.RecipeIngredient;
+import com.filloasoft.android.androeat.product.FavouriteFragment;
 import com.filloasoft.android.androeat.product.ProductDetailsFragment;
 import com.filloasoft.android.androeat.product.RapidEatAsyncTask;
 import com.filloasoft.android.androeat.product.ShoppingBasketFragment;
 import com.filloasoft.android.androeat.product.ShoppingBasketListAdapter;
-import com.filloasoft.android.androeat.recipe.FavouriteFragment;
+import com.filloasoft.android.androeat.recipe.FavouriteListAdapter;
 import com.filloasoft.android.androeat.recipe.HomeFragment;
 import com.filloasoft.android.androeat.recipe.RecipeFragment;
 
@@ -69,9 +71,7 @@ import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
-import org.springframework.util.StringUtils;
 import org.springframework.web.client.RestTemplate;
-import org.w3c.dom.Text;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -80,7 +80,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class MainActivity extends AppCompatActivity implements RapidEatAsyncTask.OnHeadlineSelectedListener, ShoppingBasketListAdapter.OnItemClickedListener, BottomNavigationView.OnNavigationItemSelectedListener, HomeFragment.OnClickHowTo, FavouriteFragment.OnClickHowTo{
+public class MainActivity extends AppCompatActivity implements RecipeFragment.onGetRecipeFavouriteListener, RecipeFragment.OnRecipeFavouriteListener, FavouriteListAdapter.OnItemRecipeClickedListener, RapidEatAsyncTask.OnHeadlineSelectedListener, ShoppingBasketListAdapter.OnItemClickedListener, BottomNavigationView.OnNavigationItemSelectedListener, HomeFragment.OnClickHowTo{
     /**
      * Keep track of the login task to ensure we can cancel it if requested.
      */
@@ -100,6 +100,7 @@ public class MainActivity extends AppCompatActivity implements RapidEatAsyncTask
     private User usuario;
     private static final int REQUEST_CODE = 123;
     private ShoppingBasketListAdapter basketListAdapter ;
+    private FavouriteListAdapter favouritesListAdapter;
 //    ShoppingBasketFragment shoppingBasketFragment = new ShoppingBasketFragment();
     private List<Recipe> recipesList;
 
@@ -114,7 +115,28 @@ public class MainActivity extends AppCompatActivity implements RapidEatAsyncTask
                 ProductDetailsFragment nextFrag = new ProductDetailsFragment().newInstance(product);
                 loadFragment(nextFrag,false);
             }
-    });
+         });
+
+        this.favouritesListAdapter = new FavouriteListAdapter();
+        this.favouritesListAdapter.setOnItemClickedListener(new FavouriteListAdapter.OnItemRecipeClickedListener() {
+            @Override
+            public void onItemRecipeClicked(Recipe recipe) {
+                RecipeFragment recipeFragment = (RecipeFragment) getSupportFragmentManager().findFragmentById(R.id.recipe_details);
+                if (recipeFragment != null){
+                    //Manage two pane layout
+                }
+                else{
+                    showProgress(true);
+                    if (recipesList!=null) {
+                        mRecipeTask = new RecipeTask(recipe.getRecipeID());
+                        mRecipeTask.execute((Void) null);
+                    }
+                    else {
+                        Toast.makeText(getApplicationContext(), "Unable to get selected recipe", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            }
+        });
 
         mTextMessage = (TextView) findViewById(R.id.message);
         setContentView(R.layout.activity_main);
@@ -148,6 +170,10 @@ public class MainActivity extends AppCompatActivity implements RapidEatAsyncTask
 
     public ShoppingBasketListAdapter getListAdapter(){
         return this.basketListAdapter;
+    }
+
+    public FavouriteListAdapter getFavouritesAdapter(){
+        return this.favouritesListAdapter;
     }
 
     @Override
@@ -190,6 +216,11 @@ public class MainActivity extends AppCompatActivity implements RapidEatAsyncTask
         }
         return loadFragment(fragment, false);
     }
+
+    public void setOnRecipeFavouriteListener(RecipeFragment fragment, Recipe recipe){
+        fragment.setOnRecipeFavouriteListener(this, this);
+    };
+
 
     public boolean loadFragment(Fragment fragment, boolean firstFragment) {
         //switching fragment
@@ -585,6 +616,40 @@ public class MainActivity extends AppCompatActivity implements RapidEatAsyncTask
         showProgress(false);
     }
 
+    @Override
+    public void onItemRecipeClicked(Recipe recipe) {
+        RecipeFragment recipeFragment = (RecipeFragment) getSupportFragmentManager().findFragmentById(R.id.recipe_details);
+        if (recipeFragment != null){
+            //Manage two pane layout
+        }
+        else{
+            showProgress(true);
+            if (recipesList!=null) {
+                mRecipeTask = new RecipeTask(recipe.getRecipeID());
+                mRecipeTask.execute((Void) null);
+            }
+            else {
+                Toast.makeText(this, "Unable to get selected recipe", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
+    @Override
+    public void onFavouriteClicked(Recipe recipe,Boolean addFavourite) {
+        if (addFavourite){
+            favouritesListAdapter.addItem(recipe);
+            Toast.makeText(this, "Recipe added to favourites", Toast.LENGTH_SHORT).show();
+
+        } else{
+            favouritesListAdapter.removeItemByRecipe(recipe);
+            Toast.makeText(this, "Recipe removed from favourites", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    @Override
+    public Boolean onRecipeFavourite(Recipe recipe) {
+        return favouritesListAdapter.isRecipeFavourite(recipe);
+    }
 
     public class RecipeTask extends AsyncTask<Void, Void, Recipe> {
 
@@ -614,6 +679,24 @@ public class MainActivity extends AppCompatActivity implements RapidEatAsyncTask
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
+                try {
+                    List<RecipeIngredient> recipeIngredients = recipe.getRecipeIngredients();
+
+                    for (RecipeIngredient i: recipeIngredients){
+
+                        if (i.getImageUrl() != null){
+                            URL ingrUrl = new URL(i.getImageUrl().toString());
+                            Bitmap mIcon_val = BitmapFactory.decodeStream(ingrUrl.openConnection().getInputStream());
+                            i.setIngredientImage(mIcon_val);
+                        }
+                    }
+                    recipe.setRecipeIngredients(recipeIngredients);
+
+                } catch (MalformedURLException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
                 return recipe;
             } catch (Exception e) {
                 Log.e("Error getting recipe -", e.getMessage(), e);
@@ -630,6 +713,7 @@ public class MainActivity extends AppCompatActivity implements RapidEatAsyncTask
             args.putSerializable("recipe", recipe);
             RecipeFragment newRecipeFragment = new RecipeFragment();
             newRecipeFragment.setArguments(args);
+            setOnRecipeFavouriteListener(newRecipeFragment, recipe);
             loadFragment(newRecipeFragment, false);
         }
 
