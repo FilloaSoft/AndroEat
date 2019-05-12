@@ -41,7 +41,9 @@ public class RecipeDetailsFragment extends Fragment {
         if (recipe.getRecipeDiets()!=null) {
             TextView dietText = (TextView) recipeDetailsView.findViewById(R.id.recipeDiets);
             String diets = android.text.TextUtils.join(", ", recipe.getRecipeDiets());
-            diets = diets.substring(0, 1).toUpperCase() + diets.substring(1);
+            if (!diets.isEmpty()) {
+                diets = diets.substring(0, 1).toUpperCase() + diets.substring(1);
+            }
             dietText.setText(diets);
         }
 

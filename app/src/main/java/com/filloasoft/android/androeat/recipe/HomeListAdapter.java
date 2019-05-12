@@ -9,24 +9,24 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.filloasoft.android.androeat.R;
+import com.filloasoft.android.androeat.model.Recipe;
+import com.filloasoft.android.androeat.model.RecipeIngredient;
 
-public class HomeListAdapter extends ArrayAdapter<String> {
+import java.util.List;
+
+public class HomeListAdapter extends ArrayAdapter<Recipe> {
 
         private final Activity context;
-        private final String[] recipeName;
-        private final String[] recipeDescription;
-        private final Integer[] recipeImage;
 
-        public HomeListAdapter(Activity context, String[] recipeName,String[] recipeDescription, Integer[] recipeImage) {
-            super(context, R.layout.product_list_row, recipeName);
+        public HomeListAdapter(Activity context, List<Recipe> recipes) {
+            super(context, R.layout.product_list_row, recipes);
             this.context=context;
-            this.recipeName=recipeName;
-            this.recipeDescription=recipeDescription;
-            this.recipeImage=recipeImage;
-
         }
 
         public View getView(int position, View view, ViewGroup parent) {
+            // Get the data item for this position
+            Recipe recipe = getItem(position);
+
             LayoutInflater inflater=context.getLayoutInflater();
             View rowView=inflater.inflate(R.layout.recipe_list_row, null,true);
 
@@ -34,9 +34,22 @@ public class HomeListAdapter extends ArrayAdapter<String> {
             ImageView imageView = (ImageView) rowView.findViewById(R.id.recipeImage);
             TextView subtitleText = (TextView) rowView.findViewById(R.id.recipeDescription);
 
-            titleText.setText(recipeName[position]);
-            imageView.setImageResource(recipeImage[position]);
-            subtitleText.setText(recipeDescription[position]);
+           // titleText.setText(recipeName[position]);
+
+            String recipeName = recipe.getRecipeName();
+
+            if (recipeName!=null) {
+                recipeName = recipeName.substring(0, 1).toUpperCase() + recipeName.substring(1);
+                titleText.setText(recipeName);
+            }
+            if (recipe.getRecipeImage()!=null) {
+                //imageView.setImageResource(recipe.getRecipeImage());
+                imageView.setImageBitmap(recipe.getRecipeBitmapImage());
+
+            }
+
+
+            subtitleText.setText("mock");
 
             return rowView;
         };

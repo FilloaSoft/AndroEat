@@ -27,7 +27,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
         "recipeInstructions",
         "unusedIngredients"
 })
-public class Recipe implements Serializable {
+public class Recipe implements Serializable, Parcelable {
 
     @JsonProperty("recipeID")
     private String recipeID;
@@ -146,5 +146,15 @@ public class Recipe implements Serializable {
 
     public void setRecipeBitmapImage(Bitmap bitmap) {
         this.recipeBitmapImage = bitmap;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+
     }
 }

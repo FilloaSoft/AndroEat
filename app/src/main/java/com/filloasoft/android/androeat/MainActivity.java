@@ -15,50 +15,48 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.annotation.VisibleForTesting;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.filloasoft.android.androeat.mic.SpeechToTextFragment;
+import com.filloasoft.android.androeat.model.ProductListView;
 import com.filloasoft.android.androeat.model.Recipe;
+import com.filloasoft.android.androeat.model.RecipeIngredient;
+import com.filloasoft.android.androeat.product.FavouriteFragment;
+import com.filloasoft.android.androeat.product.ProductDetailsFragment;
+import com.filloasoft.android.androeat.product.RapidEatAsyncTask;
 import com.filloasoft.android.androeat.product.ShoppingBasketFragment;
-import com.filloasoft.android.androeat.recipe.FavouriteFragment;
+import com.filloasoft.android.androeat.product.ShoppingBasketListAdapter;
+import com.filloasoft.android.androeat.recipe.FavouriteListAdapter;
 import com.filloasoft.android.androeat.recipe.HomeFragment;
 import com.filloasoft.android.androeat.recipe.RecipeFragment;
-import android.util.Log;
-import android.view.MenuItem;
-import android.view.View;
+
 import android.view.inputmethod.InputMethodManager;
-import android.widget.ArrayAdapter;
-import android.widget.EditText;
-import android.widget.TextView;
-import android.widget.Toast;
-import com.filloasoft.android.androeat.model.Product;
+
 import com.filloasoft.android.androeat.model.User;
 import com.filloasoft.android.androeat.product.CameraActivity;
 import com.filloasoft.android.androeat.product.ScannerActivity;
-import com.filloasoft.android.androeat.product.ShoppingBasketFragment;
-import com.filloasoft.android.androeat.recipe.FavouriteFragment;
-import com.filloasoft.android.androeat.recipe.HomeFragment;
-import com.filloasoft.android.androeat.recipe.HowToFragment;
+import com.filloasoft.android.androeat.recipe.RecipeResultFragment;
 import com.filloasoft.android.androeat.sql.DatabaseHelper;
 import com.filloasoft.android.androeat.user.LoginFragment;
 import com.filloasoft.android.androeat.user.ProfileFragment;
 import com.filloasoft.android.androeat.user.SignupFragment;
 import com.filloasoft.android.androeat.utilities.AuthUtils;
+import com.filloasoft.android.androeat.utilities.ImageUtils;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
-import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -67,19 +65,28 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
+import com.squareup.picasso.Picasso;
+
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.web.client.RestTemplate;
+
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
-import static java.security.AccessController.getContext;
+import java.util.ArrayList;
+import java.util.List;
 
-public class MainActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener, HomeFragment.OnClickHowTo, FavouriteFragment.OnClickHowTo{
 
+public class MainActivity extends AppCompatActivity implements RecipeFragment.onGetRecipeFavouriteListener, RecipeFragment.OnRecipeFavouriteListener, FavouriteListAdapter.OnItemRecipeClickedListener, RapidEatAsyncTask.OnHeadlineSelectedListener, ShoppingBasketListAdapter.OnItemClickedListener, BottomNavigationView.OnNavigationItemSelectedListener, HomeFragment.OnClickHowTo{
     /**
      * Keep track of the login task to ensure we can cancel it if requested.
      */
     private RecipeTask mRecipeTask = null;
+    private RecipesTask mRecipesTask = null;
+    private List<String> mIngredients = null;
 
     private TextView mTextMessage;
     private Toast toast;
@@ -92,11 +99,44 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
     private GoogleSignInClient mGoogleSignInClient;
     private User usuario;
     private static final int REQUEST_CODE = 123;
+    private ShoppingBasketListAdapter basketListAdapter ;
+    private FavouriteListAdapter favouritesListAdapter;
 //    ShoppingBasketFragment shoppingBasketFragment = new ShoppingBasketFragment();
+    private List<Recipe> recipesList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        this.basketListAdapter = new ShoppingBasketListAdapter();
+        this.basketListAdapter.setOnItemClickedListener(new ShoppingBasketListAdapter.OnItemClickedListener() {
+            @Override
+            public void onItemClicked(ProductListView product) {
+                ProductDetailsFragment nextFrag = new ProductDetailsFragment().newInstance(product);
+                loadFragment(nextFrag,false);
+            }
+         });
+
+        this.favouritesListAdapter = new FavouriteListAdapter();
+        this.favouritesListAdapter.setOnItemClickedListener(new FavouriteListAdapter.OnItemRecipeClickedListener() {
+            @Override
+            public void onItemRecipeClicked(Recipe recipe) {
+                RecipeFragment recipeFragment = (RecipeFragment) getSupportFragmentManager().findFragmentById(R.id.recipe_details);
+                if (recipeFragment != null){
+                    //Manage two pane layout
+                }
+                else{
+                    showProgress(true);
+                    if (recipesList!=null) {
+                        mRecipeTask = new RecipeTask(recipe.getRecipeID());
+                        mRecipeTask.execute((Void) null);
+                    }
+                    else {
+                        Toast.makeText(getApplicationContext(), "Unable to get selected recipe", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            }
+        });
 
         mTextMessage = (TextView) findViewById(R.id.message);
         setContentView(R.layout.activity_main);
@@ -122,22 +162,50 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         setSupportActionBar(myToolbar);
 
         //loading the default fragment
-        loadFragment(new HomeFragment(), true);
+        showProgress(true);
+        mRecipesTask = new RecipesTask(123L);
+        mRecipesTask.execute((Void) null);
+        //loadFragment(new HomeFragment(), true);
+    }
+
+    public ShoppingBasketListAdapter getListAdapter(){
+        return this.basketListAdapter;
+    }
+
+    public FavouriteListAdapter getFavouritesAdapter(){
+        return this.favouritesListAdapter;
     }
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         Fragment fragment = null;
         Bundle bundle = null;
+
         switch (item.getItemId()) {
             case R.id.navigation_recipe:
-                fragment = new HomeFragment();
+                if(recipesList==null){
+                    showProgress(true);
+                    mRecipesTask = new RecipesTask(123L);
+                    mRecipesTask.execute((Void) null);
+                    return true;
+                }
+                else{
+                    Bundle args = new Bundle();
+                    ArrayList<Recipe> casted = new ArrayList<Recipe>(recipesList);
+                    args.putParcelableArrayList("list", casted);
+
+                    fragment = new HomeFragment();
+                    fragment.setArguments(args);
+                }
                 break;
             case R.id.navigation_basket:
                 fragment = new ShoppingBasketFragment();
                 break;
             case R.id.navigation_fav:
                 fragment = new FavouriteFragment();
+                break;
+            case R.id.navigation_speech:
+                fragment = new SpeechToTextFragment();
                 break;
             case R.id.navigation_profile:
                 SharedPreferences preferences = this.getSharedPreferences(
@@ -149,14 +217,27 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         return loadFragment(fragment, false);
     }
 
+    public void setOnRecipeFavouriteListener(RecipeFragment fragment, Recipe recipe){
+        fragment.setOnRecipeFavouriteListener(this, this);
+    };
+
+
     public boolean loadFragment(Fragment fragment, boolean firstFragment) {
         //switching fragment
+        //comprobar que si es homeFragment se hayan cargado las recetas primero
+
+
         if (fragment != null) {
             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-
+//            transaction.add(R.id.fragment_basket, fragment);
             transaction.replace(R.id.fragment_container, fragment);
+//            toast = Toast.makeText(this, Toast.LENGTH_SHORT);
+//            toast.show();
+
+
             if (!firstFragment) {
                 transaction.addToBackStack(null);
+
             }
             transaction.commit();
             return true;
@@ -182,9 +263,11 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
             if(resultCode == Activity.RESULT_OK){
             String barcode = data.getStringExtra("barcode");
 
-                ShoppingBasketFragment apiCall = new ShoppingBasketFragment();
-                apiCall.apiCall.execute(barcode);
-
+//                ShoppingBasketFragment apiCall = new ShoppingBasketFragment();
+                showProgress(true);
+                RapidEatAsyncTask apiCall = new RapidEatAsyncTask(basketListAdapter);
+                apiCall.setOnHeadlineSelectedListener(this);
+                apiCall.execute(barcode);
             }
         }
         if (requestCode == RC_SIGN_IN) {
@@ -202,15 +285,6 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         }
     }
 
-
-//    @Override
-//    public void onStart() {
-//        super.onStart();
-//        // Check if user is signed in (non-null) and update UI accordingly.
-//        FirebaseUser currentUser = mAuth.getCurrentUser();
-//        updateUI(currentUser);
-//    }
-
     private void firebaseAuthWithGoogle(GoogleSignInAccount acct) {
         Log.d(TAG, "firebaseAuthWithGoogle:" + acct.getId());
         showProgressDialog();
@@ -224,6 +298,11 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
                             // Sign in success, update UI with the signed-in user's information
                             Log.d(TAG, "signInWithCredential:success");
                             FirebaseUser user = mAuth.getCurrentUser();
+                            SharedPreferences preferences = getApplicationContext().getSharedPreferences(
+                                    "com.filloasoft.android.androeat", Context.MODE_PRIVATE);
+
+                            preferences.edit().putString("username", user.getDisplayName()).apply();
+                            Picasso.with(getApplicationContext()).load(user.getPhotoUrl()).into(ImageUtils.picassoImageTarget(getApplicationContext(), "imageDir", "my_image.jpeg"));
                             updateUI(user);
                         } else {
                             // If sign in fails, display a message to the user.
@@ -343,12 +422,26 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
                     toast = Toast.makeText(this,"Registered succesfully!", Toast.LENGTH_SHORT);
                     toast.show();
 
-                    HomeFragment homeFragment = new HomeFragment();
-                    loadFragment(homeFragment,false);
+                   // HomeFragment homeFragment = new HomeFragment();
+                    //loadFragment(homeFragment,false);
+                    if(recipesList==null){
+                        showProgress(true);
+                        mRecipesTask = new RecipesTask(123L);
+                        mRecipesTask.execute((Void) null);
+                    }
+                    else{
+                        Bundle args = new Bundle();
+                        ArrayList<Recipe> casted = new ArrayList<Recipe>(recipesList);
+                        args.putParcelableArrayList("list", casted);
+
+                        HomeFragment homeFragment = new HomeFragment();
+                        homeFragment.setArguments(args);
+                        loadFragment(homeFragment,false);
+                    }
                 } else {
                     SharedPreferences preferences = this.getSharedPreferences(
                             "com.filloasoft.android.androeat", Context.MODE_PRIVATE);
-                    if (email!=null) {
+                    /*if (email!=null) {
                         databaseHelper = new DatabaseHelper(this);
                         if (databaseHelper.checkUser(email)) {
                             fragment = new ProfileFragment();
@@ -357,23 +450,42 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
                             fragment.setArguments(args);
                             loadFragment(fragment, false);
                         }
-                    }
+                    }*/
                 }
         } else {
-            fragment = new HomeFragment();
-            loadFragment(fragment,false);
+           // fragment = new HomeFragment();
+           // loadFragment(fragment,false);
+            if(recipesList==null){
+                showProgress(true);
+                mRecipesTask = new RecipesTask(123L);
+                mRecipesTask.execute((Void) null);
+            }
+            else{
+                Bundle args = new Bundle();
+                ArrayList<Recipe> casted = new ArrayList<Recipe>(recipesList);
+                args.putParcelableArrayList("list", casted);
+
+                fragment = new HomeFragment();
+                fragment.setArguments(args);
+                loadFragment(fragment,false);
+            }
         }
     }
 
-    public void onRecipeSelected(View view){
+    public void onRecipeSelected(View view, int position){
         RecipeFragment recipeFragment = (RecipeFragment) getSupportFragmentManager().findFragmentById(R.id.recipe_details);
         if (recipeFragment != null){
             //Manage two pane layout
         }
         else{
             showProgress(true);
-            mRecipeTask = new RecipeTask(123L);
-            mRecipeTask.execute((Void) null);
+            if (recipesList!=null) {
+                mRecipeTask = new RecipeTask(recipesList.get(position).getRecipeID());
+                mRecipeTask.execute((Void) null);
+            }
+            else {
+                Toast.makeText(this, "Unable to get selected recipe", Toast.LENGTH_SHORT).show();
+            }
         }
     }
 
@@ -388,10 +500,31 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
     }
 
     public void findRecipes(View view) {
-        toast = Toast.makeText(this,
-                "Buscando recetas...", Toast.LENGTH_SHORT);
-        // Do something in response to button
-        toast.show();
+
+//        ShoppingBasketFragment profileFragment = (ShoppingBasketFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_basket);
+//
+//        if (profileFragment != null){
+//
+//            profileFragment.getRecipes();
+//            //Manage two pane layout
+//        }
+//        else{
+//            ShoppingBasketFragment newProfileFragment = new ShoppingBasketFragment();
+//            loadFragment(newProfileFragment, false);
+//            profileFragment.getRecipes();
+//
+//        }
+        ShoppingBasketFragment shoppingBasketFragment = (ShoppingBasketFragment) this.getSupportFragmentManager().findFragmentById(R.id.fragment_container);
+        mIngredients = shoppingBasketFragment.getRecipes();
+        if (mIngredients==null || mIngredients.isEmpty()){
+            Toast.makeText(getBaseContext(),"No products selected!",Toast.LENGTH_LONG).show();
+        }
+        else {
+            showProgress(true);
+            mRecipesTask = new RecipesTask(120L);
+            mRecipesTask.execute((Void) null);
+        }
+
     }
 
     public void openAddDialog(View view) {
@@ -467,13 +600,63 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         });
     }
 
+    @Override
+    public void onItemClicked(ProductListView product) {
+        ProductDetailsFragment nextFrag = new ProductDetailsFragment().newInstance(product);
+        this.getSupportFragmentManager().beginTransaction()
+                .replace(R.id.fragment_container, nextFrag)
+                .addToBackStack(null)
+                .commit();
+    }
+
+    @Override
+    public void onTaskCompleted(Boolean bool, String msg) {
+        toast = Toast.makeText(this, msg, Toast.LENGTH_SHORT);
+        toast.show();
+        showProgress(false);
+    }
+
+    @Override
+    public void onItemRecipeClicked(Recipe recipe) {
+        RecipeFragment recipeFragment = (RecipeFragment) getSupportFragmentManager().findFragmentById(R.id.recipe_details);
+        if (recipeFragment != null){
+            //Manage two pane layout
+        }
+        else{
+            showProgress(true);
+            if (recipesList!=null) {
+                mRecipeTask = new RecipeTask(recipe.getRecipeID());
+                mRecipeTask.execute((Void) null);
+            }
+            else {
+                Toast.makeText(this, "Unable to get selected recipe", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
+    @Override
+    public void onFavouriteClicked(Recipe recipe,Boolean addFavourite) {
+        if (addFavourite){
+            favouritesListAdapter.addItem(recipe);
+            Toast.makeText(this, "Recipe added to favourites", Toast.LENGTH_SHORT).show();
+
+        } else{
+            favouritesListAdapter.removeItemByRecipe(recipe);
+            Toast.makeText(this, "Recipe removed from favourites", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    @Override
+    public Boolean onRecipeFavourite(Recipe recipe) {
+        return favouritesListAdapter.isRecipeFavourite(recipe);
+    }
 
     public class RecipeTask extends AsyncTask<Void, Void, Recipe> {
 
-        private final Long mId;
+        private final String mId;
         private Recipe recipe;
 
-        RecipeTask(Long id) {
+        RecipeTask(String id) {
             mId = id;
         }
 
@@ -482,7 +665,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
             try {
                 final String url;
                 //url = getResources().getString(R.string.recipe_url)+mId;
-                url = "http://androeat.dynu.net/recipe/262682";
+                url = "http://androeat.dynu.net/recipe/"+mId;
                 RestTemplate restTemplate = new RestTemplate();
                 restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
                 recipe = restTemplate.getForObject(url, Recipe.class);
@@ -491,6 +674,24 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
                     newurl = new URL(recipe.getRecipeImage());
                     Bitmap mIcon_val = BitmapFactory.decodeStream(newurl.openConnection().getInputStream());
                     recipe.setRecipeBitmapImage(mIcon_val);
+                } catch (MalformedURLException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                try {
+                    List<RecipeIngredient> recipeIngredients = recipe.getRecipeIngredients();
+
+                    for (RecipeIngredient i: recipeIngredients){
+
+                        if (i.getImageUrl() != null){
+                            URL ingrUrl = new URL(i.getImageUrl().toString());
+                            Bitmap mIcon_val = BitmapFactory.decodeStream(ingrUrl.openConnection().getInputStream());
+                            i.setIngredientImage(mIcon_val);
+                        }
+                    }
+                    recipe.setRecipeIngredients(recipeIngredients);
+
                 } catch (MalformedURLException e) {
                     e.printStackTrace();
                 } catch (IOException e) {
@@ -512,6 +713,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
             args.putSerializable("recipe", recipe);
             RecipeFragment newRecipeFragment = new RecipeFragment();
             newRecipeFragment.setArguments(args);
+            setOnRecipeFavouriteListener(newRecipeFragment, recipe);
             loadFragment(newRecipeFragment, false);
         }
 
@@ -519,5 +721,130 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         protected void onCancelled() {
 
         }
+    }
+
+
+    public class RecipesTask extends AsyncTask<Void, Void, List<Recipe>> {
+
+        private final Long mId;
+        private List<Recipe> recipes;
+
+        RecipesTask(Long id) {
+            mId = id;
+        }
+
+        @Override
+        protected void onPreExecute(){
+
+        }
+
+        @Override
+        protected List<Recipe> doInBackground(Void... params) {
+            try {
+                //get user preferences if exists
+                String userPreferences = getUserPreferences();
+
+                final String url;
+                if (mId==123L) {
+                    url = "http://androeat.dynu.net/recipe/random?tags=" + userPreferences;
+                }
+                else{
+                    if (!mIngredients.isEmpty()) {
+                        String ingredients = TextUtils.join("%2C", mIngredients);
+                        url = "http://androeat.dynu.net/recipe/search?ingredients=" + ingredients;
+                    }
+                    else{
+                        return null;
+                    }
+                }
+                RestTemplate restTemplate = new RestTemplate();
+                restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
+                ResponseEntity<List<Recipe>> response = restTemplate.exchange(
+                        url,
+                        HttpMethod.GET,
+                        null,
+                        new ParameterizedTypeReference<List<Recipe>>() {
+                        });
+                recipes = response.getBody();
+                URL newurl = null;
+                for (Recipe r : recipes) {
+                    try {
+                        newurl = new URL(r.getRecipeImage());
+                        Bitmap mIcon_val = BitmapFactory.decodeStream(newurl.openConnection().getInputStream());
+                        r.setRecipeBitmapImage(mIcon_val);
+                    } catch (MalformedURLException e) {
+                        e.printStackTrace();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    //recipes.add(r);
+                }
+                recipesList=recipes;
+                return recipes;
+            } catch (Exception e) {
+                Log.e("Error getting recipe -", e.getMessage(), e);
+            }
+            return null;
+        }
+
+
+        @Override
+        protected void onPostExecute(final List<Recipe> recipes) {
+            mRecipesTask = null;
+            showProgress(false);
+
+            if (recipes==null ||recipes.isEmpty()){
+                Toast.makeText(getBaseContext(),"Error getting recipes",Toast.LENGTH_LONG).show();
+            }
+            else {
+                Bundle args = new Bundle();
+                ArrayList<Recipe> casted = new ArrayList<Recipe>(recipes);
+                args.putParcelableArrayList("list", casted);
+                if (mId == 123L) {
+                    HomeFragment homeFragment = new HomeFragment();
+                    homeFragment.setArguments(args);
+                    loadFragment(homeFragment, true);
+                } else {
+                    RecipeResultFragment recipeResultFragment = new RecipeResultFragment();
+                    recipeResultFragment.setArguments(args);
+                    loadFragment(recipeResultFragment, false);
+                }
+            }
+        }
+
+        @Override
+        protected void onCancelled() {
+
+        }
+    }
+
+    private String getUserPreferences(){
+        SharedPreferences preferences = this.getSharedPreferences(
+                "com.filloasoft.android.androeat", Context.MODE_PRIVATE);
+
+        List<String> preferencesList = new ArrayList<>();
+
+        String vegan = preferences.getString("vegan", "");
+        if (!vegan.isEmpty()){
+            preferencesList.add(vegan);
+        }
+        String vegetarian = preferences.getString("vegetarian", "");
+        if (!vegetarian.isEmpty()){
+            preferencesList.add(vegetarian);
+        }
+        String glutenFree = preferences.getString("glutenfree", "");
+        if (!glutenFree.isEmpty()){
+            preferencesList.add(glutenFree);
+        }
+        String dairyFree = preferences.getString("dairyfree", "");
+        if (!dairyFree.isEmpty()){
+            preferencesList.add(dairyFree);
+        }
+        String sustainable = preferences.getString("sustainable", "");
+        if (!sustainable.isEmpty()){
+            preferencesList.add(sustainable);
+        }
+
+        return TextUtils.join("%20", preferencesList);
     }
 }

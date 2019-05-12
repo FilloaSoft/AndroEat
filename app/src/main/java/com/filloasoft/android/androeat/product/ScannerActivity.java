@@ -69,10 +69,6 @@ public class ScannerActivity extends AppCompatActivity {
         integrator.setCameraId(0);
         integrator.setBeepEnabled(true);
         integrator.initiateScan();
-
-//        toast = Toast.makeText(getApplicationContext(),
-//                "Escaneando codigo...", Toast.LENGTH_SHORT);
-//        toast.show();
     }
 
 
@@ -83,7 +79,7 @@ public class ScannerActivity extends AppCompatActivity {
         if (intentResult != null) {
             if (intentResult.getContents() != null) {
                 Intent returnIntent = new Intent();
-                returnIntent.putExtra("barcode",intentResult.getContents());
+                returnIntent.putExtra("barcode", intentResult.getContents());
                 setResult(Activity.RESULT_OK, returnIntent);
                 finish();
             }

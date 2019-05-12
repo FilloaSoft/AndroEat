@@ -77,11 +77,11 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
 
         textInputEditTextEmail = (EditText) loginView.findViewById(R.id.input_email);
         textInputEditTextPassword = (EditText) loginView.findViewById(R.id.input_password);
-        appCompatButtonLogin = (AppCompatButton) loginView.findViewById(R.id.btn_login);
-        appCompatButtonRegister = (AppCompatButton) loginView.findViewById(R.id.btn_signup);
+        //appCompatButtonLogin = (AppCompatButton) loginView.findViewById(R.id.btn_login);
+        //appCompatButtonRegister = (AppCompatButton) loginView.findViewById(R.id.btn_signup);
 
-        appCompatButtonLogin.setOnClickListener(this);
-        appCompatButtonRegister.setOnClickListener(this);
+        //appCompatButtonLogin.setOnClickListener(this);
+        //appCompatButtonRegister.setOnClickListener(this);
 
         databaseHelper = new DatabaseHelper(getActivity());
         inputValidation = new InputValidation(getActivity());
@@ -100,7 +100,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.btn_login:
+            /*case R.id.btn_login:
                 verifyFromSQLite();
                 if (checkCredentialsFromSQLite()) {
                     //TODO: falta que cuando el usuario se loguee correctamente se lance un mensaje de éxito
@@ -117,7 +117,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
                 // Navigate to SignupFragment
                 SignupFragment newSignupFragment = new SignupFragment();
                 loadFragment(newSignupFragment, false);
-                break;
+                break;*/
             case R.id.sign_in_button:
                 ((MainActivity)getActivity()).signIn();
                 break;
