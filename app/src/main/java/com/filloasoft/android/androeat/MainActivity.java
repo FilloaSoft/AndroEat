@@ -28,6 +28,7 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.filloasoft.android.androeat.mic.SpeechToTextFragment;
 import com.filloasoft.android.androeat.model.ProductListView;
 import com.filloasoft.android.androeat.model.Recipe;
 import com.filloasoft.android.androeat.model.RecipeIngredient;
@@ -202,6 +203,9 @@ public class MainActivity extends AppCompatActivity implements RecipeFragment.on
                 break;
             case R.id.navigation_fav:
                 fragment = new FavouriteFragment();
+                break;
+            case R.id.navigation_speech:
+                fragment = new SpeechToTextFragment();
                 break;
             case R.id.navigation_profile:
                 SharedPreferences preferences = this.getSharedPreferences(
