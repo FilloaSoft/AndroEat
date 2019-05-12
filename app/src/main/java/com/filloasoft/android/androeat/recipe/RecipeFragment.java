@@ -66,11 +66,12 @@ public class RecipeFragment extends Fragment {
         final FloatingActionButton favouriteButton = view.findViewById(R.id.favButton);
         isRecipeFavourite = callbackFav.onRecipeFavourite(recipe);
 
-        int color = Color.parseColor("#D9DCE0");
+        int color = Color.parseColor("#FAF9F8");
         if (isRecipeFavourite){
             color = Color.parseColor("#ff0000");
         }
-        favouriteButton.setBackgroundTintList(ColorStateList.valueOf(color));
+//        favouriteButton.setBackgroundTintList(ColorStateList.valueOf(color));
+        favouriteButton.setImageTintList(ColorStateList.valueOf(color));
 
         favouriteButton.setOnClickListener(new View.OnClickListener()
         {
@@ -78,15 +79,20 @@ public class RecipeFragment extends Fragment {
             public void onClick(View v)
             {
                 int color;
+                isRecipeFavourite = callbackFav.onRecipeFavourite(recipe);
+
                 if (isRecipeFavourite){
-                    color = Color.parseColor("#D9DCE0");
+                    color = Color.parseColor("#FAF9F8");
                     callback.onFavouriteClicked(recipe, false);
+                    favouriteButton.setImageTintList(ColorStateList.valueOf(color));
                 }
                 else{
                     color = Color.parseColor("#ff0000");
                     callback.onFavouriteClicked(recipe, true);
+                    favouriteButton.setImageTintList(ColorStateList.valueOf(color));
                 }
-                favouriteButton.setBackgroundTintList(ColorStateList.valueOf(color));
+                favouriteButton.setImageTintList(ColorStateList.valueOf(color));
+//                favouriteButton.setBackgroundTintList(ColorStateList.valueOf(color));
             }
         });
 

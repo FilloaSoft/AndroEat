@@ -1,5 +1,7 @@
 package com.filloasoft.android.androeat.model;
 
+import android.graphics.Bitmap;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -83,6 +85,8 @@ public class RecipeIngredient {
     private Object labelTags;
     @JsonIgnore
     private Map<String, Object> additionalProperties = new HashMap<String, Object>();
+    @JsonIgnore
+    private Bitmap ingredientImage;
 
     @JsonProperty("id")
     public Object getId() {
@@ -314,4 +318,11 @@ public class RecipeIngredient {
         this.additionalProperties.put(name, value);
     }
 
+    public Bitmap getIngredientImage() {
+        return ingredientImage;
+    }
+
+    public void setIngredientImage(Bitmap ingredientImage) {
+        this.ingredientImage = ingredientImage;
+    }
 }

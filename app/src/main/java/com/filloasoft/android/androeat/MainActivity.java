@@ -30,6 +30,7 @@ import android.widget.Toast;
 
 import com.filloasoft.android.androeat.model.ProductListView;
 import com.filloasoft.android.androeat.model.Recipe;
+import com.filloasoft.android.androeat.model.RecipeIngredient;
 import com.filloasoft.android.androeat.product.FavouriteFragment;
 import com.filloasoft.android.androeat.product.ProductDetailsFragment;
 import com.filloasoft.android.androeat.product.RapidEatAsyncTask;
@@ -669,6 +670,24 @@ public class MainActivity extends AppCompatActivity implements RecipeFragment.on
                     newurl = new URL(recipe.getRecipeImage());
                     Bitmap mIcon_val = BitmapFactory.decodeStream(newurl.openConnection().getInputStream());
                     recipe.setRecipeBitmapImage(mIcon_val);
+                } catch (MalformedURLException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                try {
+                    List<RecipeIngredient> recipeIngredients = recipe.getRecipeIngredients();
+
+                    for (RecipeIngredient i: recipeIngredients){
+
+                        if (i.getImageUrl() != null){
+                            URL ingrUrl = new URL(i.getImageUrl().toString());
+                            Bitmap mIcon_val = BitmapFactory.decodeStream(ingrUrl.openConnection().getInputStream());
+                            i.setIngredientImage(mIcon_val);
+                        }
+                    }
+                    recipe.setRecipeIngredients(recipeIngredients);
+
                 } catch (MalformedURLException e) {
                     e.printStackTrace();
                 } catch (IOException e) {
