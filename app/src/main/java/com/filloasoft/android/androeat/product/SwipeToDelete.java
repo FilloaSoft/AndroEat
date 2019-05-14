@@ -90,6 +90,6 @@ abstract public class SwipeToDelete extends ItemTouchHelper.Callback {
 
     @Override
     public float getSwipeThreshold(@NonNull RecyclerView.ViewHolder viewHolder) {
-        return 0.7f;
+        return 0.3f;
     }
 }

@@ -59,7 +59,6 @@ public class ShoppingBasketListAdapter extends RecyclerView.Adapter<ShoppingBask
     @Override
     public void onBindViewHolder(final MyViewHolder holder, final int position) {
 
-
         holder.listView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -75,6 +74,10 @@ public class ShoppingBasketListAdapter extends RecyclerView.Adapter<ShoppingBask
         TextView textViewDescr = holder.listView.findViewById(R.id.productDescription);
         ImageView imageView = holder.listView.findViewById(R.id.productImage);
         CheckBox checkBoxView = holder.listView.findViewById(R.id.checkBox);
+
+        if (checkedList.get(position) != null){
+            checkBoxView.setChecked(checkedList.get(position));
+        }
 
         checkBoxView.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
 
