@@ -14,6 +14,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.annotation.VisibleForTesting;
 import android.support.design.widget.BottomNavigationView;
@@ -32,6 +33,7 @@ import com.filloasoft.android.androeat.mic.SpeechToTextFragment;
 import com.filloasoft.android.androeat.model.ProductListView;
 import com.filloasoft.android.androeat.model.Recipe;
 import com.filloasoft.android.androeat.model.RecipeIngredient;
+import com.filloasoft.android.androeat.product.CameraAsyncTask;
 import com.filloasoft.android.androeat.product.FavouriteFragment;
 import com.filloasoft.android.androeat.product.ProductDetailsFragment;
 import com.filloasoft.android.androeat.product.RapidEatAsyncTask;
@@ -80,7 +82,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class MainActivity extends AppCompatActivity implements RecipeFragment.onGetRecipeFavouriteListener, RecipeFragment.OnRecipeFavouriteListener, FavouriteListAdapter.OnItemRecipeClickedListener, RapidEatAsyncTask.OnHeadlineSelectedListener, ShoppingBasketListAdapter.OnItemClickedListener, BottomNavigationView.OnNavigationItemSelectedListener, HomeFragment.OnClickHowTo{
+public class MainActivity extends AppCompatActivity implements CameraAsyncTask.OnProductPosiblityListener, CameraActivity.OnBasketAdapterListener, RecipeFragment.onGetRecipeFavouriteListener, RecipeFragment.OnRecipeFavouriteListener, FavouriteListAdapter.OnItemRecipeClickedListener, RapidEatAsyncTask.OnHeadlineSelectedListener, ShoppingBasketListAdapter.OnItemClickedListener, BottomNavigationView.OnNavigationItemSelectedListener, HomeFragment.OnClickHowTo{
     /**
      * Keep track of the login task to ensure we can cancel it if requested.
      */
@@ -99,6 +101,7 @@ public class MainActivity extends AppCompatActivity implements RecipeFragment.on
     private GoogleSignInClient mGoogleSignInClient;
     private User usuario;
     private static final int REQUEST_CODE = 123;
+    private static final int RC_CAMERA_CODE = 8001;
     private ShoppingBasketListAdapter basketListAdapter ;
     private FavouriteListAdapter favouritesListAdapter;
 //    ShoppingBasketFragment shoppingBasketFragment = new ShoppingBasketFragment();
@@ -257,7 +260,17 @@ public class MainActivity extends AppCompatActivity implements RecipeFragment.on
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == RC_CAMERA_CODE) {
+            if(resultCode == Activity.RESULT_OK){
+                String mPhotoPath = data.getStringExtra("mPhotoPath");
 
+//                ShoppingBasketFragment apiCall = new ShoppingBasketFragment();
+//                showProgress(true);
+                CameraAsyncTask apiCall = new CameraAsyncTask();
+                apiCall.setOnProductPosiblityListener(this);
+                apiCall.execute(mPhotoPath, getBaseContext(), basketListAdapter);
+            }
+        }
         // Result returned from launching the Intent from GoogleSignInApi.getSignInIntent(...);
         if (requestCode == REQUEST_CODE) {
             if(resultCode == Activity.RESULT_OK){
@@ -496,7 +509,7 @@ public class MainActivity extends AppCompatActivity implements RecipeFragment.on
 
     public void takePhoto(View view){
         Intent cameraIntent = new Intent(getApplicationContext(), CameraActivity.class);
-        startActivity(cameraIntent);
+        startActivityForResult(cameraIntent, RC_CAMERA_CODE);
     }
 
     public void findRecipes(View view) {
@@ -613,7 +626,7 @@ public class MainActivity extends AppCompatActivity implements RecipeFragment.on
     public void onTaskCompleted(Boolean bool, String msg) {
         toast = Toast.makeText(this, msg, Toast.LENGTH_SHORT);
         toast.show();
-        showProgress(false);
+        showProgress(bool);
     }
 
     @Override
@@ -649,6 +662,11 @@ public class MainActivity extends AppCompatActivity implements RecipeFragment.on
     @Override
     public Boolean onRecipeFavourite(Recipe recipe) {
         return favouritesListAdapter.isRecipeFavourite(recipe);
+    }
+
+    @Override
+    public ShoppingBasketListAdapter onGetAdapter() {
+        return this.basketListAdapter;
     }
 
     public class RecipeTask extends AsyncTask<Void, Void, Recipe> {
