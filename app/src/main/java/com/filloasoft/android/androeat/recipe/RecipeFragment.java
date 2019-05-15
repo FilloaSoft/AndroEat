@@ -106,7 +106,7 @@ public class RecipeFragment extends Fragment {
                 ShareCompat.IntentBuilder.from(getActivity())
                         .setType("text/plain")
                         .setChooserTitle("Share Recipe")
-                        .setText("http://www.google.es")
+                        .setText(recipe.getRecipeURL())
                         .startChooser();
             }
         });
