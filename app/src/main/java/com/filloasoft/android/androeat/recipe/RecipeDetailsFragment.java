@@ -26,8 +26,6 @@ public class RecipeDetailsFragment extends Fragment {
         Recipe recipe = (Recipe) bundle.getSerializable("recipe");
 
         IngredientListAdapter adapter = new IngredientListAdapter(getActivity(), recipe.getRecipeIngredients());
-        list = (ListView) recipeDetailsView.findViewById(R.id.ingredient_list);
-        list.setAdapter(adapter);
 
 
         if (recipe.getCookingTimeMinutes()!=null) {
@@ -45,6 +43,11 @@ public class RecipeDetailsFragment extends Fragment {
                 diets = diets.substring(0, 1).toUpperCase() + diets.substring(1);
             }
             dietText.setText(diets);
+        }
+
+        if (recipe.getRecipeURL()!=null){
+            TextView url = (TextView) recipeDetailsView.findViewById(R.id.recipeLink);
+            url.setText(recipe.getRecipeURL());
         }
 
         return recipeDetailsView;

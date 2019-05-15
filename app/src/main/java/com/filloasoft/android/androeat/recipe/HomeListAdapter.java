@@ -32,7 +32,6 @@ public class HomeListAdapter extends ArrayAdapter<Recipe> {
 
             TextView titleText = (TextView) rowView.findViewById(R.id.recipeName);
             ImageView imageView = (ImageView) rowView.findViewById(R.id.recipeImage);
-            TextView subtitleText = (TextView) rowView.findViewById(R.id.recipeDescription);
 
            // titleText.setText(recipeName[position]);
 
@@ -47,9 +46,6 @@ public class HomeListAdapter extends ArrayAdapter<Recipe> {
                 imageView.setImageBitmap(recipe.getRecipeBitmapImage());
 
             }
-
-
-            subtitleText.setText("mock");
 
             return rowView;
         };

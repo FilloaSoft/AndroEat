@@ -13,23 +13,12 @@
     <TextView
         android:id="@+id/recipeName"
         android:text="Android Name"
-        android:textSize="18dp"
-        android:layout_marginTop="1dp"
+        android:textSize="16dp"
         android:textColor="@color/colorAccent"
-        android:maxLines="1"
+        android:maxLines="2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/recipeImage"
-        />
-
-    <TextView
-        android:id="@+id/recipeDescription"
-        android:text="Android Version"
-        android:textSize="14sp"
-        android:maxLines="1"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/recipeName"
         />
 
 </RelativeLayout>

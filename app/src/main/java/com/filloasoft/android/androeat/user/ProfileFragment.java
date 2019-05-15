@@ -42,10 +42,6 @@ public class ProfileFragment extends Fragment implements View.OnClickListener{
         TextView textView = profileView.findViewById(R.id.userEmail);
         textView.setText(email);
 
-        String username = args.getString("username", "");
-        TextView usernameText = profileView.findViewById(R.id.userName);
-        usernameText.setText(username);
-
         //Retrieve user profile image from storage and load into imageview
         ImageView profileImage = profileView.findViewById(R.id.profile_image);
         ContextWrapper cw = new ContextWrapper(getActivity());

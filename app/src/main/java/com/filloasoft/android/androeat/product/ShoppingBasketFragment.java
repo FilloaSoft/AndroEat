@@ -194,9 +194,9 @@ public class ShoppingBasketFragment extends Fragment {
                     }else{
                         markedList.add(product.getProductName());
                     }
-                    Toast toast = Toast.makeText(getContext(),
+                    /*Toast toast = Toast.makeText(getContext(),
                             markedList.toString(), Toast.LENGTH_SHORT);
-                    toast.show();
+                    toast.show();*/
                 }
             }
         }

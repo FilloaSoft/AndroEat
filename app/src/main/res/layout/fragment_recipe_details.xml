@@ -6,23 +6,37 @@
     android:id="@+id/fragment_recipe_details">
 
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
         >
 
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_margin="@dimen/activity_vertical_margin">
+            android:orientation="vertical"
+            android:padding="4dp">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_margin="@dimen/activity_vertical_margin">
 
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:src="@drawable/ic_timer"
-                android:tint="@color/colorAccent"
-                />
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:src="@drawable/ic_timer"
+                    android:tint="@color/colorAccent"
+                    />
+                <TextView
+                    android:paddingLeft="@dimen/activity_horizontal_margin"
+                    android:id="@+id/timer"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Cooking time"
+                    android:textColor="@color/colorAccent"/>
+
+            </LinearLayout>
             <TextView
                 android:paddingLeft="@dimen/activity_horizontal_margin"
                 android:id="@+id/recipeTime"
@@ -30,21 +44,34 @@
                 android:layout_height="wrap_content"
                 android:text="@string/not_available"
                 android:textColor="@color/colorPrimaryDark"/>
-
         </LinearLayout>
 
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:padding="4dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_margin="@dimen/activity_vertical_margin">
+            android:orientation="vertical">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_margin="@dimen/activity_vertical_margin">
 
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:src="@drawable/ic_alert"
-                android:tint="@color/colorAccent"
-                />
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:src="@drawable/ic_alert"
+                    android:tint="@color/colorAccent"
+                    />
+                <TextView
+                    android:paddingLeft="@dimen/activity_horizontal_margin"
+                    android:id="@+id/alerts"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Allergens and intolerances"
+                    android:textColor="@color/colorAccent"/>
+
+            </LinearLayout>
             <TextView
                 android:paddingLeft="@dimen/activity_horizontal_margin"
                 android:id="@+id/recipeAlerts"
@@ -52,11 +79,15 @@
                 android:layout_height="wrap_content"
                 android:text="@string/not_available"
                 android:textColor="@color/colorPrimaryDark"/>
-
         </LinearLayout>
 
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:padding="4dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:layout_margin="@dimen/activity_vertical_margin">
@@ -67,6 +98,16 @@
                 android:src="@drawable/ic_check"
                 android:tint="@color/colorAccent"
                 />
+
+                <TextView
+                    android:paddingLeft="@dimen/activity_horizontal_margin"
+                    android:id="@+id/diets"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/not_available"
+                    android:textColor="@color/colorAccent"/>
+            </LinearLayout>
+
             <TextView
                 android:paddingLeft="@dimen/activity_horizontal_margin"
                 android:id="@+id/recipeDiets"
@@ -78,31 +119,42 @@
         </LinearLayout>
 
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:padding="4dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_margin="@dimen/activity_vertical_margin">
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:src="@drawable/ic_recipe"
-                android:tint="@color/colorAccent"
-                />
-            <TextView
-                android:paddingLeft="@dimen/activity_horizontal_margin"
+            android:orientation="vertical">
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/ingredients"
-                android:textColor="@color/colorAccent"/>
+                android:orientation="horizontal"
+                android:layout_margin="@dimen/activity_vertical_margin">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:src="@drawable/ic_share"
+                    android:tint="@color/colorAccent"
+                    />
+
+                <TextView
+                    android:paddingLeft="@dimen/activity_horizontal_margin"
+                    android:id="@+id/link"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Check recipe in Spoonacular"
+                    android:textColor="@color/colorAccent"/>
+            </LinearLayout>
+
+            <TextView
+                android:paddingLeft="@dimen/activity_horizontal_margin"
+                android:id="@+id/recipeLink"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/not_available"
+                android:autoLink="web"
+                android:textColor="@color/colorPrimaryDark"/>
 
         </LinearLayout>
-
-        <ListView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/ingredient_list">
-        </ListView>
 
 
     </LinearLayout>
