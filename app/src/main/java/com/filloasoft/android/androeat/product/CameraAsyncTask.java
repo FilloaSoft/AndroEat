@@ -27,6 +27,8 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class CameraAsyncTask extends AsyncTask<Object, Void, Product> {
@@ -96,7 +98,17 @@ public class CameraAsyncTask extends AsyncTask<Object, Void, Product> {
         @Override
         protected void onPostExecute(Product product) {
             try{
-                ProductListView pdLview = new ProductListView(product.getGenericName(), product.getProductName(), product.getImage(), product.getLabelsTags(), product.getIngredientsText());
+                List<String> ingredientsText = new ArrayList<>();
+                try {
+                    ingredientsText.add("Energy: " + ((product.getEnergy() == null) ? "N/A" : product.getEnergy()));
+                    ingredientsText.add("Proteins: " + ((product.getProteins() == null) ? "N/A" : product.getProteins()));
+                    ingredientsText.add("Carbohydrates: " + ((product.getCarbohydrates() == null) ? "N/A" : product.getCarbohydrates()));
+                    ingredientsText.add("Sugars: " + ((product.getSugars() == null) ? "N/A" : product.getSugars()));
+                    ingredientsText.add("Fat: " + ((product.getFat() == null) ? "N/A" : product.getFat()));
+                } catch (Exception e) {
+                    //
+                }
+                ProductListView pdLview = new ProductListView(product.getGenericName(), product.getProductName(), product.getImage(), product.getCategoriesHierarchy(),ingredientsText);
                 mAdapter.addItem(pdLview);
                 callback.onTaskCompleted(false, "Product Added!");
             } catch (Exception e){

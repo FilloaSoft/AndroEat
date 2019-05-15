@@ -267,7 +267,7 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.OnRe
                 String mPhotoPath = data.getStringExtra("mPhotoPath");
 
 //                ShoppingBasketFragment apiCall = new ShoppingBasketFragment();
-//                showProgress(true);
+                showProgress(true);
                 CameraAsyncTask apiCall = new CameraAsyncTask();
                 apiCall.setOnProductPosiblityListener(this);
                 apiCall.execute(mPhotoPath, getBaseContext(), basketListAdapter);
