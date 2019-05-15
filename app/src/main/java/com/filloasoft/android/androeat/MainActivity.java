@@ -111,7 +111,7 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.OnRe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        Toast.makeText(getApplicationContext(), getUserPreferences(), Toast.LENGTH_SHORT).show();
+        //Toast.makeText(getApplicationContext(), getUserPreferences(), Toast.LENGTH_SHORT).show();
 
 
         this.basketListAdapter = new ShoppingBasketListAdapter();
@@ -543,10 +543,10 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.OnRe
     }
 
     public void openAddDialog(View view) {
-        toast = Toast.makeText(this,
-                "Abriendo diálogo de adición de productos...", Toast.LENGTH_SHORT);
+        //toast = Toast.makeText(this,
+                //"Abriendo diálogo de adición de productos...", Toast.LENGTH_SHORT);
         // Do something in response to button
-        toast.show();
+        //toast.show();
     }
 
 
