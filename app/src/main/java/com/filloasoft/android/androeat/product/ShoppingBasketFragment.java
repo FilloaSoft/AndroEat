@@ -53,7 +53,6 @@ public class ShoppingBasketFragment extends Fragment {
         LinearLayoutManager layoutManager = new LinearLayoutManager(this.getContext());
         recyclerView.setLayoutManager(layoutManager);
         this.mAdapter = ((MainActivity) getActivity()).getListAdapter();
-//        this.mAdapter.addItem(new ProductListView("test","text", null, null, null));
         recyclerView.setAdapter(mAdapter);
 
 
@@ -190,7 +189,7 @@ public class ShoppingBasketFragment extends Fragment {
             if (checked.containsKey(i)) {
                 if (checked.get(i)){
                     if(product.productName.contains(" ")){
-                        String firstWord= product.productName.substring(0, product.productName.indexOf(" "));
+                        String firstWord = product.productName.replace(" ", "+");
                         markedList.add(firstWord);
                     }else{
                         markedList.add(product.getProductName());

@@ -1,17 +1,14 @@
 package com.filloasoft.android.androeat.recipe;
 
 import android.app.Activity;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.GridView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -19,41 +16,17 @@ import android.widget.Toast;
 import com.filloasoft.android.androeat.R;
 import com.filloasoft.android.androeat.model.Recipe;
 
-import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
-import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
-import org.springframework.web.client.RestTemplate;
-
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.ArrayList;
 import java.util.List;
 
 public class HomeFragment extends Fragment {
 
     OnClickHowTo mCallback;
+    OnReloadRecipe mCallbackReload;
     private TextView mTextMessage;
     GridView grid;
     Toast toast;
 
     private List<Recipe> recipesList;
-
-    String[] recipeName = {
-            "Tarta", "Espaguetis",
-            "Tortilla",
-    };
-
-    String[] recipeDescription = {
-            "Tarta de manzana", "Espaguetis description",
-            "Tortilla description",
-    };
-
-    Integer[] recipeImage = {
-            R.drawable.tarta, R.drawable.espaguetis,
-            R.drawable.tortilla
-    };
 
     @Nullable
     @Override
@@ -75,13 +48,27 @@ public class HomeFragment extends Fragment {
             }
         });
 
+        Button discoverButton = homeView.findViewById(R.id.discoverButton);
+
+        discoverButton.setOnClickListener(new View.OnClickListener() {
+              @Override
+              public void onClick(View v) {
+                  mCallbackReload.onReloadRecipes();
+              }
+          }
+        );
+
         mTextMessage = (TextView) homeView.findViewById(R.id.message);
 
         return homeView;
     }
 
     public interface OnClickHowTo{
-        public void onRecipeSelected(View view, int position);
+        void onRecipeSelected(View view, int position);
+    }
+
+    public interface OnReloadRecipe{
+        void onReloadRecipes();
     }
 
     @Override
@@ -90,12 +77,25 @@ public class HomeFragment extends Fragment {
 
         try{
             mCallback = (OnClickHowTo) activity;
+            mCallbackReload = (OnReloadRecipe) activity;
         }catch (ClassCastException e){
             throw new ClassCastException(activity.toString());
         }
 
     }
 
-
+//    @Override
+//    public void onAttach(Context context) {
+//        super.onAttach(context);
+//
+//        try{
+//            if (context instanceof OnClickHowTo) {
+//                mCallback = (OnClickHowTo) context;
+//            }
+//        }catch (ClassCastException e){
+//            throw new ClassCastException(context.toString());
+//        }
+//
+//    }
 
 }

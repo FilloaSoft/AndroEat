@@ -82,7 +82,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class MainActivity extends AppCompatActivity implements CameraAsyncTask.OnProductPosiblityListener, CameraActivity.OnBasketAdapterListener, RecipeFragment.onGetRecipeFavouriteListener, RecipeFragment.OnRecipeFavouriteListener, FavouriteListAdapter.OnItemRecipeClickedListener, RapidEatAsyncTask.OnHeadlineSelectedListener, ShoppingBasketListAdapter.OnItemClickedListener, BottomNavigationView.OnNavigationItemSelectedListener, HomeFragment.OnClickHowTo{
+public class MainActivity extends AppCompatActivity implements HomeFragment.OnReloadRecipe, CameraAsyncTask.OnProductPosiblityListener, CameraActivity.OnBasketAdapterListener, RecipeFragment.onGetRecipeFavouriteListener, RecipeFragment.OnRecipeFavouriteListener, FavouriteListAdapter.OnItemRecipeClickedListener, RapidEatAsyncTask.OnHeadlineSelectedListener, ShoppingBasketListAdapter.OnItemClickedListener, BottomNavigationView.OnNavigationItemSelectedListener, HomeFragment.OnClickHowTo{
     /**
      * Keep track of the login task to ensure we can cancel it if requested.
      */
@@ -110,6 +110,9 @@ public class MainActivity extends AppCompatActivity implements CameraAsyncTask.O
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        Toast.makeText(getApplicationContext(), getUserPreferences(), Toast.LENGTH_SHORT).show();
+
 
         this.basketListAdapter = new ShoppingBasketListAdapter();
         this.basketListAdapter.setOnItemClickedListener(new ShoppingBasketListAdapter.OnItemClickedListener() {
@@ -168,7 +171,7 @@ public class MainActivity extends AppCompatActivity implements CameraAsyncTask.O
         showProgress(true);
         mRecipesTask = new RecipesTask(123L);
         mRecipesTask.execute((Void) null);
-        //loadFragment(new HomeFragment(), true);
+//        loadFragment(new HomeFragment(), true);
     }
 
     public ShoppingBasketListAdapter getListAdapter(){
@@ -240,7 +243,6 @@ public class MainActivity extends AppCompatActivity implements CameraAsyncTask.O
 
             if (!firstFragment) {
                 transaction.addToBackStack(null);
-
             }
             transaction.commit();
             return true;
@@ -615,11 +617,8 @@ public class MainActivity extends AppCompatActivity implements CameraAsyncTask.O
 
     @Override
     public void onItemClicked(ProductListView product) {
-        ProductDetailsFragment nextFrag = new ProductDetailsFragment().newInstance(product);
-        this.getSupportFragmentManager().beginTransaction()
-                .replace(R.id.fragment_container, nextFrag)
-                .addToBackStack(null)
-                .commit();
+        ProductDetailsFragment newProductFragment = new ProductDetailsFragment().newInstance(product);;
+        loadFragment(newProductFragment, false);
     }
 
     @Override
@@ -667,6 +666,13 @@ public class MainActivity extends AppCompatActivity implements CameraAsyncTask.O
     @Override
     public ShoppingBasketListAdapter onGetAdapter() {
         return this.basketListAdapter;
+    }
+
+    @Override
+    public void onReloadRecipes() {
+        showProgress(true);
+        mRecipesTask = new RecipesTask(123L);
+        mRecipesTask.execute((Void) null);
     }
 
     public class RecipeTask extends AsyncTask<Void, Void, Recipe> {

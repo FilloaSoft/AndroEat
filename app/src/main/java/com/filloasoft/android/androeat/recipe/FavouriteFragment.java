@@ -33,7 +33,6 @@ public class FavouriteFragment extends Fragment {
         LinearLayoutManager layoutManager = new LinearLayoutManager(this.getContext());
         recyclerView.setLayoutManager(layoutManager);
         this.mAdapter = ((MainActivity) getActivity()).getFavouritesAdapter();
-//        this.mAdapter.addItem(new ProductListView("test","text", null, null, null));
         recyclerView.setAdapter(mAdapter);
 
 

@@ -12,7 +12,7 @@
         />
 
     <Button
-        android:id="@+id/findButton"
+        android:id="@+id/discoverButton"
         android:layout_width="110dp"
         android:layout_height="wrap_content"
         android:gravity="center"
