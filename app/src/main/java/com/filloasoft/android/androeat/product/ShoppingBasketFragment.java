@@ -1,6 +1,8 @@
 package com.filloasoft.android.androeat.product;
 
+import android.Manifest;
 import android.animation.ObjectAnimator;
+import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.VibrationEffect;
@@ -10,6 +12,7 @@ import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
@@ -114,18 +117,25 @@ public class ShoppingBasketFragment extends Fragment {
                 inputButtom.setOnClickListener( new View.OnClickListener()
                         {
                             @RequiresApi(api = Build.VERSION_CODES.O)
-                            public void onClick(View view)
-                            {
+                            public void onClick(View view) {
                             if (inputProductName.getText().length() == 0 ){
-                                Vibrator vibrator = (Vibrator) getContext().getSystemService(VIBRATOR_SERVICE);
-                                vibrator.vibrate(VibrationEffect.createWaveform(new long[]{0, 100, 50, 100},-1));
+                                if (ContextCompat.checkSelfPermission(getContext(),
+                                        Manifest.permission.VIBRATE)
+                                        == PackageManager.PERMISSION_GRANTED) {
+                                    Vibrator vibrator = (Vibrator) getContext().getSystemService(VIBRATOR_SERVICE);
+                                    if (vibrator.hasVibrator()) {
+                                        vibrator.vibrate(VibrationEffect.createWaveform(new long[]{0, 100, 50, 100}, -1));
+                                    }
+                                } else {
+                                    Toast toast = Toast.makeText(getContext(), "Name required!", Toast.LENGTH_SHORT);
+                                    toast.show();
+                                }
                                 ObjectAnimator
-                                        .ofFloat(pw.getContentView(), "translationX", 0, 25, -25, 25, -25,15, -15, 6, -6, 0)
+                                        .ofFloat(pw.getContentView(), "translationX", 0, 25, -25, 25, -25, 15, -15, 6, -6, 0)
                                         .setDuration(100)
                                         .start();
                                 inputProductName.requestFocus();
                                 inputProductName.getShowSoftInputOnFocus();
-
                             }else {
                                 mAdapter.addItem(new ProductListView(inputProductName.getText().toString(),inputProductDescr.getText().toString(), null, null, null));
                                 pw.dismiss();
@@ -194,9 +204,6 @@ public class ShoppingBasketFragment extends Fragment {
                     }else{
                         markedList.add(product.getProductName());
                     }
-                    /*Toast toast = Toast.makeText(getContext(),
-                            markedList.toString(), Toast.LENGTH_SHORT);
-                    toast.show();*/
                 }
             }
         }
