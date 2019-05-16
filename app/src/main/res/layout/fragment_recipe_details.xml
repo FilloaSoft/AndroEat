@@ -104,7 +104,7 @@
                     android:id="@+id/diets"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/not_available"
+                    android:text="Diets"
                     android:textColor="@color/colorAccent"/>
             </LinearLayout>
 
