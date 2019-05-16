@@ -85,6 +85,7 @@ public class RecipeFragment extends Fragment {
                     color = Color.parseColor("#FAF9F8");
                     callback.onFavouriteClicked(recipe, false);
                     favouriteButton.setImageTintList(ColorStateList.valueOf(color));
+
                 }
                 else{
                     color = Color.parseColor("#ff0000");

@@ -1,4 +1,4 @@
-package com.filloasoft.android.androeat.product;
+package com.filloasoft.android.androeat.recipe;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 import com.filloasoft.android.androeat.MainActivity;
 import com.filloasoft.android.androeat.R;
 import com.filloasoft.android.androeat.model.Recipe;
+import com.filloasoft.android.androeat.product.SwipeToDelete;
 import com.filloasoft.android.androeat.recipe.FavouriteListAdapter;
 
 public class FavouriteFragment extends Fragment {
@@ -27,7 +28,6 @@ public class FavouriteFragment extends Fragment {
     public View onCreateView(final LayoutInflater inflater, @Nullable final ViewGroup container, @Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         final View favouritesView = (View) inflater.inflate(R.layout.fragment_favourites, container , false);
-
 
         recyclerView = favouritesView.findViewById(R.id.recycler_favourites);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this.getContext());

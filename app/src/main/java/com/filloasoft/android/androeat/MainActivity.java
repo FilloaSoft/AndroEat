@@ -32,7 +32,7 @@ import com.filloasoft.android.androeat.mic.SpeechToTextFragment;
 import com.filloasoft.android.androeat.model.ProductListView;
 import com.filloasoft.android.androeat.model.Recipe;
 import com.filloasoft.android.androeat.model.RecipeIngredient;
-import com.filloasoft.android.androeat.product.FavouriteFragment;
+import com.filloasoft.android.androeat.recipe.FavouriteFragment;
 import com.filloasoft.android.androeat.product.ProductDetailsFragment;
 import com.filloasoft.android.androeat.product.RapidEatAsyncTask;
 import com.filloasoft.android.androeat.product.ShoppingBasketFragment;
@@ -103,6 +103,7 @@ public class MainActivity extends AppCompatActivity implements RecipeFragment.on
     private FavouriteListAdapter favouritesListAdapter;
 //    ShoppingBasketFragment shoppingBasketFragment = new ShoppingBasketFragment();
     private List<Recipe> recipesList;
+    private List<Recipe> favouriteList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -144,6 +145,8 @@ public class MainActivity extends AppCompatActivity implements RecipeFragment.on
         BottomNavigationView navigation = findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(this);
         databaseHelper = new DatabaseHelper(this);
+        favouriteList = databaseHelper.getAllRecipe();
+        this.favouritesListAdapter.setFavouriteRecipes(favouriteList);
         usuario = new User();
 
         // Configure sign-in to request the user's ID, email address, and basic
@@ -202,7 +205,9 @@ public class MainActivity extends AppCompatActivity implements RecipeFragment.on
                 fragment = new ShoppingBasketFragment();
                 break;
             case R.id.navigation_fav:
+                this.favouritesListAdapter.setFavouriteRecipes(favouriteList);
                 fragment = new FavouriteFragment();
+
                 break;
             case R.id.navigation_speech:
                 fragment = new SpeechToTextFragment();
@@ -254,7 +259,6 @@ public class MainActivity extends AppCompatActivity implements RecipeFragment.on
     }
 
     @Override
-
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
@@ -639,10 +643,11 @@ public class MainActivity extends AppCompatActivity implements RecipeFragment.on
         if (addFavourite){
             favouritesListAdapter.addItem(recipe);
             Toast.makeText(this, "Recipe added to favourites", Toast.LENGTH_SHORT).show();
-
+            databaseHelper.addRecipe(recipe);
         } else{
             favouritesListAdapter.removeItemByRecipe(recipe);
             Toast.makeText(this, "Recipe removed from favourites", Toast.LENGTH_SHORT).show();
+            databaseHelper.deleteRecipe(recipe);
         }
     }
 
