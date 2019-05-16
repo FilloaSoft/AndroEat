@@ -123,23 +123,19 @@ public class ShoppingBasketFragment extends Fragment {
                                         Manifest.permission.VIBRATE)
                                         == PackageManager.PERMISSION_GRANTED) {
                                     Vibrator vibrator = (Vibrator) getContext().getSystemService(VIBRATOR_SERVICE);
-                                    vibrator.vibrate(VibrationEffect.createWaveform(new long[]{0, 100, 50, 100}, -1));
-                                    ObjectAnimator
-                                            .ofFloat(pw.getContentView(), "translationX", 0, 25, -25, 25, -25, 15, -15, 6, -6, 0)
-                                            .setDuration(100)
-                                            .start();
-                                    inputProductName.requestFocus();
-                                    inputProductName.getShowSoftInputOnFocus();
+                                    if (vibrator.hasVibrator()) {
+                                        vibrator.vibrate(VibrationEffect.createWaveform(new long[]{0, 100, 50, 100}, -1));
+                                    }
                                 } else {
                                     Toast toast = Toast.makeText(getContext(), "Name required!", Toast.LENGTH_SHORT);
                                     toast.show();
-                                    ObjectAnimator
-                                            .ofFloat(pw.getContentView(), "translationX", 0, 25, -25, 25, -25, 15, -15, 6, -6, 0)
-                                            .setDuration(100)
-                                            .start();
-                                    inputProductName.requestFocus();
-                                    inputProductName.getShowSoftInputOnFocus();
                                 }
+                                ObjectAnimator
+                                        .ofFloat(pw.getContentView(), "translationX", 0, 25, -25, 25, -25, 15, -15, 6, -6, 0)
+                                        .setDuration(100)
+                                        .start();
+                                inputProductName.requestFocus();
+                                inputProductName.getShowSoftInputOnFocus();
                             }else {
                                 mAdapter.addItem(new ProductListView(inputProductName.getText().toString(),inputProductDescr.getText().toString(), null, null, null));
                                 pw.dismiss();
