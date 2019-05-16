@@ -158,9 +158,9 @@ public class CameraActivity extends AppCompatActivity {
                 Uri photoURI = FileProvider.getUriForFile(this,
                         "com.filloasoft.android.fileprovider",
                         photoFile);
-                toast = Toast.makeText(getApplicationContext(),
+                /*toast = Toast.makeText(getApplicationContext(),
                         photoURI.toString(), Toast.LENGTH_SHORT);
-                toast.show();
+                toast.show();*/
 //                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
 //                takePictureIntent.putExtra("crop", "true");
                 if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
