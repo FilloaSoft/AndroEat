@@ -150,9 +150,9 @@ public class CameraActivity extends AppCompatActivity {
             try {
                 photoFile = createImageFile();
             } catch (IOException ex) {
-                toast = Toast.makeText(getApplicationContext(),
+                /*toast = Toast.makeText(getApplicationContext(),
                         ex.toString(), Toast.LENGTH_SHORT);
-                toast.show();
+                toast.show();*/
             }
             if (photoFile != null) {
                 Uri photoURI = FileProvider.getUriForFile(this,
