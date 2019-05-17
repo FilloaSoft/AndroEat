@@ -22,10 +22,11 @@ public class HowToFragment extends Fragment {
         View howToView = inflater.inflate(R.layout.fragment_recipe_steps, null);
         Bundle bundle = getArguments();
         Recipe recipe = (Recipe) bundle.getSerializable("recipe");
-        HowToListAdapter adapter = new HowToListAdapter(getActivity(), recipe.getRecipeInstructions());
-        ListView stepsList = (ListView) howToView.findViewById(R.id.stepsList);
-        stepsList.setAdapter(adapter);
-
+        if (recipe.getRecipeInstructions()!=null && !recipe.getRecipeInstructions().isEmpty()) {
+            HowToListAdapter adapter = new HowToListAdapter(getActivity(), recipe.getRecipeInstructions());
+            ListView stepsList = (ListView) howToView.findViewById(R.id.stepsList);
+            stepsList.setAdapter(adapter);
+        }
         return  howToView;
     }
 

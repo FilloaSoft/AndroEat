@@ -18,9 +18,11 @@ public class IngredientsFragment extends Fragment {
         View howToView = inflater.inflate(R.layout.fragment_recipe_steps, null);
         Bundle bundle = getArguments();
         Recipe recipe = (Recipe) bundle.getSerializable("recipe");
-        IngredientListAdapter adapter = new IngredientListAdapter(getActivity(), recipe.getRecipeIngredients());
-        ListView stepsList = (ListView) howToView.findViewById(R.id.stepsList);
-        stepsList.setAdapter(adapter);
+        if (recipe.getRecipeIngredients()!=null && !recipe.getRecipeIngredients().isEmpty()) {
+            IngredientListAdapter adapter = new IngredientListAdapter(getActivity(), recipe.getRecipeIngredients());
+            ListView stepsList = (ListView) howToView.findViewById(R.id.stepsList);
+            stepsList.setAdapter(adapter);
+        }
 
         return  howToView;
     }

@@ -65,10 +65,10 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
 
         View loginView = inflater.inflate(R.layout.fragment_login, null);
 
-        toast = Toast.makeText(getActivity(),
+        /*toast = Toast.makeText(getActivity(),
                 "Pantalla de login!", Toast.LENGTH_SHORT);
 
-        toast.show();
+        toast.show();*/
 
         BottomNavigationView navigation = loginView.findViewById(R.id.navigation);
 
