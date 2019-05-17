@@ -34,11 +34,11 @@ import com.filloasoft.android.androeat.model.ProductListView;
 import com.filloasoft.android.androeat.model.Recipe;
 import com.filloasoft.android.androeat.model.RecipeIngredient;
 import com.filloasoft.android.androeat.product.CameraAsyncTask;
-import com.filloasoft.android.androeat.product.FavouriteFragment;
 import com.filloasoft.android.androeat.product.ProductDetailsFragment;
 import com.filloasoft.android.androeat.product.RapidEatAsyncTask;
 import com.filloasoft.android.androeat.product.ShoppingBasketFragment;
 import com.filloasoft.android.androeat.product.ShoppingBasketListAdapter;
+import com.filloasoft.android.androeat.recipe.FavouriteFragment;
 import com.filloasoft.android.androeat.recipe.FavouriteListAdapter;
 import com.filloasoft.android.androeat.recipe.HomeFragment;
 import com.filloasoft.android.androeat.recipe.RecipeFragment;
@@ -106,6 +106,7 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.OnRe
     private FavouriteListAdapter favouritesListAdapter;
 //    ShoppingBasketFragment shoppingBasketFragment = new ShoppingBasketFragment();
     private List<Recipe> recipesList;
+    private List<Recipe> favouriteList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -150,6 +151,8 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.OnRe
         BottomNavigationView navigation = findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(this);
         databaseHelper = new DatabaseHelper(this);
+        favouriteList = databaseHelper.getAllRecipe();
+        this.favouritesListAdapter.setFavouriteRecipes(favouriteList, databaseHelper);
         usuario = new User();
 
         // Configure sign-in to request the user's ID, email address, and basic
@@ -208,7 +211,9 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.OnRe
                 fragment = new ShoppingBasketFragment();
                 break;
             case R.id.navigation_fav:
+                this.favouritesListAdapter.setFavouriteRecipes(favouriteList, databaseHelper);
                 fragment = new FavouriteFragment();
+
                 break;
             case R.id.navigation_speech:
                 fragment = new SpeechToTextFragment();
@@ -259,7 +264,6 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.OnRe
     }
 
     @Override
-
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == RC_CAMERA_CODE) {
@@ -651,10 +655,11 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.OnRe
         if (addFavourite){
             favouritesListAdapter.addItem(recipe);
             Toast.makeText(this, "Recipe added to favourites", Toast.LENGTH_SHORT).show();
-
+//            databaseHelper.addRecipe(recipe);
         } else{
             favouritesListAdapter.removeItemByRecipe(recipe);
             Toast.makeText(this, "Recipe removed from favourites", Toast.LENGTH_SHORT).show();
+//            databaseHelper.deleteRecipe(recipe);
         }
     }
 
