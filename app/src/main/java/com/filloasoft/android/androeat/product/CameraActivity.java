@@ -17,6 +17,11 @@ import android.widget.Toast;
 
 import com.filloasoft.android.androeat.MainActivity;
 import com.filloasoft.android.androeat.R;
+import com.filloasoft.android.androeat.model.ProductListView;
+import com.filloasoft.android.androeat.model.Recipe;
+import com.filloasoft.android.androeat.recipe.RecipeFragment;
+import com.google.zxing.integration.android.IntentIntegrator;
+import com.google.zxing.integration.android.IntentResult;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -24,6 +29,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -35,13 +41,28 @@ public class CameraActivity extends AppCompatActivity {
     private static final int MY_PERMISSIONS_EXTERNAL_STORAGE = 2;
     String currentPhotoPath;
     File photoFile = null;
+    private OnBasketAdapterListener callback;
 
 
     Toast toast;
 
+    public interface OnBasketAdapterListener{
+        ShoppingBasketListAdapter onGetAdapter();
+    }
+
+    public void setOnCameraActivityListener(OnBasketAdapterListener callback) {
+        this.callback = callback;
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+
+//        toast = Toast.makeText(getApplicationContext(),
+//                getBaseContext().toString(), Toast.LENGTH_LONG);
+//        toast.show();
+
 
         if (!getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA)) {
             toast = Toast.makeText(getApplicationContext(),
@@ -129,17 +150,17 @@ public class CameraActivity extends AppCompatActivity {
             try {
                 photoFile = createImageFile();
             } catch (IOException ex) {
-                toast = Toast.makeText(getApplicationContext(),
+                /*toast = Toast.makeText(getApplicationContext(),
                         ex.toString(), Toast.LENGTH_SHORT);
-                toast.show();
+                toast.show();*/
             }
             if (photoFile != null) {
                 Uri photoURI = FileProvider.getUriForFile(this,
                         "com.filloasoft.android.fileprovider",
                         photoFile);
-                toast = Toast.makeText(getApplicationContext(),
+                /*toast = Toast.makeText(getApplicationContext(),
                         photoURI.toString(), Toast.LENGTH_SHORT);
-                toast.show();
+                toast.show();*/
 //                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
 //                takePictureIntent.putExtra("crop", "true");
                 if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
@@ -153,9 +174,6 @@ public class CameraActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQUEST_TAKE_PHOTO && resultCode == RESULT_OK) {
-            toast = Toast.makeText(getApplicationContext(),
-                    "Photo Saved!.", Toast.LENGTH_SHORT);
-            toast.show();
 
             Bitmap bmp = (Bitmap) data.getExtras().get("data");
             ByteArrayOutputStream stream = new ByteArrayOutputStream();
@@ -169,22 +187,24 @@ public class CameraActivity extends AppCompatActivity {
                 e.printStackTrace();
             }
 
-            CameraAsyncTask apiCall = new CameraAsyncTask();
+            Intent returnIntent = new Intent();
+            returnIntent.putExtra("mPhotoPath", currentPhotoPath);
+            setResult(Activity.RESULT_OK, returnIntent);
 
-            apiCall.execute(currentPhotoPath);
-//            galleryAddPic();
+            finish();
+            galleryAddPic();
         } else {
             this.finish();
         }
     this.finish();
     }
 
-//    private void galleryAddPic() {
-//        Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
-//        File f = new File(currentPhotoPath);
-//        Uri contentUri = Uri.fromFile(f);
-//        mediaScanIntent.setData(contentUri);
-//        this.sendBroadcast(mediaScanIntent);
-//        this.finish();
-//    }
+    private void galleryAddPic() {
+        Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+        File f = new File(currentPhotoPath);
+        Uri contentUri = Uri.fromFile(f);
+        mediaScanIntent.setData(contentUri);
+        this.sendBroadcast(mediaScanIntent);
+        this.finish();
+    }
 }

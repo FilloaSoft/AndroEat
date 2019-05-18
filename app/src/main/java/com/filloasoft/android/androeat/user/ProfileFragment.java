@@ -43,8 +43,8 @@ public class ProfileFragment extends Fragment implements View.OnClickListener{
         textView.setText(email);
 
         String username = args.getString("username", "");
-        TextView usernameText = profileView.findViewById(R.id.userName);
-        usernameText.setText(username);
+        TextView usernameTextView = profileView.findViewById(R.id.userName);
+        usernameTextView.setText(username);
 
         //Retrieve user profile image from storage and load into imageview
         ImageView profileImage = profileView.findViewById(R.id.profile_image);
@@ -86,7 +86,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener{
         glutenFreeSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (glutenFreeSwitch.isChecked()){
-                    preferences.edit().putString("glutenfree", "glutenfree").apply();
+                    preferences.edit().putString("glutenfree", "gluten+free").apply();
                 }
                 else{
                     preferences.edit().putString("glutenfree", null).apply();
@@ -98,7 +98,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener{
         dairyFreeSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (dairyFreeSwitch.isChecked()){
-                    preferences.edit().putString("dairyfree", "dairyfree").apply();
+                    preferences.edit().putString("dairyfree", "dairy+free").apply();
                 }
                 else{
                     preferences.edit().putString("dairyfree", null).apply();

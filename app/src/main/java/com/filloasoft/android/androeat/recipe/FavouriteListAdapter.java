@@ -8,15 +8,28 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.filloasoft.android.androeat.MainActivity;
 import com.filloasoft.android.androeat.R;
 import com.filloasoft.android.androeat.model.Recipe;
+import com.filloasoft.android.androeat.sql.DatabaseHelper;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class FavouriteListAdapter extends RecyclerView.Adapter<FavouriteListAdapter.MyViewHolder> {
-    private static ArrayList<Recipe> mDatasetFavourites = new ArrayList<>();
+
+    //private static ArrayList<Recipe> mDatasetFavourites = new ArrayList<>();
+
+    List<Recipe> recipes;
+    DatabaseHelper databaseHelper;
 //    private Map<Integer, Boolean> checkedList = new HashMap<>();
     private OnItemRecipeClickedListener mItemClickListener;
+
+    public void setFavouriteRecipes(List<Recipe> favouriteList, DatabaseHelper databaseHelper) {
+        this.recipes = favouriteList;
+        this.databaseHelper = databaseHelper;
+
+    }
 
     // Provide a reference to the views for each data item
     // Complex data items may need more than one view per item, and
@@ -37,6 +50,7 @@ public class FavouriteListAdapter extends RecyclerView.Adapter<FavouriteListAdap
     @Override
     public FavouriteListAdapter.MyViewHolder onCreateViewHolder(ViewGroup parent,
                                                                      int viewType) {
+
         RelativeLayout v = (RelativeLayout) LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.favourites_list_row, parent, false);
 
@@ -55,12 +69,12 @@ public class FavouriteListAdapter extends RecyclerView.Adapter<FavouriteListAdap
     @Override
     public void onBindViewHolder(final MyViewHolder holder, final int position) {
 
-
         holder.listView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Recipe product = mDatasetFavourites.get(position);
-
+                //Recipe product = mDatasetFavourites.get(position);
+                //AÑADIR AQUI Q SE ACCEDA POR ID
+                Recipe product = recipes.get(position);
                 mItemClickListener.onItemRecipeClicked(product);
             }
         });
@@ -71,40 +85,45 @@ public class FavouriteListAdapter extends RecyclerView.Adapter<FavouriteListAdap
         ImageView imageView = holder.listView.findViewById(R.id.productImage);
 
 
-        textView.setText(mDatasetFavourites.get(position).getRecipeName());
+        //textView.setText(mDatasetFavourites.get(position).getRecipeName());
+        textView.setText(recipes.get(position).getRecipeName());
 
-        if (mDatasetFavourites.get(position).getRecipeBitmapImage() != null){
-            imageView.setImageBitmap(mDatasetFavourites.get(position).getRecipeBitmapImage());
+        if (recipes.get(position).getRecipeBitmapImage() != null){
+            imageView.setImageBitmap(recipes.get(position).getRecipeBitmapImage());
         }
     }
 
     Recipe getCheckedItemAtPosition(int position){
-        return mDatasetFavourites.get(position);
+        return recipes.get(position);
     }
 
     public void removeItemByPosition(int position) {
-        mDatasetFavourites.remove(position);
+        databaseHelper.deleteRecipe(recipes.get(position));
+        recipes.remove(position);
         notifyItemRemoved(position);
     }
 
     public void removeItemByRecipe(Recipe recipe){
         Recipe r = existsRecipe(recipe);
         if (r != null) {
-            mDatasetFavourites.remove(r);
+            databaseHelper.deleteRecipe(recipe);
+            recipes.remove(r);
             notifyDataSetChanged();
         }
     }
 
     public void addItem(Recipe item) {
         if (existsRecipe(item) == null){
-            mDatasetFavourites.add(item);
-            notifyItemInserted(mDatasetFavourites.size());
+            databaseHelper.addRecipe(item);
+            recipes.add(item);
+            notifyItemInserted(recipes.size());
             notifyDataSetChanged();
         }
     }
 
     public void restoreItem(Recipe item, int position) {
-        mDatasetFavourites.add(position, item);
+        databaseHelper.addRecipe(item);
+        recipes.add(position, item);
         notifyItemInserted(position);
     }
 
@@ -113,7 +132,7 @@ public class FavouriteListAdapter extends RecyclerView.Adapter<FavouriteListAdap
     }
 
     public ArrayList<Recipe> getData() {
-        return mDatasetFavourites;
+        return (ArrayList<Recipe>) recipes;
     }
 
     public Recipe existsRecipe(Object other){
@@ -121,15 +140,13 @@ public class FavouriteListAdapter extends RecyclerView.Adapter<FavouriteListAdap
         if (other == this) return null;
         if (!(other instanceof Recipe))return null;
         Recipe recipeFav = (Recipe) other;
-        for (Recipe r: mDatasetFavourites) {
+        for (Recipe r: recipes) {
             if (r.getRecipeID().equals(recipeFav.getRecipeID())){
                 return r;
             }
         }
         return null;
     }
-
-
 
 //    Map<Integer, Boolean> getCheckedList(){
 //        return checkedList;
@@ -138,9 +155,7 @@ public class FavouriteListAdapter extends RecyclerView.Adapter<FavouriteListAdap
     // Return the size of your dataset (invoked by the layout manager)
     @Override
     public int getItemCount() {
-        return mDatasetFavourites.size();
+        return recipes.size();
     }
-
-
 
 }

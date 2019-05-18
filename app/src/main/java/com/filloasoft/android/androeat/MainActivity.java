@@ -14,6 +14,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.annotation.VisibleForTesting;
 import android.support.design.widget.BottomNavigationView;
@@ -32,11 +33,12 @@ import com.filloasoft.android.androeat.mic.SpeechToTextFragment;
 import com.filloasoft.android.androeat.model.ProductListView;
 import com.filloasoft.android.androeat.model.Recipe;
 import com.filloasoft.android.androeat.model.RecipeIngredient;
-import com.filloasoft.android.androeat.product.FavouriteFragment;
+import com.filloasoft.android.androeat.product.CameraAsyncTask;
 import com.filloasoft.android.androeat.product.ProductDetailsFragment;
 import com.filloasoft.android.androeat.product.RapidEatAsyncTask;
 import com.filloasoft.android.androeat.product.ShoppingBasketFragment;
 import com.filloasoft.android.androeat.product.ShoppingBasketListAdapter;
+import com.filloasoft.android.androeat.recipe.FavouriteFragment;
 import com.filloasoft.android.androeat.recipe.FavouriteListAdapter;
 import com.filloasoft.android.androeat.recipe.HomeFragment;
 import com.filloasoft.android.androeat.recipe.RecipeFragment;
@@ -80,7 +82,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class MainActivity extends AppCompatActivity implements RecipeFragment.onGetRecipeFavouriteListener, RecipeFragment.OnRecipeFavouriteListener, FavouriteListAdapter.OnItemRecipeClickedListener, RapidEatAsyncTask.OnHeadlineSelectedListener, ShoppingBasketListAdapter.OnItemClickedListener, BottomNavigationView.OnNavigationItemSelectedListener, HomeFragment.OnClickHowTo{
+public class MainActivity extends AppCompatActivity implements HomeFragment.OnReloadRecipe, CameraAsyncTask.OnProductPosiblityListener, CameraActivity.OnBasketAdapterListener, RecipeFragment.onGetRecipeFavouriteListener, RecipeFragment.OnRecipeFavouriteListener, FavouriteListAdapter.OnItemRecipeClickedListener, RapidEatAsyncTask.OnHeadlineSelectedListener, ShoppingBasketListAdapter.OnItemClickedListener, BottomNavigationView.OnNavigationItemSelectedListener, HomeFragment.OnClickHowTo{
     /**
      * Keep track of the login task to ensure we can cancel it if requested.
      */
@@ -99,14 +101,19 @@ public class MainActivity extends AppCompatActivity implements RecipeFragment.on
     private GoogleSignInClient mGoogleSignInClient;
     private User usuario;
     private static final int REQUEST_CODE = 123;
+    private static final int RC_CAMERA_CODE = 8001;
     private ShoppingBasketListAdapter basketListAdapter ;
     private FavouriteListAdapter favouritesListAdapter;
 //    ShoppingBasketFragment shoppingBasketFragment = new ShoppingBasketFragment();
     private List<Recipe> recipesList;
+    private List<Recipe> favouriteList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        //Toast.makeText(getApplicationContext(), getUserPreferences(), Toast.LENGTH_SHORT).show();
+
 
         this.basketListAdapter = new ShoppingBasketListAdapter();
         this.basketListAdapter.setOnItemClickedListener(new ShoppingBasketListAdapter.OnItemClickedListener() {
@@ -144,6 +151,8 @@ public class MainActivity extends AppCompatActivity implements RecipeFragment.on
         BottomNavigationView navigation = findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(this);
         databaseHelper = new DatabaseHelper(this);
+        favouriteList = databaseHelper.getAllRecipe();
+        this.favouritesListAdapter.setFavouriteRecipes(favouriteList, databaseHelper);
         usuario = new User();
 
         // Configure sign-in to request the user's ID, email address, and basic
@@ -165,7 +174,7 @@ public class MainActivity extends AppCompatActivity implements RecipeFragment.on
         showProgress(true);
         mRecipesTask = new RecipesTask(123L);
         mRecipesTask.execute((Void) null);
-        //loadFragment(new HomeFragment(), true);
+//        loadFragment(new HomeFragment(), true);
     }
 
     public ShoppingBasketListAdapter getListAdapter(){
@@ -202,7 +211,9 @@ public class MainActivity extends AppCompatActivity implements RecipeFragment.on
                 fragment = new ShoppingBasketFragment();
                 break;
             case R.id.navigation_fav:
+                this.favouritesListAdapter.setFavouriteRecipes(favouriteList, databaseHelper);
                 fragment = new FavouriteFragment();
+
                 break;
             case R.id.navigation_speech:
                 fragment = new SpeechToTextFragment();
@@ -237,7 +248,6 @@ public class MainActivity extends AppCompatActivity implements RecipeFragment.on
 
             if (!firstFragment) {
                 transaction.addToBackStack(null);
-
             }
             transaction.commit();
             return true;
@@ -254,10 +264,19 @@ public class MainActivity extends AppCompatActivity implements RecipeFragment.on
     }
 
     @Override
-
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == RC_CAMERA_CODE) {
+            if(resultCode == Activity.RESULT_OK){
+                String mPhotoPath = data.getStringExtra("mPhotoPath");
 
+//                ShoppingBasketFragment apiCall = new ShoppingBasketFragment();
+                showProgress(true);
+                CameraAsyncTask apiCall = new CameraAsyncTask();
+                apiCall.setOnProductPosiblityListener(this);
+                apiCall.execute(mPhotoPath, getBaseContext(), basketListAdapter);
+            }
+        }
         // Result returned from launching the Intent from GoogleSignInApi.getSignInIntent(...);
         if (requestCode == REQUEST_CODE) {
             if(resultCode == Activity.RESULT_OK){
@@ -496,7 +515,7 @@ public class MainActivity extends AppCompatActivity implements RecipeFragment.on
 
     public void takePhoto(View view){
         Intent cameraIntent = new Intent(getApplicationContext(), CameraActivity.class);
-        startActivity(cameraIntent);
+        startActivityForResult(cameraIntent, RC_CAMERA_CODE);
     }
 
     public void findRecipes(View view) {
@@ -528,10 +547,10 @@ public class MainActivity extends AppCompatActivity implements RecipeFragment.on
     }
 
     public void openAddDialog(View view) {
-        toast = Toast.makeText(this,
-                "Abriendo diálogo de adición de productos...", Toast.LENGTH_SHORT);
+        //toast = Toast.makeText(this,
+                //"Abriendo diálogo de adición de productos...", Toast.LENGTH_SHORT);
         // Do something in response to button
-        toast.show();
+        //toast.show();
     }
 
 
@@ -602,18 +621,15 @@ public class MainActivity extends AppCompatActivity implements RecipeFragment.on
 
     @Override
     public void onItemClicked(ProductListView product) {
-        ProductDetailsFragment nextFrag = new ProductDetailsFragment().newInstance(product);
-        this.getSupportFragmentManager().beginTransaction()
-                .replace(R.id.fragment_container, nextFrag)
-                .addToBackStack(null)
-                .commit();
+        ProductDetailsFragment newProductFragment = new ProductDetailsFragment().newInstance(product);;
+        loadFragment(newProductFragment, false);
     }
 
     @Override
     public void onTaskCompleted(Boolean bool, String msg) {
         toast = Toast.makeText(this, msg, Toast.LENGTH_SHORT);
         toast.show();
-        showProgress(false);
+        showProgress(bool);
     }
 
     @Override
@@ -639,16 +655,29 @@ public class MainActivity extends AppCompatActivity implements RecipeFragment.on
         if (addFavourite){
             favouritesListAdapter.addItem(recipe);
             Toast.makeText(this, "Recipe added to favourites", Toast.LENGTH_SHORT).show();
-
+//            databaseHelper.addRecipe(recipe);
         } else{
             favouritesListAdapter.removeItemByRecipe(recipe);
             Toast.makeText(this, "Recipe removed from favourites", Toast.LENGTH_SHORT).show();
+//            databaseHelper.deleteRecipe(recipe);
         }
     }
 
     @Override
     public Boolean onRecipeFavourite(Recipe recipe) {
         return favouritesListAdapter.isRecipeFavourite(recipe);
+    }
+
+    @Override
+    public ShoppingBasketListAdapter onGetAdapter() {
+        return this.basketListAdapter;
+    }
+
+    @Override
+    public void onReloadRecipes() {
+        showProgress(true);
+        mRecipesTask = new RecipesTask(123L);
+        mRecipesTask.execute((Void) null);
     }
 
     public class RecipeTask extends AsyncTask<Void, Void, Recipe> {

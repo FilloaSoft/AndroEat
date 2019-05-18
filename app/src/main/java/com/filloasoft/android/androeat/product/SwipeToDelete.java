@@ -27,7 +27,7 @@ abstract public class SwipeToDelete extends ItemTouchHelper.Callback {
     private int intrinsicHeight;
 
 
-    SwipeToDelete(Context context) {
+    public SwipeToDelete(Context context) {
         mContext = context;
         mBackground = new ColorDrawable();
         backgroundColor = Color.parseColor("#670028");
@@ -90,6 +90,6 @@ abstract public class SwipeToDelete extends ItemTouchHelper.Callback {
 
     @Override
     public float getSwipeThreshold(@NonNull RecyclerView.ViewHolder viewHolder) {
-        return 0.7f;
+        return 0.3f;
     }
 }

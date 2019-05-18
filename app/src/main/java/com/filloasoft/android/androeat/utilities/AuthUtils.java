@@ -17,11 +17,13 @@ public class AuthUtils {
         Fragment fragment;
         if (firebaseUser!=null){
             String firebaseEmail = firebaseUser.getEmail();
+            String firebaseUserName = firebaseUser.getDisplayName();
             if (firebaseEmail!=null) {
                 if (databaseHelper.checkUser(firebaseEmail)) {
                     fragment = new ProfileFragment();
                     Bundle args = new Bundle();
                     args.putString("email", firebaseEmail);
+                    args.putString("username", firebaseUserName);
                     fragment.setArguments(args);
                     return fragment;
                 }

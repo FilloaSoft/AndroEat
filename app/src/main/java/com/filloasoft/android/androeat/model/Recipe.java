@@ -20,6 +20,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 @JsonPropertyOrder({
         "recipeID",
         "recipeName",
+        "recipeURL",
         "recipeIngredients",
         "recipeImage",
         "cookingTimeMinutes",
@@ -33,6 +34,8 @@ public class Recipe implements Serializable, Parcelable {
     private String recipeID;
     @JsonProperty("recipeName")
     private String recipeName;
+    @JsonProperty("recipeURL")
+    private String recipeURL;
     @JsonProperty("recipeIngredients")
     private List<RecipeIngredient> recipeIngredients = null;
     @JsonProperty("recipeImage")
@@ -68,6 +71,16 @@ public class Recipe implements Serializable, Parcelable {
     @JsonProperty("recipeName")
     public void setRecipeName(String recipeName) {
         this.recipeName = recipeName;
+    }
+
+    @JsonProperty("recipeURL")
+    public String getRecipeURL() {
+        return recipeURL;
+    }
+
+    @JsonProperty("recipeURL")
+    public void setRecipeURL(String recipeURL) {
+        this.recipeURL = recipeURL;
     }
 
     @JsonProperty("recipeIngredients")

@@ -13,7 +13,7 @@
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/profile_image"
             android:layout_gravity="center"
-            android:layout_marginTop="45dp"
+            android:layout_marginTop="40dp"
             android:layout_width="120dp"
             android:layout_height="120dp"
             android:src="@drawable/eggs"
@@ -29,7 +29,7 @@
             android:layout_alignParentTop="true"
             android:text="User name"
             android:textColor="@color/colorAccent"
-            android:textSize="32dp"/>
+            android:textSize="28dp"/>
 
         <TextView
             android:id="@+id/userEmail"

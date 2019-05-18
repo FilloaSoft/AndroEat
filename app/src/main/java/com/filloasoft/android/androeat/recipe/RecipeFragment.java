@@ -14,6 +14,7 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
+import android.support.v4.app.ShareCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewCompat;
 import android.support.v4.view.ViewPager;
@@ -85,6 +86,7 @@ public class RecipeFragment extends Fragment {
                     color = Color.parseColor("#FAF9F8");
                     callback.onFavouriteClicked(recipe, false);
                     favouriteButton.setImageTintList(ColorStateList.valueOf(color));
+
                 }
                 else{
                     color = Color.parseColor("#ff0000");
@@ -93,6 +95,20 @@ public class RecipeFragment extends Fragment {
                 }
                 favouriteButton.setImageTintList(ColorStateList.valueOf(color));
 //                favouriteButton.setBackgroundTintList(ColorStateList.valueOf(color));
+            }
+        });
+
+
+        final FloatingActionButton shareButton = view.findViewById(R.id.shareButton);
+
+        shareButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ShareCompat.IntentBuilder.from(getActivity())
+                        .setType("text/plain")
+                        .setChooserTitle("Share Recipe")
+                        .setText(recipe.getRecipeURL())
+                        .startChooser();
             }
         });
 

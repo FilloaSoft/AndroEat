@@ -1,4 +1,4 @@
-package com.filloasoft.android.androeat.product;
+package com.filloasoft.android.androeat.recipe;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 import com.filloasoft.android.androeat.MainActivity;
 import com.filloasoft.android.androeat.R;
 import com.filloasoft.android.androeat.model.Recipe;
+import com.filloasoft.android.androeat.product.SwipeToDelete;
 import com.filloasoft.android.androeat.recipe.FavouriteListAdapter;
 
 public class FavouriteFragment extends Fragment {
@@ -28,12 +29,10 @@ public class FavouriteFragment extends Fragment {
         super.onCreate(savedInstanceState);
         final View favouritesView = (View) inflater.inflate(R.layout.fragment_favourites, container , false);
 
-
         recyclerView = favouritesView.findViewById(R.id.recycler_favourites);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this.getContext());
         recyclerView.setLayoutManager(layoutManager);
         this.mAdapter = ((MainActivity) getActivity()).getFavouritesAdapter();
-//        this.mAdapter.addItem(new ProductListView("test","text", null, null, null));
         recyclerView.setAdapter(mAdapter);
 
 
@@ -55,7 +54,6 @@ public class FavouriteFragment extends Fragment {
                 final Recipe item = mAdapter.getData().get(position);
 
                 mAdapter.removeItemByPosition(position);
-
 
                 Snackbar snackbar = Snackbar
                         .make(getView(), "Item was removed from the list.", Snackbar.LENGTH_LONG);

@@ -27,7 +27,7 @@
 
     <TextView
         android:id="@+id/ingredientDescription"
-        android:text="@string/not_available"
+        android:text=""
         android:textSize="12sp"
         android:maxLines="1"
         android:layout_width="match_parent"

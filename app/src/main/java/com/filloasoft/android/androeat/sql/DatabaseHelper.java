@@ -5,24 +5,24 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 
 import com.filloasoft.android.androeat.model.User;
+import com.filloasoft.android.androeat.model.Recipe;
 
+import java.io.ByteArrayOutputStream;
+import java.sql.Blob;
 import java.util.ArrayList;
 import java.util.List;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
 
-    // Database Version
-    private static final int DATABASE_VERSION = 1;
-
-    // Database Name
+    private static final int DATABASE_VERSION = 2;
     private static final String DATABASE_NAME = "UserManager.db";
 
-    // User table name
     private static final String TABLE_USER = "user";
 
-    // User Table Columns names
     private static final String COLUMN_USER_ID = "user_id";
     private static final String COLUMN_USER_NAME = "user_name";
     private static final String COLUMN_USER_EMAIL = "user_email";
@@ -36,6 +36,20 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     // drop table sql query
     private String DROP_USER_TABLE = "DROP TABLE IF EXISTS " + TABLE_USER;
 
+    private static final String TABLE_RECIPE = "recipe";
+    private static final String COLUMN_RECIPEID = "id";
+    private static final String COLUMN_RECIPE_ID = "recipe_id";
+    private static final String COLUMN_RECIPE_NAME = "recipe_name";
+    private static final String COLUMN_RECIPE_IMAGE = "recipe_image";
+    private static final String COLUMN_RECIPE_BITMAP = "recipe_bitmap";
+
+    private String CREATE_RECIPE_TABLE = "CREATE TABLE " + TABLE_RECIPE + "("
+            + COLUMN_RECIPEID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
+            + COLUMN_RECIPE_ID + " TEXT," + COLUMN_RECIPE_NAME + " TEXT,"
+            + COLUMN_RECIPE_IMAGE + " TEXT," + COLUMN_RECIPE_BITMAP + " BLOB" + ")";
+
+    private String DROP_RECIPE_TABLE = "DROP TABLE IF EXISTS " + TABLE_RECIPE;
+
     /**
      * Constructor
      *
@@ -47,6 +61,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
+        db.execSQL(CREATE_RECIPE_TABLE);
         db.execSQL(CREATE_USER_TABLE);
     }
 
@@ -56,7 +71,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         //Drop User Table if exist
         db.execSQL(DROP_USER_TABLE);
-
+        db.execSQL(DROP_RECIPE_TABLE);
         // Create tables again
         onCreate(db);
 
@@ -77,6 +92,89 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         // Inserting Row
         db.insert(TABLE_USER, null, values);
+        db.close();
+    }
+
+    /**
+     * This method is to create user record
+     *
+     * @param recipe
+     */
+    public void addRecipe(Recipe recipe) {
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+        values.put(COLUMN_RECIPE_ID, recipe.getRecipeID());
+        values.put(COLUMN_RECIPE_NAME, recipe.getRecipeName());
+        values.put(COLUMN_RECIPE_IMAGE, recipe.getRecipeImage());
+
+        Bitmap bmp = recipe.getRecipeBitmapImage();
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        bmp.compress(Bitmap.CompressFormat.PNG, 100, stream);
+        byte[] byteArray = stream.toByteArray();
+//        if (bmp != null && !bmp.isRecycled()) {
+//            bmp.recycle();
+//            bmp = null;
+//        }
+        values.put(COLUMN_RECIPE_BITMAP, byteArray);
+
+        // Inserting Row
+        db.insert(TABLE_RECIPE, null, values);
+        db.close();
+    }
+
+    public List<Recipe> getAllRecipe() {
+        // array of columns to fetch
+        String[] columns = {
+                COLUMN_RECIPEID,
+                COLUMN_RECIPE_ID,
+                COLUMN_RECIPE_NAME,
+                COLUMN_RECIPE_IMAGE,
+                COLUMN_RECIPE_BITMAP
+        };
+        // sorting orders
+        String sortOrder =
+                COLUMN_RECIPE_NAME + " ASC";
+        List<Recipe> recipeList = new ArrayList<Recipe>();
+
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        Cursor cursor = db.query(TABLE_RECIPE, //Table to query
+                columns,    //columns to return
+                null,        //columns for the WHERE clause
+                null,        //The values for the WHERE clause
+                null,       //group the rows
+                null,       //filter by row groups
+                sortOrder); //The sort order
+
+
+        if (cursor.moveToFirst()) {
+            do {
+                Recipe recipe = new Recipe();
+                recipe.setRecipeID(cursor.getString(cursor.getColumnIndex(COLUMN_RECIPE_ID)));
+                recipe.setRecipeName(cursor.getString(cursor.getColumnIndex(COLUMN_RECIPE_NAME)));
+                recipe.setRecipeImage(cursor.getString(cursor.getColumnIndex(COLUMN_RECIPE_IMAGE)));
+
+                byte[] blob = cursor.getBlob(cursor.getColumnIndex(COLUMN_RECIPE_BITMAP)); //This line gets the image's blob data
+                Bitmap bitmap = null;
+                BitmapFactory.Options options = new BitmapFactory.Options();
+                bitmap = BitmapFactory.decodeByteArray(blob, 0, blob.length, options); //Convert bytearray to bitmap
+                recipe.setRecipeBitmapImage(bitmap);
+                // Adding user record to list
+                recipeList.add(recipe);
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+        db.close();
+
+        // return user list
+        return recipeList;
+    }
+
+    public void deleteRecipe(Recipe recipe) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.delete(TABLE_RECIPE, COLUMN_RECIPE_ID + " = ?",
+                new String[]{String.valueOf(recipe.getRecipeID())});
         db.close();
     }
 
