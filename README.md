@@ -11,7 +11,7 @@ Repositorio para la práctica de APM 2018/2019
 En la actualidad, el equipo de FilloaSoft está formado por un nutrido y entusiasta grupo de colaboradores llamados:
 
 * Adrián Rodríguez - CEO/CTO
-* Daniel Rus - Hw/Sensorica
+* Daniel Rus - Multimedia/APIs
 * Efraím Lema - Backend/APIs
 * Patricia Juane - UX
 * Daniel Gabín - UX
