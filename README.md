@@ -1,10 +1,10 @@
 # AndroEat
 Repositorio para la práctica de APM 2018/2019
 
-## Nombre de equipo:
+## Nombre de equipo
   Filloa Soft
 
-## Nombre de aplicación:
+## Nombre de aplicación
   AndroEat
   
 ## Miembros y roles
